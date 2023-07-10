@@ -5,7 +5,10 @@ import decode
 setup_options = dict(
     name = 'decode_ble',
     version = decode.__version__,
-    packages = find_packages(),
+    # packages = find_packages(),
+    install_requires=[
+        'Click','TheengsDecoder'
+    ],
     #scripts = ['blah'],
     entry_points = '''
                 [console_scripts]

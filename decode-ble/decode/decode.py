@@ -1,26 +1,16 @@
 import click
-
-# pass_dict = click.make_pass_decorator(dict, ensure=True)
-
-
-# @click.group()
-# @click.option('-d', '--debug', default=False, help="more debugging stuff")
-# @click.option( '--repeat', default=1, help="the count")
-# @click.pass_context
-# def main(ctx, debug):
-#     ctx.obj['DEBUG'] = debug
-
-# @main.command()
-# @click.pass_context
+import json
+import struct
+from TheengsDecoder import decodeBLE as dble
+from TheengsDecoder import getProperties, getAttribute
 
 @click.command()
-@click.option('-d', '--debug', default=False, help="more debugging stuff")
-@click.argument('out', type=click.File('w'), default='-')
-# @click.argument('name')
+@click.option('--debug/--no-debug', default=False)
+@click.argument('input', type=click.File('r'), default='-', nargs=1)
+@click.argument('output', type=click.File('w'), default='-', nargs=1)
 
-# def cli(ctx, out):
-def cli(debug, out):
-    """Say hello name
+def cli(debug, input, output):
+    """decode BLE announcements in a sensorlogger JSON log
     """
     if debug:
         print("debug == True")
