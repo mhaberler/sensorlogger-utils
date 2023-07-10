@@ -9,7 +9,7 @@ setup_options = dict(
     #scripts = ['blah'],
     entry_points = '''
                 [console_scripts]
-                decode_ble=decode.decode:main
+                decode_ble=decode.decode:cli
                    '''
 )
 
