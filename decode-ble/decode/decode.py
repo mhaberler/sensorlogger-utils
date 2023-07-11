@@ -4,8 +4,10 @@ from TheengsDecoder import decodeBLE
 from TheengsDecoder import getProperties, getAttribute
 import sys
 
+
 def eprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
+
 
 try:
     sys.path.append(".")
@@ -15,12 +17,12 @@ try:
 except Exception:
     customDecoder = None
 
+
 @click.command()
 @click.option('--debug/--no-debug', default=False)
 @click.option('--custom/--no-custom', default=False)
 @click.argument('input', type=click.File('r'), default='-', nargs=1)
 @click.argument('output', type=click.File('w'), default='-', nargs=1)
-
 def cli(debug, custom, input, output):
     """decode BLE announcements in a sensorlogger JSON log
     """
@@ -31,10 +33,10 @@ def cli(debug, custom, input, output):
             data['name'] = sample['name']
             data['id'] = sample['id']
             try:
-                # Kelvin fix needed 
+                # Kelvin fix needed
                 # this should be an array
                 # data['servicedatauuid'] = list(sample['serviceUUIDs'])
-               data['servicedatauuid'] = [sample['serviceUUIDs']]
+                data['servicedatauuid'] = [sample['serviceUUIDs']]
             except KeyError:
                 pass
             data['manufacturerdata'] = sample['manufacturerData']

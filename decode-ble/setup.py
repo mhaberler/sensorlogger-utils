@@ -3,14 +3,12 @@ from setuptools import setup, find_packages
 import decode
 
 setup_options = dict(
-    name = 'decode_ble',
-    version = decode.__version__,
-    # packages = find_packages(),
+    name='decode_ble',
+    version=decode.__version__,
     install_requires=[
-        'Click','TheengsDecoder'
+        'Click', 'TheengsDecoder'
     ],
-    #scripts = ['blah'],
-    entry_points = '''
+    entry_points='''
                 [console_scripts]
                 decode_ble=decode.decode:cli
                    '''
@@ -18,4 +16,3 @@ setup_options = dict(
 
 
 setup(**setup_options)
-
