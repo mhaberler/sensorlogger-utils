@@ -1,0 +1,19 @@
+[Unit]
+Description=sensorlogger online BLE decoder backend
+
+[Service]
+
+ExecStart=/home/sensorlogger/sensorlogger-utils/.venv/bin/gunicorn \
+             --bind 127.0.0.1:5000 wsgi:app
+
+
+# gunicorn --bind 127.0.0.1:5000 wsgi:app
+
+WorkingDirectory=/home/sensorlogger/sensorlogger-utils/online-decoder
+User=sensorlogger
+Group=sensorlogger
+
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
