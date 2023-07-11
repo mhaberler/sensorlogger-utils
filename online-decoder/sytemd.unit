@@ -1,0 +1,18 @@
+[Unit]
+Description=sensorlogger online BLE decoder backend
+
+[Service]
+
+ExecStart=/home/sensorlogger/miniconda3/envs/sondehub-3.8/bin/python \
+            /home/sondehub/sondehub-feed-master/sondehub-republish.py \
+           --pub-socket tcp://86.59.12.250:9021 \
+           --dealer-socket tcp://86.59.12.250:9023
+
+WorkingDirectory=/var/www/sensorlogger
+User=sensorlogger
+Group=sensorlogger
+
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
