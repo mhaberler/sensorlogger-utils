@@ -1,0 +1,2284 @@
+[
+    {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        15.575199999999995,
+                        46.8879
+                    ]
+                },
+                "properties": {
+                    "altm": 359,
+                    "windDir": 217,
+                    "distToNextPoint": 485.1712094936427,
+                    "totDistCovered": 0,
+                    "t": 1689220800000,
+                    "tstr": "2023-07-13T04:00:00Z",
+                    "surfaceElev": 359
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        15.579042452855335,
+                        46.89138458172078
+                    ]
+                },
+                "properties": {
+                    "altm": 359,
+                    "windDir": 217,
+                    "distToNextPoint": 486.87952352197544,
+                    "totDistCovered": 485.1712094936427,
+                    "t": 1689221700000,
+                    "tstr": "2023-07-13T04:15:00Z",
+                    "surfaceElev": 391
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        15.582898686628653,
+                        46.89488143260692
+                    ]
+                },
+                "properties": {
+                    "altm": 359,
+                    "windDir": 219,
+                    "distToNextPoint": 488.17659818460135,
+                    "totDistCovered": 972.0507330156181,
+                    "t": 1689222600000,
+                    "tstr": "2023-07-13T04:30:00Z",
+                    "surfaceElev": 380
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        15.586942165816902,
+                        46.89829324795102
+                    ]
+                },
+                "properties": {
+                    "altm": 359,
+                    "windDir": 219,
+                    "distToNextPoint": 488.66893752612106,
+                    "totDistCovered": 1460.2273312002194,
+                    "t": 1689223500000,
+                    "tstr": "2023-07-13T04:45:00Z",
+                    "surfaceElev": 316
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        15.590989980792811,
+                        46.90170850412305
+                    ]
+                },
+                "properties": {
+                    "altm": 359,
+                    "windDir": 219,
+                    "distToNextPoint": 488.71767816634224,
+                    "totDistCovered": 1948.8962687263404,
+                    "t": 1689224400000,
+                    "tstr": "2023-07-13T05:00:00Z",
+                    "surfaceElev": 303
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        15.595038457432311,
+                        46.905124100922684
+                    ]
+                },
+                "properties": {
+                    "altm": 359,
+                    "windDir": 219,
+                    "distToNextPoint": 488.310795817433,
+                    "totDistCovered": 2437.6139468926826,
+                    "t": 1689225300000,
+                    "tstr": "2023-07-13T05:15:00Z",
+                    "surfaceElev": 302
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        15.599083821054654,
+                        46.908536854114935
+                    ]
+                },
+                "properties": {
+                    "altm": 359,
+                    "windDir": 219,
+                    "distToNextPoint": 487.4399977764852,
+                    "totDistCovered": 2925.9247427101154,
+                    "t": 1689226200000,
+                    "tstr": "2023-07-13T05:30:00Z",
+                    "surfaceElev": 304
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        15.603122227309711,
+                        46.9119435215089
+                    ]
+                },
+                "properties": {
+                    "altm": 359,
+                    "windDir": 220,
+                    "distToNextPoint": 486.10076816504585,
+                    "totDistCovered": 3413.3647404866006,
+                    "t": 1689227100000,
+                    "tstr": "2023-07-13T05:45:00Z",
+                    "surfaceElev": 307
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        15.607235978122654,
+                        46.91529229479796
+                    ]
+                },
+                "properties": {
+                    "altm": 359,
+                    "windDir": 219,
+                    "distToNextPoint": 484.1048486550711,
+                    "totDistCovered": 3899.4655086516464,
+                    "t": 1689228000000,
+                    "tstr": "2023-07-13T06:00:00Z",
+                    "surfaceElev": 370
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        15.611247256798945,
+                        46.91867565364792
+                    ]
+                },
+                "properties": {
+                    "altm": 359,
+                    "totDistCovered": 4383.570357306718,
+                    "t": 1689228900000,
+                    "tstr": "2023-07-13T06:15:00Z",
+                    "surfaceElev": 392
+                }
+            }
+        ],
+        "description": {
+            "alt": 30,
+            "altm": 10,
+            "lvl": "surface",
+            "ascent": 0,
+            "descent": 0,
+            "calcBackward": false,
+            "totDist": 4383.570357306718,
+            "duration": 8100000,
+            "sample": 15,
+            "sampleAscDes": 1,
+            "startTime": "2023-07-13T04:00:00Z"
+        }
+    },
+    {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        15.575199999999995,
+                        46.8879
+                    ]
+                },
+                "properties": {
+                    "altm": 600,
+                    "windDir": 291,
+                    "distToNextPoint": 729.8749407919862,
+                    "totDistCovered": 0,
+                    "t": 1689220800000,
+                    "tstr": "2023-07-13T04:00:00Z",
+                    "surfaceElev": 359
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        15.584166096943928,
+                        46.885547350338726
+                    ]
+                },
+                "properties": {
+                    "altm": 600,
+                    "windDir": 293,
+                    "distToNextPoint": 783.6473411015642,
+                    "totDistCovered": 729.8749407919862,
+                    "t": 1689221700000,
+                    "tstr": "2023-07-13T04:15:00Z",
+                    "surfaceElev": 359
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        15.593657440439857,
+                        46.882793276625165
+                    ]
+                },
+                "properties": {
+                    "altm": 600,
+                    "windDir": 294,
+                    "distToNextPoint": 843.4669867232351,
+                    "totDistCovered": 1513.5222818935504,
+                    "t": 1689222600000,
+                    "tstr": "2023-07-13T04:30:00Z",
+                    "surfaceElev": 381
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        15.603795485503891,
+                        46.87970753609576
+                    ]
+                },
+                "properties": {
+                    "altm": 600,
+                    "windDir": 296,
+                    "distToNextPoint": 909.7458122159953,
+                    "totDistCovered": 2356.9892686167855,
+                    "t": 1689223500000,
+                    "tstr": "2023-07-13T04:45:00Z",
+                    "surfaceElev": 386
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        15.614552882223185,
+                        46.876120480871336
+                    ]
+                },
+                "properties": {
+                    "altm": 600,
+                    "windDir": 297,
+                    "distToNextPoint": 983.6945241930205,
+                    "totDistCovered": 3266.735080832781,
+                    "t": 1689224400000,
+                    "tstr": "2023-07-13T05:00:00Z",
+                    "surfaceElev": 407
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        15.626083048335547,
+                        46.87210363991202
+                    ]
+                },
+                "properties": {
+                    "altm": 600,
+                    "windDir": 297,
+                    "distToNextPoint": 1065.9360639856325,
+                    "totDistCovered": 4250.429605025802,
+                    "t": 1689225300000,
+                    "tstr": "2023-07-13T05:15:00Z",
+                    "surfaceElev": 370
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        15.63857617796909,
+                        46.86775091960674
+                    ]
+                },
+                "properties": {
+                    "altm": 600,
+                    "windDir": 299,
+                    "distToNextPoint": 1157.0942327526388,
+                    "totDistCovered": 5316.365669011434,
+                    "t": 1689226200000,
+                    "tstr": "2023-07-13T05:30:00Z",
+                    "surfaceElev": 328
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        15.651887045872304,
+                        46.86270521995777
+                    ]
+                },
+                "properties": {
+                    "altm": 600,
+                    "windDir": 300,
+                    "distToNextPoint": 1265.4926626209037,
+                    "totDistCovered": 6473.459901764073,
+                    "t": 1689227100000,
+                    "tstr": "2023-07-13T05:45:00Z",
+                    "surfaceElev": 291
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        15.666300318916287,
+                        46.85701389088983
+                    ]
+                },
+                "properties": {
+                    "altm": 600,
+                    "totDistCovered": 7738.9525643849765,
+                    "t": 1689228000000,
+                    "tstr": "2023-07-13T06:00:00Z",
+                    "surfaceElev": 355
+                }
+            }
+        ],
+        "description": {
+            "alt": 2000,
+            "altm": 600,
+            "lvl": "950h",
+            "ascent": 0,
+            "descent": 0,
+            "calcBackward": false,
+            "totDist": 7738.9525643849765,
+            "duration": 7200000,
+            "sample": 15,
+            "sampleAscDes": 1,
+            "startTime": "2023-07-13T04:00:00Z"
+        }
+    },
+    {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        15.575199999999995,
+                        46.8879
+                    ]
+                },
+                "properties": {
+                    "altm": 750,
+                    "windDir": 313,
+                    "distToNextPoint": 2953.6997230683724,
+                    "totDistCovered": 0,
+                    "t": 1689220800000,
+                    "tstr": "2023-07-13T04:00:00Z",
+                    "surfaceElev": 359
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        15.603616424641384,
+                        46.86978038384348
+                    ]
+                },
+                "properties": {
+                    "altm": 750,
+                    "windDir": 310,
+                    "distToNextPoint": 3002.4608838822815,
+                    "totDistCovered": 2953.6997230683724,
+                    "t": 1689221700000,
+                    "tstr": "2023-07-13T04:15:00Z",
+                    "surfaceElev": 411
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        15.633862325623367,
+                        46.85241999053752
+                    ]
+                },
+                "properties": {
+                    "altm": 750,
+                    "windDir": 307,
+                    "distToNextPoint": 3084.7369168142204,
+                    "totDistCovered": 5956.160606950654,
+                    "t": 1689222600000,
+                    "tstr": "2023-07-13T04:30:00Z",
+                    "surfaceElev": 310
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        15.666249044037677,
+                        46.8357200472254
+                    ]
+                },
+                "properties": {
+                    "altm": 750,
+                    "windDir": 306,
+                    "distToNextPoint": 3081.870416599858,
+                    "totDistCovered": 9040.897523764874,
+                    "t": 1689223500000,
+                    "tstr": "2023-07-13T04:45:00Z",
+                    "surfaceElev": 374
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        15.699016336359044,
+                        46.8194243580946
+                    ]
+                },
+                "properties": {
+                    "altm": 750,
+                    "windDir": 304,
+                    "distToNextPoint": 3094.5418130530707,
+                    "totDistCovered": 12122.76794036473,
+                    "t": 1689224400000,
+                    "tstr": "2023-07-13T05:00:00Z",
+                    "surfaceElev": 323
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        15.73272281636707,
+                        46.80385713663876
+                    ]
+                },
+                "properties": {
+                    "altm": 750,
+                    "windDir": 304,
+                    "distToNextPoint": 3155.937970939402,
+                    "totDistCovered": 15217.309753417801,
+                    "t": 1689225300000,
+                    "tstr": "2023-07-13T05:15:00Z",
+                    "surfaceElev": 385
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        15.76708789760661,
+                        46.78798096197018
+                    ]
+                },
+                "properties": {
+                    "altm": 750,
+                    "windDir": 306,
+                    "distToNextPoint": 3027.366765850466,
+                    "totDistCovered": 18373.247724357203,
+                    "t": 1689226200000,
+                    "tstr": "2023-07-13T05:30:00Z",
+                    "surfaceElev": 258
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        15.799247322026963,
+                        46.771973554919676
+                    ]
+                },
+                "properties": {
+                    "altm": 750,
+                    "windDir": 307,
+                    "distToNextPoint": 2921.385082597349,
+                    "totDistCovered": 21400.61449020767,
+                    "t": 1689227100000,
+                    "tstr": "2023-07-13T05:45:00Z",
+                    "surfaceElev": 308
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        15.829873690927608,
+                        46.75615819540753
+                    ]
+                },
+                "properties": {
+                    "altm": 750,
+                    "totDistCovered": 24321.99957280502,
+                    "t": 1689228000000,
+                    "tstr": "2023-07-13T06:00:00Z",
+                    "surfaceElev": 245
+                }
+            }
+        ],
+        "description": {
+            "alt": 2500,
+            "altm": 750,
+            "lvl": "925h",
+            "ascent": 0,
+            "descent": 0,
+            "calcBackward": false,
+            "totDist": 24321.99957280502,
+            "duration": 7200000,
+            "sample": 15,
+            "sampleAscDes": 1,
+            "startTime": "2023-07-13T04:00:00Z"
+        }
+    },
+    {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        15.575199999999995,
+                        46.8879
+                    ]
+                },
+                "properties": {
+                    "altm": 900,
+                    "windDir": 306,
+                    "distToNextPoint": 3622.33646472569,
+                    "totDistCovered": 0,
+                    "t": 1689220800000,
+                    "tstr": "2023-07-13T04:00:00Z",
+                    "surfaceElev": 359
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        15.613749051294086,
+                        46.868745568905915
+                    ]
+                },
+                "properties": {
+                    "altm": 900,
+                    "windDir": 301,
+                    "distToNextPoint": 3479.8572239610603,
+                    "totDistCovered": 3622.33646472569,
+                    "t": 1689221700000,
+                    "tstr": "2023-07-13T04:15:00Z",
+                    "surfaceElev": 433
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        15.652974132678509,
+                        46.85262069620965
+                    ]
+                },
+                "properties": {
+                    "altm": 900,
+                    "windDir": 297,
+                    "distToNextPoint": 3455.2269621517516,
+                    "totDistCovered": 7102.19368868675,
+                    "t": 1689222600000,
+                    "tstr": "2023-07-13T04:30:00Z",
+                    "surfaceElev": 286
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        15.693448511380069,
+                        46.83850644156223
+                    ]
+                },
+                "properties": {
+                    "altm": 900,
+                    "windDir": 296,
+                    "distToNextPoint": 3531.874872248483,
+                    "totDistCovered": 10557.420650838501,
+                    "t": 1689223500000,
+                    "tstr": "2023-07-13T04:45:00Z",
+                    "surfaceElev": 409
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        15.735171522943762,
+                        46.824574915137774
+                    ]
+                },
+                "properties": {
+                    "altm": 900,
+                    "windDir": 294,
+                    "distToNextPoint": 3648.0951250706394,
+                    "totDistCovered": 14089.295523086985,
+                    "t": 1689224400000,
+                    "tstr": "2023-07-13T05:00:00Z",
+                    "surfaceElev": 325
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        15.778963910662874,
+                        46.81122230319713
+                    ]
+                },
+                "properties": {
+                    "altm": 900,
+                    "windDir": 294,
+                    "distToNextPoint": 3608.1739805738025,
+                    "totDistCovered": 17737.390648157623,
+                    "t": 1689225300000,
+                    "tstr": "2023-07-13T05:15:00Z",
+                    "surfaceElev": 331
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        15.822266446031888,
+                        46.798015903219174
+                    ]
+                },
+                "properties": {
+                    "altm": 900,
+                    "windDir": 295,
+                    "distToNextPoint": 3580.576527714771,
+                    "totDistCovered": 21345.564628731427,
+                    "t": 1689226200000,
+                    "tstr": "2023-07-13T05:30:00Z",
+                    "surfaceElev": 249
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        15.864886548272768,
+                        46.784399303873705
+                    ]
+                },
+                "properties": {
+                    "altm": 900,
+                    "windDir": 297,
+                    "distToNextPoint": 3890.342749039613,
+                    "totDistCovered": 24926.141156446196,
+                    "t": 1689227100000,
+                    "tstr": "2023-07-13T05:45:00Z",
+                    "surfaceElev": 276
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        15.91039859751603,
+                        46.7685066553791
+                    ]
+                },
+                "properties": {
+                    "altm": 900,
+                    "totDistCovered": 28816.48390548581,
+                    "t": 1689228000000,
+                    "tstr": "2023-07-13T06:00:00Z",
+                    "surfaceElev": 256
+                }
+            }
+        ],
+        "description": {
+            "alt": 3000,
+            "altm": 900,
+            "lvl": "900h",
+            "ascent": 0,
+            "descent": 0,
+            "calcBackward": false,
+            "totDist": 28816.48390548581,
+            "duration": 7200000,
+            "sample": 15,
+            "sampleAscDes": 1,
+            "startTime": "2023-07-13T04:00:00Z"
+        }
+    },
+    {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        15.575199999999995,
+                        46.8879
+                    ]
+                },
+                "properties": {
+                    "altm": 1500,
+                    "windDir": 304,
+                    "distToNextPoint": 5707.23817578731,
+                    "totDistCovered": 0,
+                    "t": 1689220800000,
+                    "tstr": "2023-07-13T04:00:00Z",
+                    "surfaceElev": 359
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        15.63742861297009,
+                        46.85918176056702
+                    ]
+                },
+                "properties": {
+                    "altm": 1500,
+                    "windDir": 301,
+                    "distToNextPoint": 5629.665120352707,
+                    "totDistCovered": 5707.23817578731,
+                    "t": 1689221700000,
+                    "tstr": "2023-07-13T04:15:00Z",
+                    "surfaceElev": 339
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        15.700863345624821,
+                        46.83308847665541
+                    ]
+                },
+                "properties": {
+                    "altm": 1500,
+                    "windDir": 295,
+                    "distToNextPoint": 6028.471780511233,
+                    "totDistCovered": 11336.903296140017,
+                    "t": 1689222600000,
+                    "tstr": "2023-07-13T04:30:00Z",
+                    "surfaceElev": 349
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        15.772655444984357,
+                        46.81015363023338
+                    ]
+                },
+                "properties": {
+                    "altm": 1500,
+                    "windDir": 290,
+                    "distToNextPoint": 6571.907532940005,
+                    "totDistCovered": 17365.37507665125,
+                    "t": 1689223500000,
+                    "tstr": "2023-07-13T04:45:00Z",
+                    "surfaceElev": 350
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        15.853771644264434,
+                        46.789910695579344
+                    ]
+                },
+                "properties": {
+                    "altm": 1500,
+                    "windDir": 285,
+                    "distToNextPoint": 7467.129107466134,
+                    "totDistCovered": 23937.282609591253,
+                    "t": 1689224400000,
+                    "tstr": "2023-07-13T05:00:00Z",
+                    "surfaceElev": 251
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        15.948479779774493,
+                        46.77249101948232
+                    ]
+                },
+                "properties": {
+                    "altm": 1500,
+                    "windDir": 282,
+                    "distToNextPoint": 8559.12815499969,
+                    "totDistCovered": 31404.411717057388,
+                    "t": 1689225300000,
+                    "tstr": "2023-07-13T05:15:00Z",
+                    "surfaceElev": 324
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        16.058378938135032,
+                        46.75643459686022
+                    ]
+                },
+                "properties": {
+                    "altm": 1500,
+                    "windDir": 280,
+                    "distToNextPoint": 9551.012431235327,
+                    "totDistCovered": 39963.53987205708,
+                    "t": 1689226200000,
+                    "tstr": "2023-07-13T05:30:00Z",
+                    "surfaceElev": 308
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        16.181814596330305,
+                        46.74145283574185
+                    ]
+                },
+                "properties": {
+                    "altm": 1500,
+                    "windDir": 279,
+                    "distToNextPoint": 10609.976947366096,
+                    "totDistCovered": 49514.55230329241,
+                    "t": 1689227100000,
+                    "tstr": "2023-07-13T05:45:00Z",
+                    "surfaceElev": 307
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        16.31929896033397,
+                        46.726443861756245
+                    ]
+                },
+                "properties": {
+                    "altm": 1500,
+                    "totDistCovered": 60124.52925065851,
+                    "t": 1689228000000,
+                    "tstr": "2023-07-13T06:00:00Z",
+                    "surfaceElev": 223
+                }
+            }
+        ],
+        "description": {
+            "alt": 5000,
+            "altm": 1500,
+            "lvl": "850h",
+            "ascent": 0,
+            "descent": 0,
+            "calcBackward": false,
+            "totDist": 60124.52925065851,
+            "duration": 7200000,
+            "sample": 15,
+            "sampleAscDes": 1,
+            "startTime": "2023-07-13T04:00:00Z"
+        }
+    },
+    {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        15.575199999999995,
+                        46.8879
+                    ]
+                },
+                "properties": {
+                    "altm": 2000,
+                    "windDir": 285,
+                    "distToNextPoint": 6867.842524796292,
+                    "totDistCovered": 0,
+                    "t": 1689220800000,
+                    "tstr": "2023-07-13T04:00:00Z",
+                    "surfaceElev": 359
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        15.662468360074946,
+                        46.87188113772208
+                    ]
+                },
+                "properties": {
+                    "altm": 2000,
+                    "windDir": 282,
+                    "distToNextPoint": 7146.544677129583,
+                    "totDistCovered": 6867.842524796292,
+                    "t": 1689221700000,
+                    "tstr": "2023-07-13T04:15:00Z",
+                    "surfaceElev": 295
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        15.754404194816662,
+                        46.858481758487045
+                    ]
+                },
+                "properties": {
+                    "altm": 2000,
+                    "windDir": 281,
+                    "distToNextPoint": 7566.927809916853,
+                    "totDistCovered": 14014.387201925874,
+                    "t": 1689222600000,
+                    "tstr": "2023-07-13T04:30:00Z",
+                    "surfaceElev": 307
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        15.852070590488152,
+                        46.84545547224361
+                    ]
+                },
+                "properties": {
+                    "altm": 2000,
+                    "windDir": 278,
+                    "distToNextPoint": 8378.033789067917,
+                    "totDistCovered": 21581.31501184273,
+                    "t": 1689223500000,
+                    "tstr": "2023-07-13T04:45:00Z",
+                    "surfaceElev": 282
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        15.961136425008595,
+                        46.83491760700772
+                    ]
+                },
+                "properties": {
+                    "altm": 2000,
+                    "windDir": 275,
+                    "distToNextPoint": 9476.555478462902,
+                    "totDistCovered": 29959.348800910644,
+                    "t": 1689224400000,
+                    "tstr": "2023-07-13T05:00:00Z",
+                    "surfaceElev": 327
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        16.085223931826935,
+                        46.82742273000581
+                    ]
+                },
+                "properties": {
+                    "altm": 2000,
+                    "windDir": 271,
+                    "distToNextPoint": 10620.632889533792,
+                    "totDistCovered": 39435.90427937354,
+                    "t": 1689225300000,
+                    "tstr": "2023-07-13T05:15:00Z",
+                    "surfaceElev": 314
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        16.22479759166193,
+                        46.82567095690459
+                    ]
+                },
+                "properties": {
+                    "altm": 2000,
+                    "windDir": 271,
+                    "distToNextPoint": 11530.371569126452,
+                    "totDistCovered": 50056.537168907336,
+                    "t": 1689226200000,
+                    "tstr": "2023-07-13T05:30:00Z",
+                    "surfaceElev": 264
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        16.37632143750584,
+                        46.82376124871709
+                    ]
+                },
+                "properties": {
+                    "altm": 2000,
+                    "windDir": 268,
+                    "distToNextPoint": 12607.10062236309,
+                    "totDistCovered": 61586.90873803379,
+                    "t": 1689227100000,
+                    "tstr": "2023-07-13T05:45:00Z",
+                    "surfaceElev": 248
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        16.541931020965134,
+                        46.827598674722964
+                    ]
+                },
+                "properties": {
+                    "altm": 2000,
+                    "totDistCovered": 74194.00936039689,
+                    "t": 1689228000000,
+                    "tstr": "2023-07-13T06:00:00Z",
+                    "surfaceElev": 225
+                }
+            }
+        ],
+        "description": {
+            "alt": 6400,
+            "altm": 2000,
+            "lvl": "800h",
+            "ascent": 0,
+            "descent": 0,
+            "calcBackward": false,
+            "totDist": 74194.00936039689,
+            "duration": 7200000,
+            "sample": 15,
+            "sampleAscDes": 1,
+            "startTime": "2023-07-13T04:00:00Z"
+        }
+    },
+    {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        17.3529052734375,
+                        46.84516443029276
+                    ]
+                },
+                "properties": {
+                    "altm": 179,
+                    "windDir": 352,
+                    "distToNextPoint": 2911.2780132875123,
+                    "totDistCovered": 0,
+                    "t": 1689220800000,
+                    "tstr": "2023-07-13T04:00:00Z",
+                    "surfaceElev": 179
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        17.358230106413046,
+                        46.81923735362079
+                    ]
+                },
+                "properties": {
+                    "altm": 179,
+                    "windDir": 352,
+                    "distToNextPoint": 2951.455019794973,
+                    "totDistCovered": 2911.2780132875123,
+                    "t": 1689221700000,
+                    "tstr": "2023-07-13T04:15:00Z",
+                    "surfaceElev": 351
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        17.3636257874399,
+                        46.792952469478756
+                    ]
+                },
+                "properties": {
+                    "altm": 179,
+                    "windDir": 352,
+                    "distToNextPoint": 2964.7272260230206,
+                    "totDistCovered": 5862.733033082485,
+                    "t": 1689222600000,
+                    "tstr": "2023-07-13T04:30:00Z",
+                    "surfaceElev": 287
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        17.369043074788596,
+                        46.766549386094866
+                    ]
+                },
+                "properties": {
+                    "altm": 179,
+                    "windDir": 351,
+                    "distToNextPoint": 2906.8291894064623,
+                    "totDistCovered": 8827.460259105506,
+                    "t": 1689223500000,
+                    "tstr": "2023-07-13T04:45:00Z",
+                    "surfaceElev": 100
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        17.375010482434114,
+                        46.740729336247966
+                    ]
+                },
+                "properties": {
+                    "altm": 179,
+                    "windDir": 349,
+                    "distToNextPoint": 2852.2517917898645,
+                    "totDistCovered": 11734.289448511969,
+                    "t": 1689224400000,
+                    "tstr": "2023-07-13T05:00:00Z",
+                    "surfaceElev": 100
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        17.382149159313634,
+                        46.71554947719393
+                    ]
+                },
+                "properties": {
+                    "altm": 179,
+                    "windDir": 348,
+                    "distToNextPoint": 2738.180361099778,
+                    "totDistCovered": 14586.541240301833,
+                    "t": 1689225300000,
+                    "tstr": "2023-07-13T05:15:00Z",
+                    "surfaceElev": 100
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        17.389613272398705,
+                        46.691462303235305
+                    ]
+                },
+                "properties": {
+                    "altm": 179,
+                    "windDir": 346,
+                    "distToNextPoint": 2628.7453858507265,
+                    "totDistCovered": 17324.721601401612,
+                    "t": 1689226200000,
+                    "tstr": "2023-07-13T05:30:00Z",
+                    "surfaceElev": 102
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        17.39794771516916,
+                        46.66852336039286
+                    ]
+                },
+                "properties": {
+                    "altm": 179,
+                    "windDir": 345,
+                    "distToNextPoint": 2552.4785427397983,
+                    "totDistCovered": 19953.466987252337,
+                    "t": 1689227100000,
+                    "tstr": "2023-07-13T05:45:00Z",
+                    "surfaceElev": 105
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        17.406602038448696,
+                        46.646350215382014
+                    ]
+                },
+                "properties": {
+                    "altm": 179,
+                    "windDir": 343,
+                    "distToNextPoint": 2504.406464261225,
+                    "totDistCovered": 22505.945529992136,
+                    "t": 1689228000000,
+                    "tstr": "2023-07-13T06:00:00Z",
+                    "surfaceElev": 107
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        17.416190348752952,
+                        46.62481127984748
+                    ]
+                },
+                "properties": {
+                    "altm": 179,
+                    "totDistCovered": 25010.35199425336,
+                    "t": 1689228900000,
+                    "tstr": "2023-07-13T06:15:00Z",
+                    "surfaceElev": 122
+                }
+            }
+        ],
+        "description": {
+            "alt": 30,
+            "altm": 10,
+            "lvl": "surface",
+            "ascent": 0,
+            "descent": 0,
+            "calcBackward": false,
+            "totDist": 25010.35199425336,
+            "duration": 8100000,
+            "sample": 15,
+            "sampleAscDes": 1,
+            "startTime": "2023-07-13T04:00:00Z"
+        }
+    },
+    {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        17.3529052734375,
+                        46.84516443029276
+                    ]
+                },
+                "properties": {
+                    "altm": 600,
+                    "windDir": 5,
+                    "distToNextPoint": 4408.089037701061,
+                    "totDistCovered": 0,
+                    "t": 1689220800000,
+                    "tstr": "2023-07-13T04:00:00Z",
+                    "surfaceElev": 179
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        17.347857454011503,
+                        46.80567227535399
+                    ]
+                },
+                "properties": {
+                    "altm": 600,
+                    "windDir": 10,
+                    "distToNextPoint": 3955.953276920595,
+                    "totDistCovered": 4408.089037701061,
+                    "t": 1689221700000,
+                    "tstr": "2023-07-13T04:15:00Z",
+                    "surfaceElev": 392
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        17.33883766982383,
+                        46.770635669031584
+                    ]
+                },
+                "properties": {
+                    "altm": 600,
+                    "windDir": 13,
+                    "distToNextPoint": 3696.2803944282427,
+                    "totDistCovered": 8364.042314621656,
+                    "t": 1689222600000,
+                    "tstr": "2023-07-13T04:30:00Z",
+                    "surfaceElev": 208
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        17.327926616412807,
+                        46.73824567830669
+                    ]
+                },
+                "properties": {
+                    "altm": 600,
+                    "windDir": 14,
+                    "distToNextPoint": 3485.159101604169,
+                    "totDistCovered": 12060.322709049899,
+                    "t": 1689223500000,
+                    "tstr": "2023-07-13T04:45:00Z",
+                    "surfaceElev": 100
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        17.316868867913428,
+                        46.707833371533255
+                    ]
+                },
+                "properties": {
+                    "altm": 600,
+                    "windDir": 13,
+                    "distToNextPoint": 3208.9149718018107,
+                    "totDistCovered": 15545.481810654068,
+                    "t": 1689224400000,
+                    "tstr": "2023-07-13T05:00:00Z",
+                    "surfaceElev": 118
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        17.307406735135427,
+                        46.679714156375596
+                    ]
+                },
+                "properties": {
+                    "altm": 600,
+                    "windDir": 10,
+                    "distToNextPoint": 2939.092868757412,
+                    "totDistCovered": 18754.39678245588,
+                    "t": 1689225300000,
+                    "tstr": "2023-07-13T05:15:00Z",
+                    "surfaceElev": 128
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        17.30071995256252,
+                        46.653683624271
+                    ]
+                },
+                "properties": {
+                    "altm": 600,
+                    "windDir": 8,
+                    "distToNextPoint": 2844.760666865588,
+                    "totDistCovered": 21693.48965121329,
+                    "t": 1689226200000,
+                    "tstr": "2023-07-13T05:30:00Z",
+                    "surfaceElev": 124
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        17.295535160533586,
+                        46.62834893714266
+                    ]
+                },
+                "properties": {
+                    "altm": 600,
+                    "windDir": 7,
+                    "distToNextPoint": 2753.787176913764,
+                    "totDistCovered": 24538.250318078877,
+                    "t": 1689227100000,
+                    "tstr": "2023-07-13T05:45:00Z",
+                    "surfaceElev": 121
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        17.29114219284323,
+                        46.603768047543674
+                    ]
+                },
+                "properties": {
+                    "altm": 600,
+                    "totDistCovered": 27292.03749499264,
+                    "t": 1689228000000,
+                    "tstr": "2023-07-13T06:00:00Z",
+                    "surfaceElev": 112
+                }
+            }
+        ],
+        "description": {
+            "alt": 2000,
+            "altm": 600,
+            "lvl": "950h",
+            "ascent": 0,
+            "descent": 0,
+            "calcBackward": false,
+            "totDist": 27292.03749499264,
+            "duration": 7200000,
+            "sample": 15,
+            "sampleAscDes": 1,
+            "startTime": "2023-07-13T04:00:00Z"
+        }
+    },
+    {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        17.3529052734375,
+                        46.84516443029276
+                    ]
+                },
+                "properties": {
+                    "altm": 750,
+                    "windDir": 350,
+                    "distToNextPoint": 740.1904485920852,
+                    "totDistCovered": 0,
+                    "t": 1689220800000,
+                    "tstr": "2023-07-13T04:00:00Z",
+                    "surfaceElev": 179
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        17.354595080984932,
+                        46.83860885534768
+                    ]
+                },
+                "properties": {
+                    "altm": 750,
+                    "windDir": 343,
+                    "distToNextPoint": 698.189222493962,
+                    "totDistCovered": 740.1904485920852,
+                    "t": 1689221700000,
+                    "tstr": "2023-07-13T04:15:00Z",
+                    "surfaceElev": 197
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        17.35727846909659,
+                        46.83260421843813
+                    ]
+                },
+                "properties": {
+                    "altm": 750,
+                    "windDir": 338,
+                    "distToNextPoint": 668.1377830434466,
+                    "totDistCovered": 1438.3796710860472,
+                    "t": 1689222600000,
+                    "tstr": "2023-07-13T04:30:00Z",
+                    "surfaceElev": 184
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        17.36056828384575,
+                        46.82703299478215
+                    ]
+                },
+                "properties": {
+                    "altm": 750,
+                    "windDir": 331,
+                    "distToNextPoint": 648.5833777138832,
+                    "totDistCovered": 2106.5174541294937,
+                    "t": 1689223500000,
+                    "tstr": "2023-07-13T04:45:00Z",
+                    "surfaceElev": 215
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        17.364700907183185,
+                        46.82193139445853
+                    ]
+                },
+                "properties": {
+                    "altm": 750,
+                    "windDir": 326,
+                    "distToNextPoint": 638.1198723179484,
+                    "totDistCovered": 2755.100831843377,
+                    "t": 1689224400000,
+                    "tstr": "2023-07-13T05:00:00Z",
+                    "surfaceElev": 188
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        17.369390274715922,
+                        46.81717365942347
+                    ]
+                },
+                "properties": {
+                    "altm": 750,
+                    "windDir": 320,
+                    "distToNextPoint": 634.6478387711941,
+                    "totDistCovered": 3393.2207041613256,
+                    "t": 1689225300000,
+                    "tstr": "2023-07-13T05:15:00Z",
+                    "surfaceElev": 191
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        17.374750898670804,
+                        46.81280131636866
+                    ]
+                },
+                "properties": {
+                    "altm": 750,
+                    "windDir": 317,
+                    "distToNextPoint": 636.4021853754394,
+                    "totDistCovered": 4027.8685429325196,
+                    "t": 1689226200000,
+                    "tstr": "2023-07-13T05:30:00Z",
+                    "surfaceElev": 146
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        17.38045380493225,
+                        46.80861541637413
+                    ]
+                },
+                "properties": {
+                    "altm": 750,
+                    "windDir": 313,
+                    "distToNextPoint": 641.8103495967497,
+                    "totDistCovered": 4664.270728307959,
+                    "t": 1689227100000,
+                    "tstr": "2023-07-13T05:45:00Z",
+                    "surfaceElev": 132
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        17.386620942522804,
+                        46.804678797713485
+                    ]
+                },
+                "properties": {
+                    "altm": 750,
+                    "totDistCovered": 5306.081077904709,
+                    "t": 1689228000000,
+                    "tstr": "2023-07-13T06:00:00Z",
+                    "surfaceElev": 104
+                }
+            }
+        ],
+        "description": {
+            "alt": 2500,
+            "altm": 750,
+            "lvl": "925h",
+            "ascent": 0,
+            "descent": 0,
+            "calcBackward": false,
+            "totDist": 5306.081077904709,
+            "duration": 7200000,
+            "sample": 15,
+            "sampleAscDes": 1,
+            "startTime": "2023-07-13T04:00:00Z"
+        }
+    },
+    {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        17.3529052734375,
+                        46.84516443029276
+                    ]
+                },
+                "properties": {
+                    "altm": 900,
+                    "windDir": 243,
+                    "distToNextPoint": 3511.5330155744323,
+                    "totDistCovered": 0,
+                    "t": 1689220800000,
+                    "tstr": "2023-07-13T04:00:00Z",
+                    "surfaceElev": 179
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        17.39405529477107,
+                        46.859494067163865
+                    ]
+                },
+                "properties": {
+                    "altm": 900,
+                    "windDir": 238,
+                    "distToNextPoint": 3300.1814704356934,
+                    "totDistCovered": 3511.5330155744323,
+                    "t": 1689221700000,
+                    "tstr": "2023-07-13T04:15:00Z",
+                    "surfaceElev": 113
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        17.430874798077305,
+                        46.875215769263846
+                    ]
+                },
+                "properties": {
+                    "altm": 900,
+                    "windDir": 238,
+                    "distToNextPoint": 3109.4625512554185,
+                    "totDistCovered": 6811.714486010125,
+                    "t": 1689222600000,
+                    "tstr": "2023-07-13T04:30:00Z",
+                    "surfaceElev": 120
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        17.46557606653353,
+                        46.89002922595433
+                    ]
+                },
+                "properties": {
+                    "altm": 900,
+                    "windDir": 238,
+                    "distToNextPoint": 2989.1277894124228,
+                    "totDistCovered": 9921.177037265545,
+                    "t": 1689223500000,
+                    "tstr": "2023-07-13T04:45:00Z",
+                    "surfaceElev": 145
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        17.498943272080293,
+                        46.90426960129142
+                    ]
+                },
+                "properties": {
+                    "altm": 900,
+                    "windDir": 236,
+                    "distToNextPoint": 2943.568975017704,
+                    "totDistCovered": 12910.304826677968,
+                    "t": 1689224400000,
+                    "tstr": "2023-07-13T05:00:00Z",
+                    "surfaceElev": 159
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        17.531074196282017,
+                        46.91906814685349
+                    ]
+                },
+                "properties": {
+                    "altm": 900,
+                    "windDir": 234,
+                    "distToNextPoint": 2944.766135826752,
+                    "totDistCovered": 15853.873801695672,
+                    "t": 1689225300000,
+                    "tstr": "2023-07-13T05:15:00Z",
+                    "surfaceElev": 154
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        17.56245105136111,
+                        46.934630130346854
+                    ]
+                },
+                "properties": {
+                    "altm": 900,
+                    "windDir": 234,
+                    "distToNextPoint": 2864.8658765737423,
+                    "totDistCovered": 18798.639937522425,
+                    "t": 1689226200000,
+                    "tstr": "2023-07-13T05:30:00Z",
+                    "surfaceElev": 164
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        17.592985192608612,
+                        46.949769981914194
+                    ]
+                },
+                "properties": {
+                    "altm": 900,
+                    "windDir": 236,
+                    "distToNextPoint": 2734.72608089701,
+                    "totDistCovered": 21663.505814096166,
+                    "t": 1689227100000,
+                    "tstr": "2023-07-13T05:45:00Z",
+                    "surfaceElev": 213
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        17.622861258242235,
+                        46.96351887751362
+                    ]
+                },
+                "properties": {
+                    "altm": 900,
+                    "totDistCovered": 24398.231894993176,
+                    "t": 1689228000000,
+                    "tstr": "2023-07-13T06:00:00Z",
+                    "surfaceElev": 183
+                }
+            }
+        ],
+        "description": {
+            "alt": 3000,
+            "altm": 900,
+            "lvl": "900h",
+            "ascent": 0,
+            "descent": 0,
+            "calcBackward": false,
+            "totDist": 24398.231894993176,
+            "duration": 7200000,
+            "sample": 15,
+            "sampleAscDes": 1,
+            "startTime": "2023-07-13T04:00:00Z"
+        }
+    },
+    {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        17.3529052734375,
+                        46.84516443029276
+                    ]
+                },
+                "properties": {
+                    "altm": 1500,
+                    "windDir": 268,
+                    "distToNextPoint": 12027.305232895362,
+                    "totDistCovered": 0,
+                    "t": 1689220800000,
+                    "tstr": "2023-07-13T04:00:00Z",
+                    "surfaceElev": 179
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        17.510960971544936,
+                        46.84883053330993
+                    ]
+                },
+                "properties": {
+                    "altm": 1500,
+                    "windDir": 264,
+                    "distToNextPoint": 12606.38095629277,
+                    "totDistCovered": 12027.305232895362,
+                    "t": 1689221700000,
+                    "tstr": "2023-07-13T04:15:00Z",
+                    "surfaceElev": 123
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        17.67585546226276,
+                        46.86056275026836
+                    ]
+                },
+                "properties": {
+                    "altm": 1500,
+                    "windDir": 261,
+                    "distToNextPoint": 13171.931034266709,
+                    "totDistCovered": 24633.686189188134,
+                    "t": 1689222600000,
+                    "tstr": "2023-07-13T04:30:00Z",
+                    "surfaceElev": 100
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        17.84702231904689,
+                        46.87896613093157
+                    ]
+                },
+                "properties": {
+                    "altm": 1500,
+                    "windDir": 261,
+                    "distToNextPoint": 13751.802973805507,
+                    "totDistCovered": 37805.61722345484,
+                    "t": 1689223500000,
+                    "tstr": "2023-07-13T04:45:00Z",
+                    "surfaceElev": 100
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        18.02578852358233,
+                        46.8981737352251
+                    ]
+                },
+                "properties": {
+                    "altm": 1500,
+                    "windDir": 260,
+                    "distToNextPoint": 14101.196928058635,
+                    "totDistCovered": 51557.42019726035,
+                    "t": 1689224400000,
+                    "tstr": "2023-07-13T05:00:00Z",
+                    "surfaceElev": 111
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        18.208636666170268,
+                        46.920049429355856
+                    ]
+                },
+                "properties": {
+                    "altm": 1500,
+                    "windDir": 259,
+                    "distToNextPoint": 14047.20500186945,
+                    "totDistCovered": 65658.61712531898,
+                    "t": 1689225300000,
+                    "tstr": "2023-07-13T05:15:00Z",
+                    "surfaceElev": 158
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        18.39027767713546,
+                        46.94401065144274
+                    ]
+                },
+                "properties": {
+                    "altm": 1500,
+                    "windDir": 257,
+                    "distToNextPoint": 13144.516748872746,
+                    "totDistCovered": 79705.82212718844,
+                    "t": 1689226200000,
+                    "tstr": "2023-07-13T05:30:00Z",
+                    "surfaceElev": 130
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        18.559073126704202,
+                        46.970478458548726
+                    ]
+                },
+                "properties": {
+                    "altm": 1500,
+                    "windDir": 253,
+                    "distToNextPoint": 12575.655017606887,
+                    "totDistCovered": 92850.33887606119,
+                    "t": 1689227100000,
+                    "tstr": "2023-07-13T05:45:00Z",
+                    "surfaceElev": 100
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        18.717667152222617,
+                        47.00343496766489
+                    ]
+                },
+                "properties": {
+                    "altm": 1500,
+                    "totDistCovered": 105425.99389366807,
+                    "t": 1689228000000,
+                    "tstr": "2023-07-13T06:00:00Z",
+                    "surfaceElev": 127
+                }
+            }
+        ],
+        "description": {
+            "alt": 5000,
+            "altm": 1500,
+            "lvl": "850h",
+            "ascent": 0,
+            "descent": 0,
+            "calcBackward": false,
+            "totDist": 105425.99389366807,
+            "duration": 7200000,
+            "sample": 15,
+            "sampleAscDes": 1,
+            "startTime": "2023-07-13T04:00:00Z"
+        }
+    },
+    {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        17.3529052734375,
+                        46.84516443029276
+                    ]
+                },
+                "properties": {
+                    "altm": 2000,
+                    "windDir": 260,
+                    "distToNextPoint": 16828.014221573,
+                    "totDistCovered": 0,
+                    "t": 1689220800000,
+                    "tstr": "2023-07-13T04:00:00Z",
+                    "surfaceElev": 179
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        17.570913200461632,
+                        46.871237116007336
+                    ]
+                },
+                "properties": {
+                    "altm": 2000,
+                    "windDir": 259,
+                    "distToNextPoint": 16913.999682087575,
+                    "totDistCovered": 16828.014221573,
+                    "t": 1689221700000,
+                    "tstr": "2023-07-13T04:15:00Z",
+                    "surfaceElev": 134
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        17.78944475057455,
+                        46.90005345985655
+                    ]
+                },
+                "properties": {
+                    "altm": 2000,
+                    "windDir": 260,
+                    "distToNextPoint": 16823.290994392406,
+                    "totDistCovered": 33742.013903660576,
+                    "t": 1689222600000,
+                    "tstr": "2023-07-13T04:30:00Z",
+                    "surfaceElev": 129
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        18.007614681337202,
+                        46.926118488151694
+                    ]
+                },
+                "properties": {
+                    "altm": 2000,
+                    "windDir": 258,
+                    "distToNextPoint": 16780.244364811435,
+                    "totDistCovered": 50565.304898052986,
+                    "t": 1689223500000,
+                    "tstr": "2023-07-13T04:45:00Z",
+                    "surfaceElev": 100
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        18.223880558207707,
+                        46.95729056950973
+                    ]
+                },
+                "properties": {
+                    "altm": 2000,
+                    "windDir": 255,
+                    "distToNextPoint": 16221.496097061421,
+                    "totDistCovered": 67345.54926286443,
+                    "t": 1689224400000,
+                    "tstr": "2023-07-13T05:00:00Z",
+                    "surfaceElev": 110
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        18.43047807417509,
+                        46.994862266183034
+                    ]
+                },
+                "properties": {
+                    "altm": 2000,
+                    "windDir": 255,
+                    "distToNextPoint": 15967.621410984477,
+                    "totDistCovered": 83567.04535992585,
+                    "t": 1689225300000,
+                    "tstr": "2023-07-13T05:15:00Z",
+                    "surfaceElev": 138
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        18.633983120669722,
+                        47.03184857334952
+                    ]
+                },
+                "properties": {
+                    "altm": 2000,
+                    "windDir": 255,
+                    "distToNextPoint": 15824.963092681377,
+                    "totDistCovered": 99534.66677091032,
+                    "t": 1689226200000,
+                    "tstr": "2023-07-13T05:30:00Z",
+                    "surfaceElev": 123
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        18.835808670346086,
+                        47.0685058040053
+                    ]
+                },
+                "properties": {
+                    "altm": 2000,
+                    "windDir": 252,
+                    "distToNextPoint": 15271.949840801659,
+                    "totDistCovered": 115359.62986359169,
+                    "t": 1689227100000,
+                    "tstr": "2023-07-13T05:45:00Z",
+                    "surfaceElev": 124
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        19.027735274823588,
+                        47.11078719969881
+                    ]
+                },
+                "properties": {
+                    "altm": 2000,
+                    "totDistCovered": 130631.57970439334,
+                    "t": 1689228000000,
+                    "tstr": "2023-07-13T06:00:00Z",
+                    "surfaceElev": 94
+                }
+            }
+        ],
+        "description": {
+            "alt": 6400,
+            "altm": 2000,
+            "lvl": "800h",
+            "ascent": 0,
+            "descent": 0,
+            "calcBackward": false,
+            "totDist": 130631.57970439334,
+            "duration": 7200000,
+            "sample": 15,
+            "sampleAscDes": 1,
+            "startTime": "2023-07-13T04:00:00Z"
+        }
+    }
+]

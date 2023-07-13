@@ -18,6 +18,7 @@ import io
 import csv
 import zipfile
 import json
+import geojson
 from TheengsDecoder import decodeBLE
 from TheengsDecoder import getProperties, getAttribute
 import sys
@@ -69,17 +70,46 @@ def decode(input, debug=False, customDecoder=None):
                 if result:
                     sample["decoded"] = result
                     continue
-    output = json.dumps(j, indent=2).encode('utf-8')
+    output = json.dumps(j, indent=2).encode("utf-8")
     buffer = io.BytesIO()
     buffer.write(output)
     buffer.seek(0)
     return buffer
 
 
+def massage(fa):
+    if isinstance(fa, list):  # unfixed
+        fl = []
+        for fc in fa:
+            features = fc["features"]
+            cl = []
+            for f in features:
+                cl.append(f["geometry"]["coordinates"])
+            lsf = geojson.Feature(
+                geometry=geojson.LineString(cl, properties=fc["description"]),
+                properties=fc["description"],
+            )
+            fl = fl + features + [lsf]
+        return geojson.FeatureCollection(features=fl)
+    else:
+        return fa  # assume fixed
+
+
 @app.route("/")
 def index():
     return render_template("index.html")
 
+@app.route("/traj", methods=["POST"])
+def traj():
+    j = json.loads(request.data)
+    f = open('traj-orig.json', 'w')
+    f.write(json.dumps(j, indent=4))
+    f.close()
+    f = open('traj-geojson.json', 'w')
+    m = massage(j)
+    f.write(geojson.dumps(m, indent=4))
+    f.close()
+    return {}
 
 @app.route("/upload", methods=["POST"])
 def upload():
@@ -89,8 +119,7 @@ def upload():
         if fn and allowed_file(fn):
             base, ext = os.path.splitext(fn)
             file.save(
-                os.path.join(app.config["UPLOAD_FOLDER"],
-                             base + "-decoded" + ext)
+                os.path.join(app.config["UPLOAD_FOLDER"], base + "-decoded" + ext)
             )
     return redirect("/")  # change to redirect to your own url
 
@@ -108,9 +137,9 @@ def decode_ble():
             output = decode(input, customDecoder=custom.Decoder)
             base, ext = os.path.splitext(fn)
             response = make_response(
-                send_file(output,
-                          download_name=base + "-decoded" + ext,
-                          as_attachment=True)
+                send_file(
+                    output, download_name=base + "-decoded" + ext, as_attachment=True
+                )
             )
             return response
 
@@ -148,4 +177,4 @@ def postzip():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, port=5001)
