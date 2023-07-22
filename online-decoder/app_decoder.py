@@ -40,20 +40,41 @@ def allowed_file(filename):
 
 def decode(input, debug=False, customDecoder=None):
     j = json.loads(input.decode("utf-8"))
+    bleMeta = {}
     for sample in j:
-        if sample["sensor"].startswith("Bluetooth"):
+        if sample["sensor"].startswith("BluetoothMetadata"):
+            # example:
+            # {
+            #     "sensor": "BluetoothMetadata",
+            #     "time": "1689983283060000000",
+            #     "seconds_elapsed": "0.061",
+            #     "id": "659702ad-9718-92af-2443-eaabfe9f494d",
+            #     "name": "TPMS1_121A64",
+            #     "localName": "",
+            #     "isConnectable": "0",
+            #     "serviceUUIDs": "fbb0"
+            # },
+            if not isinstance(sample["serviceUUIDs"], list):
+                # mutate so we always have a list of serviceUUIDs
+                sample["serviceUUIDs"] = [sample["serviceUUIDs"]]
+            id = "bluetooth-" + sample["id"]
+            bleMeta[id] = sample
+            continue
+        meta = bleMeta.get(sample["sensor"], None)
+        if meta and "manufacturerData" in sample:
+            # see https://github.com/theengs/decoder/blob/development/examples/python/ScanAndDecode.py
             data = {}
-            data["name"] = sample["name"]
+            if meta["localName"]:
+               data["name"] = meta["localName"]
+            sl = meta["serviceUUIDs"][0]
+            if len(sl) > 4:
+                sl = sl[4:8]
+            data["servicedatauuid"] = sl
             data["id"] = sample["id"]
-            try:
-                # Kelvin fix needed
-                # this should be an array
-                # data['servicedatauuid'] = list(sample['serviceUUIDs'])
-                data["servicedatauuid"] = [sample["serviceUUIDs"]]
-            except KeyError:
-                pass
+            data["rssi"] = sample["rssi"]
             data["manufacturerdata"] = sample["manufacturerData"]
-            result = decodeBLE(json.dumps(data))
+            input = json.dumps(data)
+            result = decodeBLE(input)
             if result:
                 js = json.loads(result)
                 js.pop("id", None)
@@ -133,7 +154,8 @@ def decode_ble():
     for file in files:
         fn = secure_filename(file.filename)
         if fn and allowed_file(fn):
-            input = file.stream._file.getvalue()
+            input = file.stream.read()
+            # input = file.stream._file.getvalue()
             output = decode(input, customDecoder=custom.Decoder)
             base, ext = os.path.splitext(fn)
             response = make_response(
