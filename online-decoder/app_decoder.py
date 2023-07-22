@@ -15,15 +15,18 @@ from flask import (
 )
 from werkzeug.utils import secure_filename
 import io
-import csv
 import zipfile
 import json
 import geojson
 from TheengsDecoder import decodeBLE
 from TheengsDecoder import getProperties, getAttribute
-import sys
 import codecs
 import custom
+
+# pip install git+https://github.com/mhaberler/uttlv.git@ltv-option
+
+from uttlv import TLV
+import bleads
 
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -32,6 +35,7 @@ app.config["UPLOAD_FOLDER"] = "/tmp/sensorlogger-upload"
 ALLOWED_EXTENSIONS = ["zip", "json"]
 
 reader = codecs.getreader("utf-8")
+
 
 
 def allowed_file(filename):
@@ -43,7 +47,7 @@ def decode(input, debug=False, customDecoder=None):
     bleMeta = {}
     for sample in j:
         if sample["sensor"].startswith("BluetoothMetadata"):
-            # example:
+            # iOS example:
             # {
             #     "sensor": "BluetoothMetadata",
             #     "time": "1689983283060000000",
@@ -54,10 +58,23 @@ def decode(input, debug=False, customDecoder=None):
             #     "isConnectable": "0",
             #     "serviceUUIDs": "fbb0"
             # },
+            # android example:
+            # {
+            #     "sensor": "BluetoothMetadata",
+            #     "time": "1689983118942000000",
+            #     "seconds_elapsed": "0.103000244140625",
+            #     "id": "DC:23:4D:EB:88:46",
+            #     "name": "TY",
+            #     "localName": "TY",
+            #     "isConnectable": "true",
+            #     "serviceUUIDs": [
+            #     "a201"
+            #     ]
+            # },
             if not isinstance(sample["serviceUUIDs"], list):
                 # mutate so we always have a list of serviceUUIDs
                 sample["serviceUUIDs"] = [sample["serviceUUIDs"]]
-            id = "bluetooth-" + sample["id"]
+            id = "bluetooth-" + sample["id"].replace(":", "")
             bleMeta[id] = sample
             continue
         meta = bleMeta.get(sample["sensor"], None)
@@ -91,6 +108,34 @@ def decode(input, debug=False, customDecoder=None):
                 if result:
                     sample["decoded"] = result
                     continue
+            # try splitting up the advertisement
+            tlv = TLV(len_size=1,ltv=True,lenTV=True)
+            tlv.set_tag_map(bleads.bleAdvConfig)
+            tlv.parse_array(bytes(bytearray.fromhex(data["manufacturerdata"])))
+            if bleads.BLE_HS_ADV_TYPE_MFG_DATA in tlv:  # ha!
+                data = {}
+                if meta["localName"]:
+                    data["name"] = meta["localName"]
+                sl = meta["serviceUUIDs"][0]
+                if len(sl) > 4:
+                    sl = sl[4:8]
+                data["servicedatauuid"] = sl
+                data["id"] = sample["id"]
+                data["rssi"] = sample["rssi"]
+                data["manufacturerdata"] = tlv[bleads.BLE_HS_ADV_TYPE_MFG_DATA].hex()
+                input = json.dumps(data)
+                result = decodeBLE(input)              
+                if result:
+                    js = json.loads(result)
+                    js.pop("id", None)
+                    js.pop("mfid", None)
+                    js.pop("manufacturerdata", None)
+                    js.pop("servicedatauuid", None)
+                    sample["decoded"] = js
+                    if debug and sample["decoded"]:
+                        print(json.dumps(sample, indent=2))
+                continue
+
     output = json.dumps(j, indent=2).encode("utf-8")
     buffer = io.BytesIO()
     buffer.write(output)
@@ -199,4 +244,4 @@ def postzip():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5001)
+    app.run(debug=True, port=5000)
