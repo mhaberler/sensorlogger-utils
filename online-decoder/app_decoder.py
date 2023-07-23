@@ -228,7 +228,9 @@ def massage(fa):
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return redirect('/sensorlogger')
+    # return render_template("index.html")
+
 
 
 # receive a JSON file by upload
