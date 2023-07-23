@@ -19,6 +19,13 @@
         <input type="radio" name="destfmt"  value="gpx"> GPX<br>
         <input type="radio" name="destfmt"  value="influxdbv2"> InfluxDBv2 import file<br>
         <br>
+        Timestamps (absolute time only):
+        <br>
+        <input type="radio" name="timestamp" value="linux_timestamp_float" checked> convert time to Unix epoch (float)<br>
+        <input type="radio" name="timestamp" value="linux_timestamp" > convert time to Unix epoch (int, 1s resolution)<br>
+        <input type="radio" name="timestamp" value="iso8061"> convert time to ISO8601 strings<br>
+        <input type="radio" name="timestamp" value="untouched"> leave untouched<br>
+        <br>
         Conversion options:<br>
         <input type="checkbox" name="options" value="decode_ble" checked> decode BLE beacon reports<br>
         <input type="checkbox" name="options" value="drop_metadata" checked> drop sensorlogger metadata<br>
@@ -28,7 +35,7 @@
         <input type="checkbox" name="options" value="drop_useless" checked> drop useless data<br>
         <input type="checkbox" name="options" value="prettyprint" checked> Prettyprint JSON<br>
         <input type="checkbox" name="options" value="gzip"> gzip the result<br>
-        <br>
+
         <br>
         <input type="file" name="files">
         <input type="submit" value="Decode">

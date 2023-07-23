@@ -22,6 +22,7 @@ from TheengsDecoder import decodeBLE
 from TheengsDecoder import getProperties, getAttribute
 import codecs
 import custom
+from flatten_json import flatten
 
 # pip install git+https://github.com/mhaberler/uttlv.git@ltv-option
 
@@ -35,12 +36,22 @@ app.config["UPLOAD_FOLDER"] = "/tmp/sensorlogger-upload"
 ALLOWED_EXTENSIONS = ["zip", "json"]
 
 reader = codecs.getreader("utf-8")
-
-
+decoded = "values"
+suffix = "-processed"
 def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
-
+def traverse(dict_or_list, path=[]):
+    if isinstance(dict_or_list, dict):
+        iterator = dict_or_list.iteritems()
+    else:
+        iterator = enumerate(dict_or_list)
+    for k, v in iterator:
+        yield path + [k], v
+        if isinstance(v, (dict, list)):
+            for k, v in traverse(v, path + [k]):
+                yield k, v
+                
 def decode_ble_beacons(j, debug=False, customDecoder=None):
     bleMeta = {}
     for sample in j:
@@ -72,15 +83,15 @@ def decode_ble_beacons(j, debug=False, customDecoder=None):
                 js.pop("mfid", None)
                 js.pop("manufacturerdata", None)
                 js.pop("servicedatauuid", None)
-                sample["decoded"] = js
-                if debug and sample["decoded"]:
+                sample[decoded] = js
+                if debug and sample[decoded]:
                     print(json.dumps(sample, indent=2))
                 continue
 
             if customDecoder:
                 result = customDecoder(data, debug)
                 if result:
-                    sample["decoded"] = result
+                    sample[decoded] = result
                     continue
             # try splitting up the advertisement
             tlv = TLV(len_size=1, ltv=True, lenTV=True)
@@ -105,8 +116,8 @@ def decode_ble_beacons(j, debug=False, customDecoder=None):
                     js.pop("mfid", None)
                     js.pop("manufacturerdata", None)
                     js.pop("servicedatauuid", None)
-                    sample["decoded"] = js
-                    if debug and sample["decoded"]:
+                    sample[decoded] = js
+                    if debug and sample[decoded]:
                         print(json.dumps(sample, indent=2))
                 continue
     return
@@ -116,6 +127,12 @@ def decode(input, options, destfmt, debug=False, customDecoder=None):
     j = json.loads(input.decode("utf-8"))
     if "decode_ble" in options:
         decode_ble_beacons(j, debug=debug, customDecoder=customDecoder)
+    if "flatten_json" in options:
+        result = []
+        for report in j:
+            result.append(flatten(report))
+        j = result
+
     output = json.dumps(j, indent=2).encode("utf-8")
     buffer = io.BytesIO()
     buffer.write(output)
@@ -166,7 +183,7 @@ def sensorlogger():
                 response = make_response(
                     send_file(
                         output,
-                        download_name=base + "-decoded" + ext,
+                        download_name=base + suffix + ext,
                         as_attachment=True,
                     )
                 )
@@ -206,7 +223,7 @@ def upload():
         if fn and allowed_file(fn):
             base, ext = os.path.splitext(fn)
             file.save(
-                os.path.join(app.config["UPLOAD_FOLDER"], base + "-decoded" + ext)
+                os.path.join(app.config["UPLOAD_FOLDER"], base + suffix + ext)
             )
     return redirect("/")  # change to redirect to your own url
 
