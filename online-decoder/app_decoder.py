@@ -36,6 +36,7 @@ ALLOWED_EXTENSIONS = ["zip", "json"]
 
 reader = codecs.getreader("utf-8")
 
+
 def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
@@ -80,7 +81,7 @@ def decode(input, debug=False, customDecoder=None):
             # see https://github.com/theengs/decoder/blob/development/examples/python/ScanAndDecode.py
             data = {}
             if meta["localName"]:
-               data["name"] = meta["localName"]
+                data["name"] = meta["localName"]
             sl = meta["serviceUUIDs"][0]
             if len(sl) > 4:
                 sl = sl[4:8]
@@ -107,7 +108,7 @@ def decode(input, debug=False, customDecoder=None):
                     sample["decoded"] = result
                     continue
             # try splitting up the advertisement
-            tlv = TLV(len_size=1,ltv=True,lenTV=True)
+            tlv = TLV(len_size=1, ltv=True, lenTV=True)
             tlv.set_tag_map(bleads.bleAdvConfig)
             tlv.parse_array(bytes(bytearray.fromhex(data["manufacturerdata"])))
             if bleads.BLE_HS_ADV_TYPE_MFG_DATA in tlv:  # ha!
@@ -122,7 +123,7 @@ def decode(input, debug=False, customDecoder=None):
                 data["rssi"] = sample["rssi"]
                 data["manufacturerdata"] = tlv[bleads.BLE_HS_ADV_TYPE_MFG_DATA].hex()
                 input = json.dumps(data)
-                result = decodeBLE(input)              
+                result = decodeBLE(input)
                 if result:
                     js = json.loads(result)
                     js.pop("id", None)
@@ -163,37 +164,59 @@ def massage(fa):
 def index():
     return render_template("index.html")
 
+# receive a JSON file by upload
+# convert as per options
+@app.route("/sensorlogger",methods=["GET", "POST"])
+def sensorlogger():
+    if request.method == "GET":
+        return render_template("sensorlogger.html")
+    if request.method == "POST":
+        options = request.form['options']
+        destfmt = request.form['destfmt']
+        # if "download" in request.form:
+        #     return {}
+        # elif "watch" in request.form:
+        #     return {}
+        files = request.files.getlist("files")
+        for file in files:
+            fn = secure_filename(file.filename)
+            if fn and allowed_file(fn):
+                input = file.stream.read()
+                # input = file.stream._file.getvalue()
+                output = decode(input, customDecoder=custom.Decoder)
+                base, ext = os.path.splitext(fn)
+                response = make_response(
+                    send_file(
+                        output, download_name=base + "-decoded" + ext, as_attachment=True
+                    )
+                )
+                return response
 
-# @app.route("/download")
-# def download(): 
-#     return render_template("index.html")
 
-
-@app.route("/form",methods=["GET", "POST"])
+@app.route("/form", methods=["GET", "POST"])
 def form():
-    if request.method == 'GET':
+    if request.method == "GET":
         return render_template("form.html")
-    if request.method == 'POST':
-        #option = request.form['options']
-        if 'download' in request.form:
+    if request.method == "POST":
+        # option = request.form['options']
+        if "download" in request.form:
             return {}
-        elif 'watch' in request.form:
+        elif "watch" in request.form:
             return {}
-
-
 
 
 @app.route("/traj", methods=["POST"])
 def traj():
     j = json.loads(request.data)
-    f = open('traj-orig.json', 'w')
+    f = open("traj-orig.json", "w")
     f.write(json.dumps(j, indent=4))
     f.close()
-    f = open('traj-geojson.json', 'w')
+    f = open("traj-geojson.json", "w")
     m = massage(j)
     f.write(geojson.dumps(m, indent=4))
     f.close()
     return {}
+
 
 @app.route("/upload", methods=["POST"])
 def upload():
@@ -207,26 +230,6 @@ def upload():
             )
     return redirect("/")  # change to redirect to your own url
 
-
-# receive a JSON file by upload
-# convert BLE ads
-# send JSON file as <basename>-decoded.json
-@app.route("/decode_ble", methods=["POST"])
-def decode_ble():
-    files = request.files.getlist("files")
-    for file in files:
-        fn = secure_filename(file.filename)
-        if fn and allowed_file(fn):
-            input = file.stream.read()
-            # input = file.stream._file.getvalue()
-            output = decode(input, customDecoder=custom.Decoder)
-            base, ext = os.path.splitext(fn)
-            response = make_response(
-                send_file(
-                    output, download_name=base + "-decoded" + ext, as_attachment=True
-                )
-            )
-            return response
 
 
 # upload several files
@@ -259,6 +262,12 @@ def postzip():
     # file_names = [file_name for file_name in file_names if file_name.endswith(".txt")]
     # files = [(zipfile_ob.open(name).read(),name) for name in file_names]
     return str(file_names)
+
+
+# @app.route("/download")
+# def download():
+#     return render_template("index.html")
+
 
 
 if __name__ == "__main__":
