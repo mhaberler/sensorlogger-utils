@@ -36,8 +36,6 @@ ALLOWED_EXTENSIONS = ["zip", "json"]
 
 reader = codecs.getreader("utf-8")
 
-
-
 def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
@@ -164,6 +162,26 @@ def massage(fa):
 @app.route("/")
 def index():
     return render_template("index.html")
+
+
+# @app.route("/download")
+# def download(): 
+#     return render_template("index.html")
+
+
+@app.route("/form",methods=["GET", "POST"])
+def form():
+    if request.method == 'GET':
+        return render_template("form.html")
+    if request.method == 'POST':
+        #option = request.form['options']
+        if 'download' in request.form:
+            return {}
+        elif 'watch' in request.form:
+            return {}
+
+
+
 
 @app.route("/traj", methods=["POST"])
 def traj():
