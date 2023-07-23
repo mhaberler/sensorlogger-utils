@@ -70,13 +70,12 @@ t2 = [
     },
 ]
 
-import re
+
 import json
 import arrow
-import copy
+
 
 # arrow.Arrow.fromtimestamp(1690028917795.12312).isoformat()
-metadataNames = ["BluetoothMetadata", "Metadata"]
 
 
 def traverse_and_modify(obj, **kwargs):
