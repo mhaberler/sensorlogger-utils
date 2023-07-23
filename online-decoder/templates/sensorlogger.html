@@ -12,17 +12,21 @@
 
     <form action="/sensorlogger" method="post" enctype="multipart/form-data">
         Output format:<br>
-        <br>
         <input type="radio" name="destfmt"  value="canonical" checked> sanitized JSON<br>
         <input type="radio" name="destfmt"  value="plotjuggler"> JSON for plotJuggler <br>
         <input type="radio" name="destfmt"  value="teleplot"> JSON Teleplot recording<br>
+        <input type="radio" name="destfmt"  value="geojson"> GeoJSON<br>
+        <input type="radio" name="destfmt"  value="gpx"> GPX<br>
         <input type="radio" name="destfmt"  value="influxdbv2"> InfluxDBv2 import file<br>
         <br>
         Conversion options:<br>
+        <input type="checkbox" name="options" value="decode_ble" checked> decode BLE beacon reports<br>
+        <input type="checkbox" name="options" value="drop_metadata" checked> drop sensorlogger metadata<br>
         <input type="checkbox" name="options" value="flatten_json" checked> flatten JSON <br>
         <input type="checkbox" name="options" value="strings_to_numeric" checked> convert strings to numeric<br>
         <input type="checkbox" name="options" value="fix_keys" checked> fix key syntax<br>
         <input type="checkbox" name="options" value="drop_useless" checked> drop useless data<br>
+        <input type="checkbox" name="options" value="prettyprint" checked> Prettyprint JSON<br>
         <input type="checkbox" name="options" value="gzip"> gzip the result<br>
         <br>
         <br>

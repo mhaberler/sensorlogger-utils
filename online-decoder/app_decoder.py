@@ -41,35 +41,10 @@ def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-def decode(input, debug=False, customDecoder=None):
-    j = json.loads(input.decode("utf-8"))
+def decode_ble_beacons(j, debug=False, customDecoder=None):
     bleMeta = {}
     for sample in j:
         if sample["sensor"].startswith("BluetoothMetadata"):
-            # iOS example:
-            # {
-            #     "sensor": "BluetoothMetadata",
-            #     "time": "1689983283060000000",
-            #     "seconds_elapsed": "0.061",
-            #     "id": "659702ad-9718-92af-2443-eaabfe9f494d",
-            #     "name": "TPMS1_121A64",
-            #     "localName": "",
-            #     "isConnectable": "0",
-            #     "serviceUUIDs": "fbb0"
-            # },
-            # android example:
-            # {
-            #     "sensor": "BluetoothMetadata",
-            #     "time": "1689983118942000000",
-            #     "seconds_elapsed": "0.103000244140625",
-            #     "id": "DC:23:4D:EB:88:46",
-            #     "name": "TY",
-            #     "localName": "TY",
-            #     "isConnectable": "true",
-            #     "serviceUUIDs": [
-            #     "a201"
-            #     ]
-            # },
             if not isinstance(sample["serviceUUIDs"], list):
                 # mutate so we always have a list of serviceUUIDs
                 sample["serviceUUIDs"] = [sample["serviceUUIDs"]]
@@ -134,7 +109,13 @@ def decode(input, debug=False, customDecoder=None):
                     if debug and sample["decoded"]:
                         print(json.dumps(sample, indent=2))
                 continue
+    return
 
+
+def decode(input, options, destfmt, debug=False, customDecoder=None):
+    j = json.loads(input.decode("utf-8"))
+    if "decode_ble" in options:
+        decode_ble_beacons(j, debug=debug, customDecoder=customDecoder)
     output = json.dumps(j, indent=2).encode("utf-8")
     buffer = io.BytesIO()
     buffer.write(output)
@@ -164,30 +145,29 @@ def massage(fa):
 def index():
     return render_template("index.html")
 
+
 # receive a JSON file by upload
 # convert as per options
-@app.route("/sensorlogger",methods=["GET", "POST"])
+@app.route("/sensorlogger", methods=["GET", "POST"])
 def sensorlogger():
     if request.method == "GET":
         return render_template("sensorlogger.html")
     if request.method == "POST":
-        options = request.form['options']
-        destfmt = request.form['destfmt']
-        # if "download" in request.form:
-        #     return {}
-        # elif "watch" in request.form:
-        #     return {}
+        options = request.form.getlist("options")
+        destfmt = request.form.getlist("destfmt")
         files = request.files.getlist("files")
         for file in files:
             fn = secure_filename(file.filename)
             if fn and allowed_file(fn):
                 input = file.stream.read()
                 # input = file.stream._file.getvalue()
-                output = decode(input, customDecoder=custom.Decoder)
+                output = decode(input, options, destfmt, customDecoder=custom.Decoder)
                 base, ext = os.path.splitext(fn)
                 response = make_response(
                     send_file(
-                        output, download_name=base + "-decoded" + ext, as_attachment=True
+                        output,
+                        download_name=base + "-decoded" + ext,
+                        as_attachment=True,
                     )
                 )
                 return response
@@ -231,7 +211,6 @@ def upload():
     return redirect("/")  # change to redirect to your own url
 
 
-
 # upload several files
 # zip them
 # return the zip archvive
@@ -267,7 +246,6 @@ def postzip():
 # @app.route("/download")
 # def download():
 #     return render_template("index.html")
-
 
 
 if __name__ == "__main__":
