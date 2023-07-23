@@ -25,6 +25,7 @@ import codecs
 import custom
 from flatten_json import flatten
 import arrow
+import gengpx
 
 # pip install git+https://github.com/mhaberler/uttlv.git@ltv-option
 
@@ -169,6 +170,14 @@ def decode_ble_beacons(j, debug=False, customDecoder=None):
 
 def decode(input, options, destfmt, timestamp, debug=False, customDecoder=None):
     j = json.loads(input.decode("utf-8"))
+
+    if "gpx" in destfmt:
+        xml = gengpx.gengpx(j)
+        buffer = io.BytesIO()
+        buffer.write(xml)
+        buffer.seek(0)
+        return (".gpx", buffer)
+    
     if "decode_ble" in options:
         decode_ble_beacons(j, debug=debug, customDecoder=customDecoder)
     if "flatten_json" in options:
@@ -183,15 +192,20 @@ def decode(input, options, destfmt, timestamp, debug=False, customDecoder=None):
 
     # delete empty dicts
     final = [x for x in massaged if x != {}]
+    
     if "ndjson" in options:
         output = ndjson.dumps(final).encode("utf-8")
     else:
-        output = json.dumps(final, indent=2).encode("utf-8")
+        kwargs={}
+        if "prettyprint" in options:
+            kwargs['indent'] = 2
+        output = json.dumps(final, **kwargs).encode("utf-8")
     
     buffer = io.BytesIO()
     buffer.write(output)
     buffer.seek(0)
-    return buffer
+    return (".json", buffer)
+
 
 
 def massage(fa):
@@ -233,10 +247,10 @@ def sensorlogger():
             if fn and allowed_file(fn):
                 input = file.stream.read()
                 # input = file.stream._file.getvalue()
-                output = decode(
+                (ext,output) = decode(
                     input, options, destfmt, timestamp, customDecoder=custom.Decoder
                 )
-                base, ext = os.path.splitext(fn)
+                base, oldext = os.path.splitext(fn)
                 response = make_response(
                     send_file(
                         output,
