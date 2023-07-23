@@ -17,12 +17,14 @@ from werkzeug.utils import secure_filename
 import io
 import zipfile
 import json
+import ndjson
 import geojson
 from TheengsDecoder import decodeBLE
 from TheengsDecoder import getProperties, getAttribute
 import codecs
 import custom
 from flatten_json import flatten
+import arrow
 
 # pip install git+https://github.com/mhaberler/uttlv.git@ltv-option
 
@@ -38,20 +40,62 @@ ALLOWED_EXTENSIONS = ["zip", "json"]
 reader = codecs.getreader("utf-8")
 decoded = "values"
 suffix = "-processed"
+metadataNames = ["BluetoothMetadata", "Metadata"]
+useless = ["manufacturerData"]
+
+
 def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
-def traverse(dict_or_list, path=[]):
-    if isinstance(dict_or_list, dict):
-        iterator = dict_or_list.iteritems()
-    else:
-        iterator = enumerate(dict_or_list)
-    for k, v in iterator:
-        yield path + [k], v
-        if isinstance(v, (dict, list)):
-            for k, v in traverse(v, path + [k]):
-                yield k, v
-                
+
+def traverse_and_modify(obj, **kwargs):
+    debug = kwargs.get("debug", None)
+    options = kwargs.get("options", [])
+    useless = kwargs.get("useless", [])
+    timestamp = kwargs.get("timestamp", [])
+    if isinstance(obj, dict):
+        for key, value in obj.copy().items():
+            if (
+                "drop_metadata" in options
+                and key == "sensor"
+                and value in metadataNames
+            ):
+                obj.clear()
+                return
+            if key in useless:
+                if debug:
+                    print(f"drop {key=}")
+                obj.pop(key)
+                continue
+            if key == "time" and "linux_timestamp_float" in timestamp:
+                obj[key] = float(value) * 1.0e-6
+                continue
+            if key == "time" and "linux_timestamp" in timestamp:
+                obj[key] = int(value) // 1000000
+                continue
+            if key == "time" and "iso8061" in timestamp:
+                obj[key] = arrow.Arrow.fromtimestamp(float(value) * 1.0e-6).isoformat()
+                continue
+            if "strings_to_numeric" in options and isinstance(value, str):
+                try:
+                    obj[key] = int(value)
+                except ValueError:
+                    try:
+                        obj[key] = float(value)
+                    except ValueError:
+                        pass
+                    pass
+                    continue
+
+        if isinstance(value, dict):
+            traverse_and_modify(value, **kwargs)
+
+    elif isinstance(obj, list):
+        for _, value in enumerate(obj):
+            traverse_and_modify(value, **kwargs)
+    return obj
+
+
 def decode_ble_beacons(j, debug=False, customDecoder=None):
     bleMeta = {}
     for sample in j:
@@ -123,7 +167,7 @@ def decode_ble_beacons(j, debug=False, customDecoder=None):
     return
 
 
-def decode(input, options, destfmt, debug=False, customDecoder=None):
+def decode(input, options, destfmt, timestamp, debug=False, customDecoder=None):
     j = json.loads(input.decode("utf-8"))
     if "decode_ble" in options:
         decode_ble_beacons(j, debug=debug, customDecoder=customDecoder)
@@ -133,7 +177,17 @@ def decode(input, options, destfmt, debug=False, customDecoder=None):
             result.append(flatten(report))
         j = result
 
-    output = json.dumps(j, indent=2).encode("utf-8")
+    massaged = traverse_and_modify(
+        j, options=options, useless=useless, timestamp=timestamp, debug=debug
+    )
+
+    # delete empty dicts
+    final = [x for x in massaged if x != {}]
+    if "ndjson" in options:
+        output = ndjson.dumps(final).encode("utf-8")
+    else:
+        output = json.dumps(final, indent=2).encode("utf-8")
+    
     buffer = io.BytesIO()
     buffer.write(output)
     buffer.seek(0)
@@ -172,13 +226,16 @@ def sensorlogger():
     if request.method == "POST":
         options = request.form.getlist("options")
         destfmt = request.form.getlist("destfmt")
+        timestamp = request.form.getlist("timestamp")
         files = request.files.getlist("files")
         for file in files:
             fn = secure_filename(file.filename)
             if fn and allowed_file(fn):
                 input = file.stream.read()
                 # input = file.stream._file.getvalue()
-                output = decode(input, options, destfmt, customDecoder=custom.Decoder)
+                output = decode(
+                    input, options, destfmt, timestamp, customDecoder=custom.Decoder
+                )
                 base, ext = os.path.splitext(fn)
                 response = make_response(
                     send_file(
@@ -222,9 +279,7 @@ def upload():
         fn = secure_filename(file.filename)
         if fn and allowed_file(fn):
             base, ext = os.path.splitext(fn)
-            file.save(
-                os.path.join(app.config["UPLOAD_FOLDER"], base + suffix + ext)
-            )
+            file.save(os.path.join(app.config["UPLOAD_FOLDER"], base + suffix + ext))
     return redirect("/")  # change to redirect to your own url
 
 
