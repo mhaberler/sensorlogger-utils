@@ -26,6 +26,7 @@ import custom
 from flatten_json import flatten
 import arrow
 import gengpx
+from flask_qrcode import QRcode
 
 # pip install git+https://github.com/mhaberler/uttlv.git@ltv-option
 
@@ -35,6 +36,7 @@ import bleads
 app = Flask(__name__)
 app.config.from_object(__name__)
 app.config["UPLOAD_FOLDER"] = "/tmp/sensorlogger-upload"
+QRcode(app)
 
 ALLOWED_EXTENSIONS = ["zip", "json"]
 
@@ -68,6 +70,12 @@ def traverse_and_modify(obj, **kwargs):
                     print(f"drop {key=}")
                 obj.pop(key)
                 continue
+            if key == "seconds_elapsed" and "drop_bad_timestamps" in options:
+               if float(value) < 0.0:
+                    if debug:
+                        print(f"drop bad seconds_elapsed: {value=}")
+                    obj.clear()
+                    return
             if key == "time" and "linux_timestamp_float" in timestamp:
                 obj[key] = float(value) * 1.0e-6
                 continue
@@ -261,18 +269,51 @@ def sensorlogger():
                     )
                 )
                 return response
-
-
-@app.route("/form", methods=["GET", "POST"])
-def form():
+            
+@app.route("/animation3D", methods=["GET", "POST"])
+def animation3D():
     if request.method == "GET":
-        return render_template("form.html")
+        return render_template("animation3D.html")
     if request.method == "POST":
-        # option = request.form['options']
-        if "download" in request.form:
-            return {}
-        elif "watch" in request.form:
-            return {}
+        options = request.form.getlist("options")
+        destfmt = request.form.getlist("destfmt")
+        timestamp = request.form.getlist("timestamp")
+        files = request.files.getlist("files")
+        for file in files:
+            fn = secure_filename(file.filename)
+            if fn and allowed_file(fn):
+                input = file.stream.read()
+                # input = file.stream._file.getvalue()
+                (ext,output) = decode(
+                    input, options, destfmt, timestamp, customDecoder=custom.Decoder
+                )
+                base, oldext = os.path.splitext(fn)
+                response = make_response(
+                    send_file(
+                        output,
+                        download_name=base + suffix + ext,
+                        as_attachment=True,
+                    )
+                )
+                return response
+
+@app.route("/livetrack", methods=["GET", "POST"])
+def livetrack():
+    if request.method == "GET":
+        return render_template("livetrack.html")
+    if request.method == "POST":
+        app.logger.info(f'rh: {request.headers=}')
+        return render_template("qrconfig.html", config="blahfasel") 
+    
+# push from mobile
+@app.route("/tracking", methods=["POST"])
+def tracking():
+    ah = request.headers.get('Authorization', None)
+
+    app.logger.info(f'livetrack post {ah=} {request.data=}')
+    return {}
+    
+
 
 
 @app.route("/traj", methods=["POST"])
@@ -288,47 +329,47 @@ def traj():
     return {}
 
 
-@app.route("/upload", methods=["POST"])
-def upload():
-    files = request.files.getlist("files")
-    for file in files:
-        fn = secure_filename(file.filename)
-        if fn and allowed_file(fn):
-            base, ext = os.path.splitext(fn)
-            file.save(os.path.join(app.config["UPLOAD_FOLDER"], base + suffix + ext))
-    return redirect("/")  # change to redirect to your own url
+# @app.route("/upload", methods=["POST"])
+# def upload():
+#     files = request.files.getlist("files")
+#     for file in files:
+#         fn = secure_filename(file.filename)
+#         if fn and allowed_file(fn):
+#             base, ext = os.path.splitext(fn)
+#             file.save(os.path.join(app.config["UPLOAD_FOLDER"], base + suffix + ext))
+#     return redirect("/")  # change to redirect to your own url
 
 
 # upload several files
 # zip them
 # return the zip archvive
-@app.route("/zip", methods=["POST"])
-def zip():
-    files = request.files.getlist("files")
-    zipped_file = io.BytesIO()
-    with zipfile.ZipFile(zipped_file, "w") as zipper:
-        for file in files:
-            fn = secure_filename(file.filename)
-            zipper.writestr(fn, file.stream._file.getvalue())
-    zipped_file.seek(0)
-    response = make_response(
-        send_file(zipped_file, download_name="export.zip", as_attachment=True)
-    )
-    return response
+# @app.route("/zip", methods=["POST"])
+# def zip():
+#     files = request.files.getlist("files")
+#     zipped_file = io.BytesIO()
+#     with zipfile.ZipFile(zipped_file, "w") as zipper:
+#         for file in files:
+#             fn = secure_filename(file.filename)
+#             zipper.writestr(fn, file.stream._file.getvalue())
+#     zipped_file.seek(0)
+#     response = make_response(
+#         send_file(zipped_file, download_name="export.zip", as_attachment=True)
+#     )
+#     return response
 
 
 # upload zip archive
 # return list of files in archive
-@app.route("/postzip", methods=["POST"])
-def postzip():
-    file = request.files["data_zip_file"]
-    file_like_object = file.stream._file
-    zipfile_ob = zipfile.ZipFile(file_like_object)
-    file_names = zipfile_ob.namelist()
-    # Filter names to only include the filetype that you want:
-    # file_names = [file_name for file_name in file_names if file_name.endswith(".txt")]
-    # files = [(zipfile_ob.open(name).read(),name) for name in file_names]
-    return str(file_names)
+# @app.route("/postzip", methods=["POST"])
+# def postzip():
+#     file = request.files["data_zip_file"]
+#     file_like_object = file.stream._file
+#     zipfile_ob = zipfile.ZipFile(file_like_object)
+#     file_names = zipfile_ob.namelist()
+#     # Filter names to only include the filetype that you want:
+#     # file_names = [file_name for file_name in file_names if file_name.endswith(".txt")]
+#     # files = [(zipfile_ob.open(name).read(),name) for name in file_names]
+#     return str(file_names)
 
 
 # @app.route("/download")
@@ -337,4 +378,4 @@ def postzip():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5000)
+    app.run(debug=True, host='0.0.0.0',port=5000)
