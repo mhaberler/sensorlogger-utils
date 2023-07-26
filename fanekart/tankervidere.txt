@@ -1,0 +1,67 @@
+mysite/flask_app.py		# Main web application
+	loggGps.py ? # Endre litt på denne. Legge på standard kommentarfelt for kjente GPS'er? 
+	
+mysite/static/gps/ 		# Folder for GPS data
+
+
+
+# App routes
+/getfile/<filename>	# Serving data from mysite/static/gps with appropriate CORS headers. 
+
+/gps/mypos/<gpsId>
+
+Skal modifiseres til /gps/mypos/<gpsId>/<mySecretKey>
+
+appending key-value pairs to this URL will logg GPS positions into /static/gps/ - folder
+
+Exammple 
+/gps/mypos/GP1/theSecretKeyOfGPS1?lat=60.3333&lon=4.12345
+
+Will write these two files to the folder /mysite/static/gps: 
+GPS1.geojson  # Last known positions
+GPS1_kurve.geojson # Last 30 positions 
+
+Your map application retrieves these using these http GET requests: 
+https://<username>.pythonanywhere.com/getfile/GPS1.geojson
+https://<username>.pythonanywhere.com/getfile/GPS1_kurve.geojson
+ 
+ 
+ 
+### Kode fra app_flask.py
+
+@app.route('/getfile/<filename>')
+def getFile(filename):
+    filename = dataDir + filename
+
+    try:
+        with open( filename) as file:
+            blob = file.read()
+    except:
+        abort(404)
+        pass
+
+    r = make_response(blob)
+    r.mimetype='application/json'
+    r.headers['Access-Control-Allow-Origin'] = '*'
+
+    return r
+
+# Noen tanker om ny implementasjon
+@app.route('/gps/mypos/<gpsId>/<gpsKey>')
+def getpos(gpsId='')
+    secretKeys = [ 'firstsecretkey', 'secondsecretkey' ] 
+    if gpsKey not in secretKeys:
+        abort(401)
+	pass
+
+    lat = request.args.get('lat', '')
+    lon = request.args.get('lon', '')
+
+    ok = loggGps.loggGps( str(lat), str(lon), str(gpsId))
+
+    return( ok + "<br>gps ID" + str(gpsId) + "<br>\n" +
+            'lat' + str(lat) + "<br>\n" +
+            "lon" + str(lon) )
+
+
+

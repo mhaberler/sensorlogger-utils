@@ -1,0 +1,51 @@
+
+/* kommentar ... */
+
+
+
+body {
+
+	padding: 0;
+	margin: 0;
+
+}
+
+html, body {
+	height: 100%;
+}
+
+
+
+#vegreferanse {
+
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  width: 100%;
+  padding: 15px 0 0 0;
+  height: 60px;
+  margin: 0;
+  font-size: 30px;
+  font-weight: 300;
+  color: #fff;
+  text-shadow: 2px 2px rgba(0,0,0,0.6);
+  text-align: center;
+  text-transform: uppercase;
+  background-color: #444F55;
+
+}
+
+
+
+/* KART */
+#map {
+
+  height: 100%;
+  width: 100%;
+  z-index: 10
+
+}
+
+
+
