@@ -4,17 +4,18 @@ from flask import Flask, render_template, jsonify
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///test.db"
 
 db = SQLAlchemy(app)
 
 BASECOORDS = [-13.9626, 33.7741]
 
+
 class Point(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     latitude_off = db.Column(db.Float)
     longitude_off = db.Column(db.Float)
-    district_id = db.Column(db.Integer, db.ForeignKey('district.id'))
+    district_id = db.Column(db.Integer, db.ForeignKey("district.id"))
     district = db.relationship("District")
 
     def __init__(self, id, district, lat, lng):
@@ -24,7 +25,11 @@ class Point(db.Model):
         self.longitude_off = lng
 
     def __repr__(self):
-        return "<Point %d: Lat %s Lng %s>" % (self.id, self.latitude_off, self.longitude_off)
+        return "<Point %d: Lat %s Lng %s>" % (
+            self.id,
+            self.latitude_off,
+            self.longitude_off,
+        )
 
     @property
     def latitude(self):
@@ -48,13 +53,13 @@ class District(db.Model):
         self.longitude = lng
 
 
-@app.route('/')
+@app.route("/")
 def index():
     districts = District.query.all()
-    return render_template('index.html', districts=districts)
+    return render_template("index.html", districts=districts)
 
 
-@app.route('/district/<int:district_id>')
+@app.route("/district/<int:district_id>")
 def district(district_id):
     points = Point.query.filter_by(district_id=district_id).all()
     coords = [[point.latitude, point.longitude] for point in points]
@@ -75,10 +80,11 @@ def make_random_data(db):
     db.session.commit()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     if len(sys.argv) > 1:
-        if sys.argv[1] == 'mkdb':
-            db.create_all()
-            make_random_data(db)
+        if sys.argv[1] == "mkdb":
+            with app.app_context():
+                db.create_all()
+                make_random_data(db)
     else:
         app.run(debug=True)
