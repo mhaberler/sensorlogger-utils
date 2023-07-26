@@ -6,15 +6,10 @@
 </head>
 
 <body>
-    <h1>Scan this code with your mobile to start live tracking:</h1>
-
-    <img src="{{ qrcode(config,error_correction='H', back_color='white', fill_color='red') }}">
+    <h1>Scan this code with your mobile to start live tracking and
+        <a href="{{ tracker  }}">click here to track Sensor Logger on the map:</a></h1>
     <br>
-    Track your session at:
-
-
-    <p><a href="{{ tracker  }}">Check out this cool form!</a></p>
-
+    <img src="{{ qrcode(config,error_correction='H', back_color='white', fill_color='red') }}">
 
 </body>
 

@@ -6,6 +6,7 @@ from datetime import datetime
 import json
 from flask_qrcode import QRcode
 import shortuuid
+
 # from flask_cors import CORS
 from TheengsDecoder import decodeBLE
 from slconfig import genconfig
@@ -51,11 +52,11 @@ def background_thread():
         )
         socketio.sleep(1)
 
+
 @app.route("/trackme/<clientsession>/")
-#@app.route("/trackme")
 def trackme(clientsession=""):
     app.logger.info(f"trackme {clientsession=}")
-    return {}
+    return render_template("leaflet.html", clientsession=clientsession)
 
 
 @app.route("/sl/<clientsession>/", methods=["GET", "POST"])
@@ -69,25 +70,12 @@ def getpos(clientsession=""):
     deviceId = body["deviceId"]
     for p in body["payload"]:
         if p.get("name", None) == "location":
-            time = p["time"]
-            lat = p["values"]["latitude"]
-            lon = p["values"]["longitude"]
-            alt = p["values"]["altitude"]
-            app.logger.info(f"post {lat=} {lon=} {alt=}")
-            socketio.emit(
-                "updateLocation",
-                {
-                    "time": time,
-                    "lat": lat,
-                    "lon": lon,
-                    "alt": alt,
-                    "messageId": messageId,
-                    "deviceId": deviceId,
-                    "sessionId": sessionId,
-                },
-            )
+            socketio.emit("updateLocation", p)
+
         if p.get("name", None) == "test":
-            app.logger.info(f"client hit test: {clientsession=} {messageId=} {sessionId=} {deviceId=}")
+            app.logger.info(
+                f"client hit test: {clientsession=} {messageId=} {sessionId=} {deviceId=}"
+            )
 
     return {}
 
@@ -96,12 +84,14 @@ def getpos(clientsession=""):
 def livetrack():
     clientsession = shortuuid.uuid()
     secret = shortuuid.uuid()
-    authToken = f"realm={secret}" 
+    authToken = f"realm={secret}"
     uri = f"{request.host_url}sl/{clientsession}"
     config = genconfig(uri, authToken=authToken)
     app.logger.info(f"generate config: {clientsession=} {secret=} {config=}")
-    return render_template("genqrcode.html", config=config,tracker=f"/trackme/{clientsession}")
-    #  <img src="{{ qrcode(config,error_correction='H', back_color='white', fill_color='red') }}">
+    return render_template(
+        "genqrcode.html", config=config, tracker=f"/trackme/{clientsession}/"
+    )
+
 
 """
 Serve root index file

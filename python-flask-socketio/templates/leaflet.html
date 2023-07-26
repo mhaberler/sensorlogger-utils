@@ -1,0 +1,81 @@
+<html>
+
+<head>
+    <script src="{{url_for('static', filename='jquery-2.2.2.min.js')}}"></script>
+    <script src="{{url_for('static', filename='protomaps.min.js')}}"></script>
+    <script src="{{url_for('static', filename='leaflet/leaflet.js')}}"></script>
+    <script src="{{url_for('static', filename='js/socket.io.min.js')}}"></script>
+    <link rel="stylesheet" href="{{url_for('static', filename='leaflet/leaflet.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='demo.css')}}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+
+</head>
+
+<body>
+    <h1>Sensor Logger Live Tracking</h1>
+    <div id="llmap"></div>
+    <script>
+        const clientsession = "{{ clientsession  }}";
+        var mymap;
+        var gpsMarker = null;
+        var gpsCircleMarker;
+
+        BASECOORDS = [47.07585724136853, 15.431147228565663];
+
+        function makeMap() {
+            mymap = L.map('llmap').setView(BASECOORDS, 8);
+            var layer = protomaps.leafletLayer({ url: 'https://static.mah.priv.at/cors/pmtiles/europe-latest.pmtiles' })
+            layer.addTo(mymap)
+            layer.addInspector(mymap)
+        }
+
+        function onLocationFound(msg) {
+            var radius = msg.values.horizontalAccuracy / 2;
+            var popupContent = "You are within " + radius + " meters from this point";
+
+            pos = new L.LatLng(msg.values.latitude, msg.values.longitude);
+            if (gpsMarker == null) {
+                gpsMarker = L.marker(pos).addTo(mymap);
+                gpsMarker.bindPopup(popupContent).openPopup();
+                gpsCircleMarker = L.circle(pos, radius).addTo(mymap);
+            }
+            else {
+                gpsMarker.getPopup().setContent(popupContent);
+                gpsMarker.setLatLng(pos);
+                gpsCircleMarker.setLatLng(pos);
+                gpsCircleMarker.setRadius(radius);
+            }
+        }
+
+        function setupConnection() {
+            var socket = io.connect();
+
+            socket.on("connect", () => {
+                console.log(socket.id);
+            });
+
+            socket.on("connect_error", (err) => {
+                console.log(`connect_error due to ${err.message}`);
+            });
+
+            socket.on('disconnect', function (reason) {
+                console.log('disconnected because ' + reason);
+            });
+
+            socket.on("updateSensorData", function (msg) {
+                console.log("Received sensorData :: " + msg);
+
+            });
+            socket.on("updateLocation", function (msg) {
+                console.log("Received location :: " + msg);
+                onLocationFound(msg);
+            });
+        }
+
+        $(function () {
+            makeMap();
+            setupConnection();
+        })
+    </script>
+
+</body>
