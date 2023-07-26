@@ -36,6 +36,7 @@ import bleads
 app = Flask(__name__)
 app.config.from_object(__name__)
 app.config["UPLOAD_FOLDER"] = "/tmp/sensorlogger-upload"
+
 QRcode(app)
 
 ALLOWED_EXTENSIONS = ["zip", "json"]
