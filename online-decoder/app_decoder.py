@@ -32,6 +32,7 @@ from flask_qrcode import QRcode
 
 from uttlv import TLV
 import bleads
+import overpy
 
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -71,7 +72,7 @@ def traverse_and_modify(obj, **kwargs):
                 obj.pop(key)
                 continue
             if key == "seconds_elapsed" and "drop_bad_timestamps" in options:
-               if float(value) < 0.0:
+                if float(value) < 0.0:
                     if debug:
                         print(f"drop bad seconds_elapsed: {value=}")
                     obj.clear()
@@ -185,7 +186,7 @@ def decode(input, options, destfmt, timestamp, debug=False, customDecoder=None):
         buffer.write(xml)
         buffer.seek(0)
         return (".gpx", buffer)
-    
+
     if "decode_ble" in options:
         decode_ble_beacons(j, debug=debug, customDecoder=customDecoder)
     if "flatten_json" in options:
@@ -200,20 +201,19 @@ def decode(input, options, destfmt, timestamp, debug=False, customDecoder=None):
 
     # delete empty dicts
     final = [x for x in massaged if x != {}]
-    
+
     if "ndjson" in options:
         output = ndjson.dumps(final).encode("utf-8")
     else:
-        kwargs={}
+        kwargs = {}
         if "prettyprint" in options:
-            kwargs['indent'] = 2
+            kwargs["indent"] = 2
         output = json.dumps(final, **kwargs).encode("utf-8")
-    
+
     buffer = io.BytesIO()
     buffer.write(output)
     buffer.seek(0)
     return (".json", buffer)
-
 
 
 def massage(fa):
@@ -236,9 +236,8 @@ def massage(fa):
 
 @app.route("/")
 def index():
-    return redirect('/sensorlogger')
+    return redirect("/sensorlogger")
     # return render_template("index.html")
-
 
 
 # receive a JSON file by upload
@@ -257,7 +256,7 @@ def sensorlogger():
             if fn and allowed_file(fn):
                 input = file.stream.read()
                 # input = file.stream._file.getvalue()
-                (ext,output) = decode(
+                (ext, output) = decode(
                     input, options, destfmt, timestamp, customDecoder=custom.Decoder
                 )
                 base, oldext = os.path.splitext(fn)
@@ -269,7 +268,8 @@ def sensorlogger():
                     )
                 )
                 return response
-            
+
+
 @app.route("/animation3D", methods=["GET", "POST"])
 def animation3D():
     if request.method == "GET":
@@ -284,7 +284,7 @@ def animation3D():
             if fn and allowed_file(fn):
                 input = file.stream.read()
                 # input = file.stream._file.getvalue()
-                (ext,output) = decode(
+                (ext, output) = decode(
                     input, options, destfmt, timestamp, customDecoder=custom.Decoder
                 )
                 base, oldext = os.path.splitext(fn)
@@ -297,23 +297,23 @@ def animation3D():
                 )
                 return response
 
+
 @app.route("/livetrack", methods=["GET", "POST"])
 def livetrack():
     if request.method == "GET":
         return render_template("livetrack.html")
     if request.method == "POST":
-        app.logger.info(f'rh: {request.headers=}')
-        return render_template("qrconfig.html", config="blahfasel") 
-    
+        app.logger.info(f"rh: {request.headers=}")
+        return render_template("qrconfig.html", config="blahfasel")
+
+
 # push from mobile
 @app.route("/tracking", methods=["POST"])
 def tracking():
-    ah = request.headers.get('Authorization', None)
+    ah = request.headers.get("Authorization", None)
 
-    app.logger.info(f'livetrack post {ah=} {request.data=}')
+    app.logger.info(f"livetrack post {ah=} {request.data=}")
     return {}
-    
-
 
 
 @app.route("/traj", methods=["POST"])
@@ -327,6 +327,72 @@ def traj():
     f.write(geojson.dumps(m, indent=4))
     f.close()
     return {}
+
+
+def get_shops(lat, lon, distance=5000):
+    # Initialize the API
+    api = overpy.Overpass()
+    # Define the query
+    query = (
+        f'(node["shop"](around:{distance},{lat},{lon});'
+        f'node["building"="retail"](around:{distance},{lat},{lon});'
+        f'node["building"="supermarket"](around:{distance},{lat},{lon});'
+        f'node["healthcare"="pharmacy"](around:{distance},{lat},{lon});'
+        f");out;"
+    )
+    # Call the API
+    result = api.query(query)
+    return result
+
+
+# https://mateuszwiza.medium.com/plotting-api-results-on-a-map-using-flask-and-leafletjs-2cf2d3cc660b
+# https://github.com/mateuszwiza/mapping-api-results
+# 47.07585724136853 15.431147228565663
+@app.route("/shops", methods=["GET", "POST"])
+def shops():
+    if request.method == "POST":
+        # The code here determines what happens after sumbitting the form
+        # Get shops data from OpenStreetMap
+        shops = get_shops(request.form["lat"], request.form["lon"], distance=50)
+        #app.logger.info(f"found {len(shops.nodes)} shops")
+
+        # Initialize variables
+        id_counter = 0
+        markers = ""
+        for node in shops.nodes:
+            # Create unique ID for each marker
+            idd = "shop" + str(id_counter)
+            id_counter += 1
+            # Check if shops have name and website in OSM
+            try:
+                shop_brand = node.tags["brand"]
+            except:
+                shop_brand = "null"
+            try:
+                shop_website = node.tags["website"]
+            except:
+                shop_website = "null"
+            # Create the marker and its pop-up for each shop
+            markers += "var {idd} = L.marker([{latitude}, {longitude}]);\
+                        {idd}.addTo(map).bindPopup('{brand}<br>{website}');".format(
+                idd=idd,
+                latitude=node.lat,
+                longitude=node.lon,
+                brand=shop_brand,
+                website=shop_website,
+            )
+
+        # Render the page with the map
+        rt = render_template(
+            "results.html",
+            markers=markers,
+            lat=request.form["lat"],
+            lon=request.form["lon"],
+        )
+        return rt
+    else:
+        # Render the input form
+        return render_template("leaflet.html")
 
 
 # @app.route("/upload", methods=["POST"])
@@ -378,4 +444,4 @@ def traj():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, host='0.0.0.0',port=5000)
+    app.run(debug=True, host="0.0.0.0", port=5000)
