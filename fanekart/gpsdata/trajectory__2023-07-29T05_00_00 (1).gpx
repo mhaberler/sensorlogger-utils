@@ -1,0 +1,1082 @@
+<?xml version="1.0" encoding="utf-8"?><gpx creator="Windy.com/plugins --- windy-plugin-traj" version="1.1" xmlns="http://www.topografix.com/GPX/1/1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">
+    <trk>
+        <name>surface</name>
+        <desc>Model:iconEu,   Reference time:2023-07-26T12:00:00Z,   Distance:7374m,   Time:135min,   Av speed:3.28kph,   Alt: 30ft </desc>
+        <extensions>
+            <gpxx:TrackExtension xmlns:gpxx="http://www.garmin.com/xmlschemas/GpxExtensions/v3">
+                <gpxx:DisplayColor>DarkRed</gpxx:DisplayColor>
+            </gpxx:TrackExtension>
+            <line xmlns="http://www.topografix.com/GPX/gpx_style/0/2">
+                <color>f05c10</color>
+                <opacity>1</opacity>
+            </line>
+            <model>iconEu</model>
+            <ref_time>2023-07-26T12:00:00Z</ref_time>
+            <distance>7374</distance>
+            <time_mins>135</time_mins>
+            <av_speed_kmph>3.28</av_speed_kmph>
+            <level>surface</level>
+            <alt_ft>30</alt_ft>
+            <alt_m>10</alt_m>
+            <ascent>0</ascent>
+            <descent>0</descent>
+            <calc_backward>false</calc_backward>
+        </extensions>
+        <trkseg>
+            <trkpt lat="42.76293910173984" lon="12.42097333073616">
+                <name>surface_0</name>
+                <time>2023-07-29T05:00:00Z</time>
+                <ele>174</ele>
+            </trkpt>
+            <trkpt lat="42.76741789305124" lon="12.415669728024131">
+                <name>surface_15</name>
+                <time>2023-07-29T05:15:00Z</time>
+                <ele>174</ele>
+            </trkpt>
+            <trkpt lat="42.77231048072857" lon="12.410647085029089">
+                <name>surface_30</name>
+                <time>2023-07-29T05:30:00Z</time>
+                <ele>174</ele>
+            </trkpt>
+            <trkpt lat="42.777646952963146" lon="12.405925514556097">
+                <name>surface_45</name>
+                <time>2023-07-29T05:45:00Z</time>
+                <ele>174</ele>
+            </trkpt>
+            <trkpt lat="42.78334234810498" lon="12.401262661495203">
+                <name>surface_60</name>
+                <time>2023-07-29T06:00:00Z</time>
+                <ele>174</ele>
+            </trkpt>
+            <trkpt lat="42.789440836019345" lon="12.39665616852259">
+                <name>surface_75</name>
+                <time>2023-07-29T06:15:00Z</time>
+                <ele>174</ele>
+            </trkpt>
+            <trkpt lat="42.79643159445824" lon="12.392806914130555">
+                <name>surface_90</name>
+                <time>2023-07-29T06:30:00Z</time>
+                <ele>174</ele>
+            </trkpt>
+            <trkpt lat="42.80435176877427" lon="12.39011536769736">
+                <name>surface_105</name>
+                <time>2023-07-29T06:45:00Z</time>
+                <ele>174</ele>
+            </trkpt>
+            <trkpt lat="42.81318025225702" lon="12.388850447858804">
+                <name>surface_120</name>
+                <time>2023-07-29T07:00:00Z</time>
+                <ele>174</ele>
+            </trkpt>
+            <trkpt lat="42.8228736020068" lon="12.389081133083277">
+                <name>surface_135</name>
+                <time>2023-07-29T07:15:00Z</time>
+                <ele>174</ele>
+            </trkpt>
+        </trkseg>
+    </trk>
+    <trk>
+        <name>950h</name>
+        <desc>Model:iconEu,   Reference time:2023-07-26T12:00:00Z,   Distance:14151m,   Time:120min,   Av speed:7.08kph,   Alt: 2000ft </desc>
+        <extensions>
+            <gpxx:TrackExtension xmlns:gpxx="http://www.garmin.com/xmlschemas/GpxExtensions/v3">
+                <gpxx:DisplayColor>DarkBlue</gpxx:DisplayColor>
+            </gpxx:TrackExtension>
+            <line xmlns="http://www.topografix.com/GPX/gpx_style/0/2">
+                <color>f19222</color>
+                <opacity>1</opacity>
+            </line>
+            <model>iconEu</model>
+            <ref_time>2023-07-26T12:00:00Z</ref_time>
+            <distance>14151</distance>
+            <time_mins>120</time_mins>
+            <av_speed_kmph>7.08</av_speed_kmph>
+            <level>950h</level>
+            <alt_ft>2000</alt_ft>
+            <alt_m>600</alt_m>
+            <ascent>0</ascent>
+            <descent>0</descent>
+            <calc_backward>false</calc_backward>
+        </extensions>
+        <trkseg>
+            <trkpt lat="42.76293910173984" lon="12.42097333073616">
+                <name>950h_0</name>
+                <time>2023-07-29T05:00:00Z</time>
+                <ele>600</ele>
+            </trkpt>
+            <trkpt lat="42.77565344968966" lon="12.42340772258555">
+                <name>950h_15</name>
+                <time>2023-07-29T05:15:00Z</time>
+                <ele>600</ele>
+            </trkpt>
+            <trkpt lat="42.78908912344931" lon="12.424367217257235">
+                <name>950h_30</name>
+                <time>2023-07-29T05:30:00Z</time>
+                <ele>600</ele>
+            </trkpt>
+            <trkpt lat="42.803233225387594" lon="12.423694014729529">
+                <name>950h_45</name>
+                <time>2023-07-29T05:45:00Z</time>
+                <ele>600</ele>
+            </trkpt>
+            <trkpt lat="42.81810785482285" lon="12.421562649445464">
+                <name>950h_60</name>
+                <time>2023-07-29T06:00:00Z</time>
+                <ele>600</ele>
+            </trkpt>
+            <trkpt lat="42.83373589120141" lon="12.417420178336183">
+                <name>950h_75</name>
+                <time>2023-07-29T06:15:00Z</time>
+                <ele>600</ele>
+            </trkpt>
+            <trkpt lat="42.85079378384383" lon="12.413734987070292">
+                <name>950h_90</name>
+                <time>2023-07-29T06:30:00Z</time>
+                <ele>600</ele>
+            </trkpt>
+            <trkpt lat="42.869338950203996" lon="12.411075470192785">
+                <name>950h_105</name>
+                <time>2023-07-29T06:45:00Z</time>
+                <ele>600</ele>
+            </trkpt>
+            <trkpt lat="42.88931524505345" lon="12.409168909236886">
+                <name>950h_120</name>
+                <time>2023-07-29T07:00:00Z</time>
+                <ele>600</ele>
+            </trkpt>
+        </trkseg>
+    </trk>
+    <trk>
+        <name>925h</name>
+        <desc>Model:iconEu,   Reference time:2023-07-26T12:00:00Z,   Distance:14477m,   Time:120min,   Av speed:7.24kph,   Alt: 2500ft </desc>
+        <extensions>
+            <gpxx:TrackExtension xmlns:gpxx="http://www.garmin.com/xmlschemas/GpxExtensions/v3">
+                <gpxx:DisplayColor>DarkMagenta</gpxx:DisplayColor>
+            </gpxx:TrackExtension>
+            <line xmlns="http://www.topografix.com/GPX/gpx_style/0/2">
+                <color>f19a1f</color>
+                <opacity>1</opacity>
+            </line>
+            <model>iconEu</model>
+            <ref_time>2023-07-26T12:00:00Z</ref_time>
+            <distance>14477</distance>
+            <time_mins>120</time_mins>
+            <av_speed_kmph>7.24</av_speed_kmph>
+            <level>925h</level>
+            <alt_ft>2500</alt_ft>
+            <alt_m>750</alt_m>
+            <ascent>0</ascent>
+            <descent>0</descent>
+            <calc_backward>false</calc_backward>
+        </extensions>
+        <trkseg>
+            <trkpt lat="42.76293910173984" lon="12.42097333073616">
+                <name>925h_0</name>
+                <time>2023-07-29T05:00:00Z</time>
+                <ele>750</ele>
+            </trkpt>
+            <trkpt lat="42.77757195305443" lon="12.428229510991022">
+                <name>925h_15</name>
+                <time>2023-07-29T05:15:00Z</time>
+                <ele>750</ele>
+            </trkpt>
+            <trkpt lat="42.7928398885903" lon="12.434590694092329">
+                <name>925h_30</name>
+                <time>2023-07-29T05:30:00Z</time>
+                <ele>750</ele>
+            </trkpt>
+            <trkpt lat="42.80857559239749" lon="12.439938611161542">
+                <name>925h_45</name>
+                <time>2023-07-29T05:45:00Z</time>
+                <ele>750</ele>
+            </trkpt>
+            <trkpt lat="42.824637263185664" lon="12.444195398189493">
+                <name>925h_60</name>
+                <time>2023-07-29T06:00:00Z</time>
+                <ele>750</ele>
+            </trkpt>
+            <trkpt lat="42.840981832377565" lon="12.4465382562946">
+                <name>925h_75</name>
+                <time>2023-07-29T06:15:00Z</time>
+                <ele>750</ele>
+            </trkpt>
+            <trkpt lat="42.85748094533127" lon="12.451322413014775">
+                <name>925h_90</name>
+                <time>2023-07-29T06:30:00Z</time>
+                <ele>750</ele>
+            </trkpt>
+            <trkpt lat="42.87349273742042" lon="12.458002229672381">
+                <name>925h_105</name>
+                <time>2023-07-29T06:45:00Z</time>
+                <ele>750</ele>
+            </trkpt>
+            <trkpt lat="42.88864684341669" lon="12.465124123220892">
+                <name>925h_120</name>
+                <time>2023-07-29T07:00:00Z</time>
+                <ele>750</ele>
+            </trkpt>
+        </trkseg>
+    </trk>
+    <trk>
+        <name>900h</name>
+        <desc>Model:iconEu,   Reference time:2023-07-26T12:00:00Z,   Distance:14941m,   Time:120min,   Av speed:7.47kph,   Alt: 3000ft </desc>
+        <extensions>
+            <gpxx:TrackExtension xmlns:gpxx="http://www.garmin.com/xmlschemas/GpxExtensions/v3">
+                <gpxx:DisplayColor>DarkCyan</gpxx:DisplayColor>
+            </gpxx:TrackExtension>
+            <line xmlns="http://www.topografix.com/GPX/gpx_style/0/2">
+                <color>f0a21c</color>
+                <opacity>1</opacity>
+            </line>
+            <model>iconEu</model>
+            <ref_time>2023-07-26T12:00:00Z</ref_time>
+            <distance>14941</distance>
+            <time_mins>120</time_mins>
+            <av_speed_kmph>7.47</av_speed_kmph>
+            <level>900h</level>
+            <alt_ft>3000</alt_ft>
+            <alt_m>900</alt_m>
+            <ascent>0</ascent>
+            <descent>0</descent>
+            <calc_backward>false</calc_backward>
+        </extensions>
+        <trkseg>
+            <trkpt lat="42.76293910173984" lon="12.42097333073616">
+                <name>900h_0</name>
+                <time>2023-07-29T05:00:00Z</time>
+                <ele>900</ele>
+            </trkpt>
+            <trkpt lat="42.776739404626525" lon="12.4379036789059">
+                <name>900h_15</name>
+                <time>2023-07-29T05:15:00Z</time>
+                <ele>900</ele>
+            </trkpt>
+            <trkpt lat="42.790250060420924" lon="12.452813488526315">
+                <name>900h_30</name>
+                <time>2023-07-29T05:30:00Z</time>
+                <ele>900</ele>
+            </trkpt>
+            <trkpt lat="42.803462456858476" lon="12.465897930957757">
+                <name>900h_45</name>
+                <time>2023-07-29T05:45:00Z</time>
+                <ele>900</ele>
+            </trkpt>
+            <trkpt lat="42.81660333167445" lon="12.477092616346324">
+                <name>900h_60</name>
+                <time>2023-07-29T06:00:00Z</time>
+                <ele>900</ele>
+            </trkpt>
+            <trkpt lat="42.829799095759306" lon="12.486660041697904">
+                <name>900h_75</name>
+                <time>2023-07-29T06:15:00Z</time>
+                <ele>900</ele>
+            </trkpt>
+            <trkpt lat="42.8439091215216" lon="12.49646574613487">
+                <name>900h_90</name>
+                <time>2023-07-29T06:30:00Z</time>
+                <ele>900</ele>
+            </trkpt>
+            <trkpt lat="42.859134231123356" lon="12.507049007027453">
+                <name>900h_105</name>
+                <time>2023-07-29T06:45:00Z</time>
+                <ele>900</ele>
+            </trkpt>
+            <trkpt lat="42.87565721484244" lon="12.519037782251363">
+                <name>900h_120</name>
+                <time>2023-07-29T07:00:00Z</time>
+                <ele>900</ele>
+            </trkpt>
+        </trkseg>
+    </trk>
+    <trk>
+        <name>850h</name>
+        <desc>Model:iconEu,   Reference time:2023-07-26T12:00:00Z,   Distance:17141m,   Time:120min,   Av speed:8.57kph,   Alt: 5000ft </desc>
+        <extensions>
+            <gpxx:TrackExtension xmlns:gpxx="http://www.garmin.com/xmlschemas/GpxExtensions/v3">
+                <gpxx:DisplayColor>LightGray</gpxx:DisplayColor>
+            </gpxx:TrackExtension>
+            <line xmlns="http://www.topografix.com/GPX/gpx_style/0/2">
+                <color>e6bc0f</color>
+                <opacity>1</opacity>
+            </line>
+            <model>iconEu</model>
+            <ref_time>2023-07-26T12:00:00Z</ref_time>
+            <distance>17141</distance>
+            <time_mins>120</time_mins>
+            <av_speed_kmph>8.57</av_speed_kmph>
+            <level>850h</level>
+            <alt_ft>5000</alt_ft>
+            <alt_m>1500</alt_m>
+            <ascent>0</ascent>
+            <descent>0</descent>
+            <calc_backward>false</calc_backward>
+        </extensions>
+        <trkseg>
+            <trkpt lat="42.76293910173984" lon="12.42097333073616">
+                <name>850h_0</name>
+                <time>2023-07-29T05:00:00Z</time>
+                <ele>1500</ele>
+            </trkpt>
+            <trkpt lat="42.76247725489003" lon="12.456582277124694">
+                <name>850h_15</name>
+                <time>2023-07-29T05:15:00Z</time>
+                <ele>1500</ele>
+            </trkpt>
+            <trkpt lat="42.76206598065592" lon="12.488332893504529">
+                <name>850h_30</name>
+                <time>2023-07-29T05:30:00Z</time>
+                <ele>1500</ele>
+            </trkpt>
+            <trkpt lat="42.76206242715431" lon="12.516914248222148">
+                <name>850h_45</name>
+                <time>2023-07-29T05:45:00Z</time>
+                <ele>1500</ele>
+            </trkpt>
+            <trkpt lat="42.76240535346567" lon="12.543921423840727">
+                <name>850h_60</name>
+                <time>2023-07-29T06:00:00Z</time>
+                <ele>1500</ele>
+            </trkpt>
+            <trkpt lat="42.76338625899234" lon="12.569489356435229">
+                <name>850h_75</name>
+                <time>2023-07-29T06:15:00Z</time>
+                <ele>1500</ele>
+            </trkpt>
+            <trkpt lat="42.76642878487443" lon="12.593012060544883">
+                <name>850h_90</name>
+                <time>2023-07-29T06:30:00Z</time>
+                <ele>1500</ele>
+            </trkpt>
+            <trkpt lat="42.77125584873215" lon="12.61211570150386">
+                <name>850h_105</name>
+                <time>2023-07-29T06:45:00Z</time>
+                <ele>1500</ele>
+            </trkpt>
+            <trkpt lat="42.777223705448336" lon="12.627409735879231">
+                <name>850h_120</name>
+                <time>2023-07-29T07:00:00Z</time>
+                <ele>1500</ele>
+            </trkpt>
+        </trkseg>
+    </trk>
+    <trk>
+        <name>surface</name>
+        <desc>Model:iconEu,   Reference time:2023-07-26T12:00:00Z,   Distance:7991m,   Time:135min,   Av speed:3.55kph,   Alt: 30ft </desc>
+        <extensions>
+            <gpxx:TrackExtension xmlns:gpxx="http://www.garmin.com/xmlschemas/GpxExtensions/v3">
+                <gpxx:DisplayColor>DarkRed</gpxx:DisplayColor>
+            </gpxx:TrackExtension>
+            <line xmlns="http://www.topografix.com/GPX/gpx_style/0/2">
+                <color>f05c10</color>
+                <opacity>1</opacity>
+            </line>
+            <model>iconEu</model>
+            <ref_time>2023-07-26T12:00:00Z</ref_time>
+            <distance>7991</distance>
+            <time_mins>135</time_mins>
+            <av_speed_kmph>3.55</av_speed_kmph>
+            <level>surface</level>
+            <alt_ft>30</alt_ft>
+            <alt_m>10</alt_m>
+            <ascent>0</ascent>
+            <descent>0</descent>
+            <calc_backward>false</calc_backward>
+        </extensions>
+        <trkseg>
+            <trkpt lat="42.872738470219126" lon="12.384924441576004">
+                <name>surface_0</name>
+                <time>2023-07-29T05:00:00Z</time>
+                <ele>153</ele>
+            </trkpt>
+            <trkpt lat="42.87712493461378" lon="12.381327778141646">
+                <name>surface_15</name>
+                <time>2023-07-29T05:15:00Z</time>
+                <ele>153</ele>
+            </trkpt>
+            <trkpt lat="42.882087266791366" lon="12.37772692060385">
+                <name>surface_30</name>
+                <time>2023-07-29T05:30:00Z</time>
+                <ele>153</ele>
+            </trkpt>
+            <trkpt lat="42.88753318657757" lon="12.373774800191075">
+                <name>surface_45</name>
+                <time>2023-07-29T05:45:00Z</time>
+                <ele>153</ele>
+            </trkpt>
+            <trkpt lat="42.893414367131534" lon="12.3693249703879">
+                <name>surface_60</name>
+                <time>2023-07-29T06:00:00Z</time>
+                <ele>153</ele>
+            </trkpt>
+            <trkpt lat="42.89959689172006" lon="12.3640511215791">
+                <name>surface_75</name>
+                <time>2023-07-29T06:15:00Z</time>
+                <ele>153</ele>
+            </trkpt>
+            <trkpt lat="42.90726166547154" lon="12.359171390937195">
+                <name>surface_90</name>
+                <time>2023-07-29T06:30:00Z</time>
+                <ele>153</ele>
+            </trkpt>
+            <trkpt lat="42.916377500196944" lon="12.354885368609832">
+                <name>surface_105</name>
+                <time>2023-07-29T06:45:00Z</time>
+                <ele>153</ele>
+            </trkpt>
+            <trkpt lat="42.92693251289866" lon="12.351557381994278">
+                <name>surface_120</name>
+                <time>2023-07-29T07:00:00Z</time>
+                <ele>153</ele>
+            </trkpt>
+            <trkpt lat="42.93880052822016" lon="12.348989754132795">
+                <name>surface_135</name>
+                <time>2023-07-29T07:15:00Z</time>
+                <ele>153</ele>
+            </trkpt>
+        </trkseg>
+    </trk>
+    <trk>
+        <name>950h</name>
+        <desc>Model:iconEu,   Reference time:2023-07-26T12:00:00Z,   Distance:18385m,   Time:120min,   Av speed:9.19kph,   Alt: 2000ft </desc>
+        <extensions>
+            <gpxx:TrackExtension xmlns:gpxx="http://www.garmin.com/xmlschemas/GpxExtensions/v3">
+                <gpxx:DisplayColor>DarkBlue</gpxx:DisplayColor>
+            </gpxx:TrackExtension>
+            <line xmlns="http://www.topografix.com/GPX/gpx_style/0/2">
+                <color>f19222</color>
+                <opacity>1</opacity>
+            </line>
+            <model>iconEu</model>
+            <ref_time>2023-07-26T12:00:00Z</ref_time>
+            <distance>18385</distance>
+            <time_mins>120</time_mins>
+            <av_speed_kmph>9.19</av_speed_kmph>
+            <level>950h</level>
+            <alt_ft>2000</alt_ft>
+            <alt_m>600</alt_m>
+            <ascent>0</ascent>
+            <descent>0</descent>
+            <calc_backward>false</calc_backward>
+        </extensions>
+        <trkseg>
+            <trkpt lat="42.872738470219126" lon="12.384924441576004">
+                <name>950h_0</name>
+                <time>2023-07-29T05:00:00Z</time>
+                <ele>600</ele>
+            </trkpt>
+            <trkpt lat="42.892061815534674" lon="12.391013653147704">
+                <name>950h_15</name>
+                <time>2023-07-29T05:15:00Z</time>
+                <ele>600</ele>
+            </trkpt>
+            <trkpt lat="42.91241623987276" lon="12.395415425113175">
+                <name>950h_30</name>
+                <time>2023-07-29T05:30:00Z</time>
+                <ele>600</ele>
+            </trkpt>
+            <trkpt lat="42.93336069445482" lon="12.39791820956705">
+                <name>950h_45</name>
+                <time>2023-07-29T05:45:00Z</time>
+                <ele>600</ele>
+            </trkpt>
+            <trkpt lat="42.95473467065349" lon="12.398427962392383">
+                <name>950h_60</name>
+                <time>2023-07-29T06:00:00Z</time>
+                <ele>600</ele>
+            </trkpt>
+            <trkpt lat="42.97608897058287" lon="12.397408730931584">
+                <name>950h_75</name>
+                <time>2023-07-29T06:15:00Z</time>
+                <ele>600</ele>
+            </trkpt>
+            <trkpt lat="42.996960188934835" lon="12.397408730931584">
+                <name>950h_90</name>
+                <time>2023-07-29T06:30:00Z</time>
+                <ele>600</ele>
+            </trkpt>
+            <trkpt lat="43.01724316280918" lon="12.397408730931584">
+                <name>950h_105</name>
+                <time>2023-07-29T06:45:00Z</time>
+                <ele>600</ele>
+            </trkpt>
+            <trkpt lat="43.03720412144607" lon="12.398362407156574">
+                <name>950h_120</name>
+                <time>2023-07-29T07:00:00Z</time>
+                <ele>600</ele>
+            </trkpt>
+        </trkseg>
+    </trk>
+    <trk>
+        <name>925h</name>
+        <desc>Model:iconEu,   Reference time:2023-07-26T12:00:00Z,   Distance:20983m,   Time:120min,   Av speed:10.49kph,   Alt: 2500ft </desc>
+        <extensions>
+            <gpxx:TrackExtension xmlns:gpxx="http://www.garmin.com/xmlschemas/GpxExtensions/v3">
+                <gpxx:DisplayColor>DarkMagenta</gpxx:DisplayColor>
+            </gpxx:TrackExtension>
+            <line xmlns="http://www.topografix.com/GPX/gpx_style/0/2">
+                <color>f19a1f</color>
+                <opacity>1</opacity>
+            </line>
+            <model>iconEu</model>
+            <ref_time>2023-07-26T12:00:00Z</ref_time>
+            <distance>20983</distance>
+            <time_mins>120</time_mins>
+            <av_speed_kmph>10.49</av_speed_kmph>
+            <level>925h</level>
+            <alt_ft>2500</alt_ft>
+            <alt_m>750</alt_m>
+            <ascent>0</ascent>
+            <descent>0</descent>
+            <calc_backward>false</calc_backward>
+        </extensions>
+        <trkseg>
+            <trkpt lat="42.872738470219126" lon="12.384924441576004">
+                <name>925h_0</name>
+                <time>2023-07-29T05:00:00Z</time>
+                <ele>750</ele>
+            </trkpt>
+            <trkpt lat="42.89422299082304" lon="12.400518087081977">
+                <name>925h_15</name>
+                <time>2023-07-29T05:15:00Z</time>
+                <ele>750</ele>
+            </trkpt>
+            <trkpt lat="42.91584237759985" lon="12.414284190531227">
+                <name>925h_30</name>
+                <time>2023-07-29T05:30:00Z</time>
+                <ele>750</ele>
+            </trkpt>
+            <trkpt lat="42.93747721862686" lon="12.426224258366542">
+                <name>925h_45</name>
+                <time>2023-07-29T05:45:00Z</time>
+                <ele>750</ele>
+            </trkpt>
+            <trkpt lat="42.95931602556953" lon="12.436499571369195">
+                <name>925h_60</name>
+                <time>2023-07-29T06:00:00Z</time>
+                <ele>750</ele>
+            </trkpt>
+            <trkpt lat="42.98137448367813" lon="12.445145644641093">
+                <name>925h_75</name>
+                <time>2023-07-29T06:15:00Z</time>
+                <ele>750</ele>
+            </trkpt>
+            <trkpt lat="43.003710064811855" lon="12.452760680851025">
+                <name>925h_90</name>
+                <time>2023-07-29T06:30:00Z</time>
+                <ele>750</ele>
+            </trkpt>
+            <trkpt lat="43.02663845287942" lon="12.460580748774865">
+                <name>925h_105</name>
+                <time>2023-07-29T06:45:00Z</time>
+                <ele>750</ele>
+            </trkpt>
+            <trkpt lat="43.05049603185252" lon="12.468118203803789">
+                <name>925h_120</name>
+                <time>2023-07-29T07:00:00Z</time>
+                <ele>750</ele>
+            </trkpt>
+        </trkseg>
+    </trk>
+    <trk>
+        <name>900h</name>
+        <desc>Model:iconEu,   Reference time:2023-07-26T12:00:00Z,   Distance:18685m,   Time:120min,   Av speed:9.34kph,   Alt: 3000ft </desc>
+        <extensions>
+            <gpxx:TrackExtension xmlns:gpxx="http://www.garmin.com/xmlschemas/GpxExtensions/v3">
+                <gpxx:DisplayColor>DarkCyan</gpxx:DisplayColor>
+            </gpxx:TrackExtension>
+            <line xmlns="http://www.topografix.com/GPX/gpx_style/0/2">
+                <color>f0a21c</color>
+                <opacity>1</opacity>
+            </line>
+            <model>iconEu</model>
+            <ref_time>2023-07-26T12:00:00Z</ref_time>
+            <distance>18685</distance>
+            <time_mins>120</time_mins>
+            <av_speed_kmph>9.34</av_speed_kmph>
+            <level>900h</level>
+            <alt_ft>3000</alt_ft>
+            <alt_m>900</alt_m>
+            <ascent>0</ascent>
+            <descent>0</descent>
+            <calc_backward>false</calc_backward>
+        </extensions>
+        <trkseg>
+            <trkpt lat="42.872738470219126" lon="12.384924441576004">
+                <name>900h_0</name>
+                <time>2023-07-29T05:00:00Z</time>
+                <ele>900</ele>
+            </trkpt>
+            <trkpt lat="42.88856054752425" lon="12.40304629542448">
+                <name>900h_15</name>
+                <time>2023-07-29T05:15:00Z</time>
+                <ele>900</ele>
+            </trkpt>
+            <trkpt lat="42.9041162556417" lon="12.420867531481472">
+                <name>900h_30</name>
+                <time>2023-07-29T05:30:00Z</time>
+                <ele>900</ele>
+            </trkpt>
+            <trkpt lat="42.920111182150656" lon="12.437933664668947">
+                <name>900h_45</name>
+                <time>2023-07-29T05:45:00Z</time>
+                <ele>900</ele>
+            </trkpt>
+            <trkpt lat="42.936846552376544" lon="12.453353376012478">
+                <name>900h_60</name>
+                <time>2023-07-29T06:00:00Z</time>
+                <ele>900</ele>
+            </trkpt>
+            <trkpt lat="42.95470689717197" lon="12.466329191289665">
+                <name>900h_75</name>
+                <time>2023-07-29T06:15:00Z</time>
+                <ele>900</ele>
+            </trkpt>
+            <trkpt lat="42.97401676754326" lon="12.478079924422397">
+                <name>900h_90</name>
+                <time>2023-07-29T06:30:00Z</time>
+                <ele>900</ele>
+            </trkpt>
+            <trkpt lat="42.994640502979905" lon="12.488903983090415">
+                <name>900h_105</name>
+                <time>2023-07-29T06:45:00Z</time>
+                <ele>900</ele>
+            </trkpt>
+            <trkpt lat="43.016507556749154" lon="12.499202164366311">
+                <name>900h_120</name>
+                <time>2023-07-29T07:00:00Z</time>
+                <ele>900</ele>
+            </trkpt>
+        </trkseg>
+    </trk>
+    <trk>
+        <name>850h</name>
+        <desc>Model:iconEu,   Reference time:2023-07-26T12:00:00Z,   Distance:19020m,   Time:120min,   Av speed:9.51kph,   Alt: 5000ft </desc>
+        <extensions>
+            <gpxx:TrackExtension xmlns:gpxx="http://www.garmin.com/xmlschemas/GpxExtensions/v3">
+                <gpxx:DisplayColor>LightGray</gpxx:DisplayColor>
+            </gpxx:TrackExtension>
+            <line xmlns="http://www.topografix.com/GPX/gpx_style/0/2">
+                <color>e6bc0f</color>
+                <opacity>1</opacity>
+            </line>
+            <model>iconEu</model>
+            <ref_time>2023-07-26T12:00:00Z</ref_time>
+            <distance>19020</distance>
+            <time_mins>120</time_mins>
+            <av_speed_kmph>9.51</av_speed_kmph>
+            <level>850h</level>
+            <alt_ft>5000</alt_ft>
+            <alt_m>1500</alt_m>
+            <ascent>0</ascent>
+            <descent>0</descent>
+            <calc_backward>false</calc_backward>
+        </extensions>
+        <trkseg>
+            <trkpt lat="42.872738470219126" lon="12.384924441576004">
+                <name>850h_0</name>
+                <time>2023-07-29T05:00:00Z</time>
+                <ele>1500</ele>
+            </trkpt>
+            <trkpt lat="42.87483031709546" lon="12.417623305980918">
+                <name>850h_15</name>
+                <time>2023-07-29T05:15:00Z</time>
+                <ele>1500</ele>
+            </trkpt>
+            <trkpt lat="42.87828911115846" lon="12.447457360806714">
+                <name>850h_30</name>
+                <time>2023-07-29T05:30:00Z</time>
+                <ele>1500</ele>
+            </trkpt>
+            <trkpt lat="42.88297101969786" lon="12.475153252136833">
+                <name>850h_45</name>
+                <time>2023-07-29T05:45:00Z</time>
+                <ele>1500</ele>
+            </trkpt>
+            <trkpt lat="42.88878314170953" lon="12.501113133507403">
+                <name>850h_60</name>
+                <time>2023-07-29T06:00:00Z</time>
+                <ele>1500</ele>
+            </trkpt>
+            <trkpt lat="42.89565622846665" lon="12.526900387607103">
+                <name>850h_75</name>
+                <time>2023-07-29T06:15:00Z</time>
+                <ele>1500</ele>
+            </trkpt>
+            <trkpt lat="42.904134150627094" lon="12.552905160105418">
+                <name>850h_90</name>
+                <time>2023-07-29T06:30:00Z</time>
+                <ele>1500</ele>
+            </trkpt>
+            <trkpt lat="42.91394545715883" lon="12.579205378934427">
+                <name>850h_105</name>
+                <time>2023-07-29T06:45:00Z</time>
+                <ele>1500</ele>
+            </trkpt>
+            <trkpt lat="42.92439900644027" lon="12.604966848253948">
+                <name>850h_120</name>
+                <time>2023-07-29T07:00:00Z</time>
+                <ele>1500</ele>
+            </trkpt>
+        </trkseg>
+    </trk>
+    <trk>
+        <name>surface</name>
+        <desc>Model:iconEu,   Reference time:2023-07-26T12:00:00Z,   Distance:6139m,   Time:135min,   Av speed:2.73kph,   Alt: 30ft </desc>
+        <extensions>
+            <gpxx:TrackExtension xmlns:gpxx="http://www.garmin.com/xmlschemas/GpxExtensions/v3">
+                <gpxx:DisplayColor>DarkRed</gpxx:DisplayColor>
+            </gpxx:TrackExtension>
+            <line xmlns="http://www.topografix.com/GPX/gpx_style/0/2">
+                <color>f05c10</color>
+                <opacity>1</opacity>
+            </line>
+            <model>iconEu</model>
+            <ref_time>2023-07-26T12:00:00Z</ref_time>
+            <distance>6139</distance>
+            <time_mins>135</time_mins>
+            <av_speed_kmph>2.73</av_speed_kmph>
+            <level>surface</level>
+            <alt_ft>30</alt_ft>
+            <alt_m>10</alt_m>
+            <ascent>0</ascent>
+            <descent>0</descent>
+            <calc_backward>false</calc_backward>
+        </extensions>
+        <trkseg>
+            <trkpt lat="42.89050376720242" lon="12.533412538468838">
+                <name>surface_0</name>
+                <time>2023-07-29T04:00:00Z</time>
+                <ele>280</ele>
+            </trkpt>
+            <trkpt lat="42.896808187548565" lon="12.533562752704748">
+                <name>surface_15</name>
+                <time>2023-07-29T04:15:00Z</time>
+                <ele>280</ele>
+            </trkpt>
+            <trkpt lat="42.902794558091585" lon="12.533562752704748">
+                <name>surface_30</name>
+                <time>2023-07-29T04:30:00Z</time>
+                <ele>280</ele>
+            </trkpt>
+            <trkpt lat="42.90849903958713" lon="12.533562752704748">
+                <name>surface_45</name>
+                <time>2023-07-29T04:45:00Z</time>
+                <ele>280</ele>
+            </trkpt>
+            <trkpt lat="42.9139542918029" lon="12.533692770129166">
+                <name>surface_60</name>
+                <time>2023-07-29T05:00:00Z</time>
+                <ele>280</ele>
+            </trkpt>
+            <trkpt lat="42.919191436144594" lon="12.533817599901315">
+                <name>surface_75</name>
+                <time>2023-07-29T05:15:00Z</time>
+                <ele>280</ele>
+            </trkpt>
+            <trkpt lat="42.9247854475617" lon="12.532332628963413">
+                <name>surface_90</name>
+                <time>2023-07-29T05:30:00Z</time>
+                <ele>280</ele>
+            </trkpt>
+            <trkpt lat="42.93060090784037" lon="12.529123556003311">
+                <name>surface_105</name>
+                <time>2023-07-29T05:45:00Z</time>
+                <ele>280</ele>
+            </trkpt>
+            <trkpt lat="42.93647705576622" lon="12.524108057936688">
+                <name>surface_120</name>
+                <time>2023-07-29T06:00:00Z</time>
+                <ele>280</ele>
+            </trkpt>
+            <trkpt lat="42.94222562659697" lon="12.517281483325844">
+                <name>surface_135</name>
+                <time>2023-07-29T06:15:00Z</time>
+                <ele>280</ele>
+            </trkpt>
+        </trkseg>
+    </trk>
+    <trk>
+        <name>950h</name>
+        <desc>Model:iconEu,   Reference time:2023-07-26T12:00:00Z,   Distance:13577m,   Time:120min,   Av speed:6.79kph,   Alt: 2000ft </desc>
+        <extensions>
+            <gpxx:TrackExtension xmlns:gpxx="http://www.garmin.com/xmlschemas/GpxExtensions/v3">
+                <gpxx:DisplayColor>DarkBlue</gpxx:DisplayColor>
+            </gpxx:TrackExtension>
+            <line xmlns="http://www.topografix.com/GPX/gpx_style/0/2">
+                <color>f19222</color>
+                <opacity>1</opacity>
+            </line>
+            <model>iconEu</model>
+            <ref_time>2023-07-26T12:00:00Z</ref_time>
+            <distance>13577</distance>
+            <time_mins>120</time_mins>
+            <av_speed_kmph>6.79</av_speed_kmph>
+            <level>950h</level>
+            <alt_ft>2000</alt_ft>
+            <alt_m>600</alt_m>
+            <ascent>0</ascent>
+            <descent>0</descent>
+            <calc_backward>false</calc_backward>
+        </extensions>
+        <trkseg>
+            <trkpt lat="42.89050376720242" lon="12.533412538468838">
+                <name>950h_0</name>
+                <time>2023-07-29T04:00:00Z</time>
+                <ele>600</ele>
+            </trkpt>
+            <trkpt lat="42.90615443330229" lon="12.536796746170102">
+                <name>950h_15</name>
+                <time>2023-07-29T04:15:00Z</time>
+                <ele>600</ele>
+            </trkpt>
+            <trkpt lat="42.921392940309644" lon="12.540092645616713">
+                <name>950h_30</name>
+                <time>2023-07-29T04:30:00Z</time>
+                <ele>600</ele>
+            </trkpt>
+            <trkpt lat="42.93604683587077" lon="12.543262854630486">
+                <name>950h_45</name>
+                <time>2023-07-29T04:45:00Z</time>
+                <ele>600</ele>
+            </trkpt>
+            <trkpt lat="42.94999685945975" lon="12.54594139282884">
+                <name>950h_60</name>
+                <time>2023-07-29T05:00:00Z</time>
+                <ele>600</ele>
+            </trkpt>
+            <trkpt lat="42.963639720143696" lon="12.547900877549944">
+                <name>950h_75</name>
+                <time>2023-07-29T05:15:00Z</time>
+                <ele>600</ele>
+            </trkpt>
+            <trkpt lat="42.97854121092472" lon="12.548612147560352">
+                <name>950h_90</name>
+                <time>2023-07-29T05:30:00Z</time>
+                <ele>600</ele>
+            </trkpt>
+            <trkpt lat="42.99463075189286" lon="12.548228175413328">
+                <name>950h_105</name>
+                <time>2023-07-29T05:45:00Z</time>
+                <ele>600</ele>
+            </trkpt>
+            <trkpt lat="43.0117494993706" lon="12.546179940204134">
+                <name>950h_120</name>
+                <time>2023-07-29T06:00:00Z</time>
+                <ele>600</ele>
+            </trkpt>
+        </trkseg>
+    </trk>
+    <trk>
+        <name>925h</name>
+        <desc>Model:iconEu,   Reference time:2023-07-26T12:00:00Z,   Distance:19743m,   Time:120min,   Av speed:9.87kph,   Alt: 2500ft </desc>
+        <extensions>
+            <gpxx:TrackExtension xmlns:gpxx="http://www.garmin.com/xmlschemas/GpxExtensions/v3">
+                <gpxx:DisplayColor>DarkMagenta</gpxx:DisplayColor>
+            </gpxx:TrackExtension>
+            <line xmlns="http://www.topografix.com/GPX/gpx_style/0/2">
+                <color>f19a1f</color>
+                <opacity>1</opacity>
+            </line>
+            <model>iconEu</model>
+            <ref_time>2023-07-26T12:00:00Z</ref_time>
+            <distance>19743</distance>
+            <time_mins>120</time_mins>
+            <av_speed_kmph>9.87</av_speed_kmph>
+            <level>925h</level>
+            <alt_ft>2500</alt_ft>
+            <alt_m>750</alt_m>
+            <ascent>0</ascent>
+            <descent>0</descent>
+            <calc_backward>false</calc_backward>
+        </extensions>
+        <trkseg>
+            <trkpt lat="42.89050376720242" lon="12.533412538468838">
+                <name>925h_0</name>
+                <time>2023-07-29T04:00:00Z</time>
+                <ele>750</ele>
+            </trkpt>
+            <trkpt lat="42.91293251407977" lon="12.545168336494482">
+                <name>925h_15</name>
+                <time>2023-07-29T04:15:00Z</time>
+                <ele>750</ele>
+            </trkpt>
+            <trkpt lat="42.9346959443976" lon="12.557786744476052">
+                <name>925h_30</name>
+                <time>2023-07-29T04:30:00Z</time>
+                <ele>750</ele>
+            </trkpt>
+            <trkpt lat="42.95563023560671" lon="12.571125214570543">
+                <name>925h_45</name>
+                <time>2023-07-29T04:45:00Z</time>
+                <ele>750</ele>
+            </trkpt>
+            <trkpt lat="42.9758887720768" lon="12.583453638417469">
+                <name>925h_60</name>
+                <time>2023-07-29T05:00:00Z</time>
+                <ele>750</ele>
+            </trkpt>
+            <trkpt lat="42.99550166704399" lon="12.594287999501965">
+                <name>925h_75</name>
+                <time>2023-07-29T05:15:00Z</time>
+                <ele>750</ele>
+            </trkpt>
+            <trkpt lat="43.01544152032537" lon="12.603678394746458">
+                <name>925h_90</name>
+                <time>2023-07-29T05:30:00Z</time>
+                <ele>750</ele>
+            </trkpt>
+            <trkpt lat="43.03587094658666" lon="12.611167674379733">
+                <name>925h_105</name>
+                <time>2023-07-29T05:45:00Z</time>
+                <ele>750</ele>
+            </trkpt>
+            <trkpt lat="43.05669621194951" lon="12.61670779564772">
+                <name>925h_120</name>
+                <time>2023-07-29T06:00:00Z</time>
+                <ele>750</ele>
+            </trkpt>
+        </trkseg>
+    </trk>
+    <trk>
+        <name>900h</name>
+        <desc>Model:iconEu,   Reference time:2023-07-26T12:00:00Z,   Distance:21061m,   Time:120min,   Av speed:10.53kph,   Alt: 3000ft </desc>
+        <extensions>
+            <gpxx:TrackExtension xmlns:gpxx="http://www.garmin.com/xmlschemas/GpxExtensions/v3">
+                <gpxx:DisplayColor>DarkCyan</gpxx:DisplayColor>
+            </gpxx:TrackExtension>
+            <line xmlns="http://www.topografix.com/GPX/gpx_style/0/2">
+                <color>f0a21c</color>
+                <opacity>1</opacity>
+            </line>
+            <model>iconEu</model>
+            <ref_time>2023-07-26T12:00:00Z</ref_time>
+            <distance>21061</distance>
+            <time_mins>120</time_mins>
+            <av_speed_kmph>10.53</av_speed_kmph>
+            <level>900h</level>
+            <alt_ft>3000</alt_ft>
+            <alt_m>900</alt_m>
+            <ascent>0</ascent>
+            <descent>0</descent>
+            <calc_backward>false</calc_backward>
+        </extensions>
+        <trkseg>
+            <trkpt lat="42.89050376720242" lon="12.533412538468838">
+                <name>900h_0</name>
+                <time>2023-07-29T04:00:00Z</time>
+                <ele>900</ele>
+            </trkpt>
+            <trkpt lat="42.911985877258985" lon="12.547090371897692">
+                <name>900h_15</name>
+                <time>2023-07-29T04:15:00Z</time>
+                <ele>900</ele>
+            </trkpt>
+            <trkpt lat="42.93384755319754" lon="12.560385341441963">
+                <name>900h_30</name>
+                <time>2023-07-29T04:30:00Z</time>
+                <ele>900</ele>
+            </trkpt>
+            <trkpt lat="42.95602119892819" lon="12.57324605416376">
+                <name>900h_45</name>
+                <time>2023-07-29T04:45:00Z</time>
+                <ele>900</ele>
+            </trkpt>
+            <trkpt lat="42.977843911160896" lon="12.585297713320907">
+                <name>900h_60</name>
+                <time>2023-07-29T05:00:00Z</time>
+                <ele>900</ele>
+            </trkpt>
+            <trkpt lat="42.99901875529093" lon="12.59699560467776">
+                <name>900h_75</name>
+                <time>2023-07-29T05:15:00Z</time>
+                <ele>900</ele>
+            </trkpt>
+            <trkpt lat="43.02093731435864" lon="12.607318787390648">
+                <name>900h_90</name>
+                <time>2023-07-29T05:30:00Z</time>
+                <ele>900</ele>
+            </trkpt>
+            <trkpt lat="43.04377288377217" lon="12.6168718051974">
+                <name>900h_105</name>
+                <time>2023-07-29T05:45:00Z</time>
+                <ele>900</ele>
+            </trkpt>
+            <trkpt lat="43.06729757735202" lon="12.624900574516726">
+                <name>900h_120</name>
+                <time>2023-07-29T06:00:00Z</time>
+                <ele>900</ele>
+            </trkpt>
+        </trkseg>
+    </trk>
+    <trk>
+        <name>850h</name>
+        <desc>Model:iconEu,   Reference time:2023-07-26T12:00:00Z,   Distance:24378m,   Time:120min,   Av speed:12.19kph,   Alt: 5000ft </desc>
+        <extensions>
+            <gpxx:TrackExtension xmlns:gpxx="http://www.garmin.com/xmlschemas/GpxExtensions/v3">
+                <gpxx:DisplayColor>LightGray</gpxx:DisplayColor>
+            </gpxx:TrackExtension>
+            <line xmlns="http://www.topografix.com/GPX/gpx_style/0/2">
+                <color>e6bc0f</color>
+                <opacity>1</opacity>
+            </line>
+            <model>iconEu</model>
+            <ref_time>2023-07-26T12:00:00Z</ref_time>
+            <distance>24378</distance>
+            <time_mins>120</time_mins>
+            <av_speed_kmph>12.19</av_speed_kmph>
+            <level>850h</level>
+            <alt_ft>5000</alt_ft>
+            <alt_m>1500</alt_m>
+            <ascent>0</ascent>
+            <descent>0</descent>
+            <calc_backward>false</calc_backward>
+        </extensions>
+        <trkseg>
+            <trkpt lat="42.89050376720242" lon="12.533412538468838">
+                <name>850h_0</name>
+                <time>2023-07-29T04:00:00Z</time>
+                <ele>1500</ele>
+            </trkpt>
+            <trkpt lat="42.905212631799" lon="12.561057751269121">
+                <name>850h_15</name>
+                <time>2023-07-29T04:15:00Z</time>
+                <ele>1500</ele>
+            </trkpt>
+            <trkpt lat="42.92202701605346" lon="12.589418930982614">
+                <name>850h_30</name>
+                <time>2023-07-29T04:30:00Z</time>
+                <ele>1500</ele>
+            </trkpt>
+            <trkpt lat="42.94035332343826" lon="12.617226858906108">
+                <name>850h_45</name>
+                <time>2023-07-29T04:45:00Z</time>
+                <ele>1500</ele>
+            </trkpt>
+            <trkpt lat="42.95980588882457" lon="12.643811705860713">
+                <name>850h_60</name>
+                <time>2023-07-29T05:00:00Z</time>
+                <ele>1500</ele>
+            </trkpt>
+            <trkpt lat="42.98019744895749" lon="12.670732471536393">
+                <name>850h_75</name>
+                <time>2023-07-29T05:15:00Z</time>
+                <ele>1500</ele>
+            </trkpt>
+            <trkpt lat="42.999197261047705" lon="12.699590161177577">
+                <name>850h_90</name>
+                <time>2023-07-29T05:30:00Z</time>
+                <ele>1500</ele>
+            </trkpt>
+            <trkpt lat="43.01725255045087" lon="12.729025981048816">
+                <name>850h_105</name>
+                <time>2023-07-29T05:45:00Z</time>
+                <ele>1500</ele>
+            </trkpt>
+            <trkpt lat="43.03393490782109" lon="12.759320183609535">
+                <name>850h_120</name>
+                <time>2023-07-29T06:00:00Z</time>
+                <ele>1500</ele>
+            </trkpt>
+        </trkseg>
+    </trk>
+</gpx>

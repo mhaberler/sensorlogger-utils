@@ -169,7 +169,9 @@ def loggGps(lat, lon, name, dataDir):
 
 
 if __name__=="__main__":
-    loggGps('63.5', '11.0', 'konsoll2')
+    dataDir = "/Users/mah/Ballon/src/sensorlogger-utils/fanekart/gpsdata/"
+
+    loggGps('47', '15.0', 'gpsid', dataDir)
     # loggGps('19.9', '5.5', 'test')
 
 #    dataDir = 'Directory where we write our geojson-data'
