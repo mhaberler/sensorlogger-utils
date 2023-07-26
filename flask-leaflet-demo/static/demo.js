@@ -1,17 +1,17 @@
 BASECOORDS = [47.07585724136853, 15.431147228565663];
 
 function makeMap() {
-    var TILE_URL = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
-    var MB_ATTR = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
     mymap = L.map('llmap').setView(BASECOORDS, 8);
-    L.tileLayer(TILE_URL, {attribution: MB_ATTR}).addTo(mymap);
+    var layer = protomaps.leafletLayer({ url: 'https://static.mah.priv.at/cors/pmtiles/europe-latest.pmtiles' })
+    layer.addTo(mymap)
+    layer.addInspector(mymap)
 }
 
 var layer = L.layerGroup();
 
 function renderData(districtid) {
-    $.getJSON("/district/" + districtid, function(obj) {
-        var markers = obj.data.map(function(arr) {
+    $.getJSON("/district/" + districtid, function (obj) {
+        var markers = obj.data.map(function (arr) {
             return L.marker([arr[0], arr[1]]);
         });
         mymap.removeLayer(layer);
@@ -21,10 +21,10 @@ function renderData(districtid) {
 }
 
 
-$(function() {
+$(function () {
     makeMap();
     renderData('0');
-    $('#distsel').change(function() {
+    $('#distsel').change(function () {
         var val = $('#distsel option:selected').val();
         renderData(val);
     });
