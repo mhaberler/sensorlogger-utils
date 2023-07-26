@@ -58,15 +58,12 @@ untracked/
 
 
 
-.venv/pyvenv.cfg
-.venv/share/man/man1/qr.1
-.venv/pyvenv.cfg
+
 .gitignore
-.venv/pyvenv.cfg
+
 
 unused/
 
-.venv/pyvenv.cfg
 
-.venv
 
+.venv/share/man/man1/qr.1
