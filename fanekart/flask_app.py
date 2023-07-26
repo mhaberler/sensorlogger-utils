@@ -68,7 +68,3 @@ def getpos(gpsId="", secretGpsKey=""):
             app.logger.info(f"post {lat=} {lon=} {alt=}")
             ok = loggGps.loggGps(str(lat), str(lon), str(gpsId), dataDir)
     return {}
-
-    # return( ok + "<br>gps ID" + str(gpsId) + "<br>\n" +
-    #         'lat' + str(lat) + "<br>\n" +
-    #         "lon" + str(lon) )

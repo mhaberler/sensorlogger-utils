@@ -59,4 +59,13 @@ $(document).ready(function () {
     }
     addData(msg.date, msg.value);
   });
+  socket.on("updateLocation", function (msg) {
+    console.log("Received location :: " + msg.date + " :: " + msg.value);
+
+    // // Show only MAX_DATA_COUNT data
+    // if (myChart.data.labels.length > MAX_DATA_COUNT) {
+    //   removeFirstData();
+    // }
+    // addData(msg.date, msg.value);
+  });
 });
