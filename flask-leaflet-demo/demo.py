@@ -4,11 +4,11 @@ from flask import Flask, render_template, jsonify
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///test.db"
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///test.sqlite"
 
 db = SQLAlchemy(app)
 
-BASECOORDS = [-13.9626, 33.7741]
+BASECOORDS = [ 47.07585724136853, 15.431147228565663]
 
 
 class Point(db.Model):
