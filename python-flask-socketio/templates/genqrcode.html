@@ -1,12 +1,21 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Sensorlogger QRcode</title>
 </head>
-    <body>
-        <h1>Scan this code with your mobile to start live tracking:</h1>
 
-            <img src="{{ qrcode(config,error_correction='H', back_color='white', fill_color='red') }}">
+<body>
+    <h1>Scan this code with your mobile to start live tracking:</h1>
 
-    </body>
+    <img src="{{ qrcode(config,error_correction='H', back_color='white', fill_color='red') }}">
+    <br>
+    Track your session at:
+
+
+    <p><a href="{{ tracker  }}">Check out this cool form!</a></p>
+
+
+</body>
+
 </html>

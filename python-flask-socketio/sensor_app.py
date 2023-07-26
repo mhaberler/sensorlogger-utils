@@ -5,9 +5,10 @@ from threading import Lock
 from datetime import datetime
 import json
 from flask_qrcode import QRcode
-
+import shortuuid
 # from flask_cors import CORS
 from TheengsDecoder import decodeBLE
+from slconfig import genconfig
 
 
 """
@@ -50,13 +51,16 @@ def background_thread():
         )
         socketio.sleep(1)
 
+@app.route("/trackme/<clientsession>/")
+#@app.route("/trackme")
+def trackme(clientsession=""):
+    app.logger.info(f"trackme {clientsession=}")
+    return {}
 
-# fanekart/gpsdata/gpsid_kurve.geojson
-# http://172.16.0.212:5010/gpspos/gpsid/dakey/
-# b'{"messageId":7,"sessionId":"3fbb1ddc-a645-463b-891e-aa0f4c7c0e97","deviceId":"072aaf1a-c294-4b47-86cd-f97fed7e4f26","payload":[{"name":"bluetooth-e691df7be54d","time":1690393567924000000,"values":{"rssi":-78,"id":"E6:91:DF:7B:E5:4D","txPowerLevel":null,"manufacturerData":"9904050dc5887ca4d901bcfd20024894967a56d4e691df7be54d"}},{"values":{"bearingAccuracy":0,"verticalAccuracy":1.417931318283081,"horizontalAccuracy":20,"speedAccuracy":0,"speed":0.012091556563973427,"bearing":0,"altitude":869,"longitude":15.2118591,"latitude":47.1292252},"name":"location","time":1690393568740000000},{"name":"bluetooth-e691df7be54d","time":1690393570516000000,"values":{"rssi":-77,"id":"E6:91:DF:7B:E5:4D","txPowerLevel":null,"manufacturerData":"9904050dc38885a4d901c0fd20024094967a56d5e691df7be54d"}},{"name":"bluetooth-e691df7be54d","time":1690393571788000000,"values":{"rssi":-77,"id":"E6:91:DF:7B:E5:4D","txPowerLevel":null,"manufacturerData":"9904050dc38885a4d901c0fd20024094967a56d5e691df7be54d"}},{"values":{"bearingAccuracy":0,"verticalAccuracy":1.417931318283081,"horizontalAccuracy":20,"speedAccuracy":0,"speed":0.0026552374474704266,"bearing":0,"altitude":869,"longitude":15.2118591,"latitude":47.1292252},"name":"location","time":1690393572879000000},{"name":"bluetooth-e691df7be54d","time":1690393573069000000,"values":{"rssi":-77,"id":"E6:91:DF:7B:E5:4D","txPowerLevel":null,"manufacturerData":"9904050dc38882a4d901bcfd28024494967a56d6e691df7be54d"}},{"values":{"bearingAccuracy":0,"verticalAccuracy":1.3752892017364502,"horizontalAccuracy":20,"speedAccuracy":0,"speed":0.012174158357083797,"bearing":0,"altitude":869,"longitude":15.2118581,"latitude":47.1292252},"name":"location","time":1690393578752000000},{"values":{"bearingAccuracy":0,"verticalAccuracy":1.3752892017364502,"horizontalAccuracy":20,"speedAccuracy":0,"speed":0.0029675213154405355,"bearing":0,"altitude":869,"longitude":15.211858,"latitude":47.1292252},"name":"location","time":1690393582895000000}]}'
-@app.route("/gpspos/<gpsId>/<secretGpsKey>/", methods=["GET", "POST"])
-def getpos(gpsId="", secretGpsKey=""):
-    # if secretGpsKey not in mySecretGpsKeys:
+
+@app.route("/sl/<clientsession>/", methods=["GET", "POST"])
+def getpos(clientsession=""):
+    # if clientsession not in clientsessions:
     #     abort(401)
     #     pass
     body = json.loads(request.data)
@@ -82,18 +86,22 @@ def getpos(gpsId="", secretGpsKey=""):
                     "sessionId": sessionId,
                 },
             )
+        if p.get("name", None) == "test":
+            app.logger.info(f"client hit test: {clientsession=} {messageId=} {sessionId=} {deviceId=}")
+
     return {}
 
 
 @app.route("/livetrack", methods=["GET", "POST"])
 def livetrack():
-    app.logger.info(f"rh: {request.headers=}")
-    return render_template("genqrcode.html", config="blahfasel")
-    # if request.method == "GET":
-    #     return render_template("livetrack.html")
-    # if request.method == "POST":
-
-#  <img src="{{ qrcode(config,error_correction='H', back_color='white', fill_color='red') }}">
+    clientsession = shortuuid.uuid()
+    secret = shortuuid.uuid()
+    authToken = f"realm={secret}" 
+    uri = f"{request.host_url}sl/{clientsession}"
+    config = genconfig(uri, authToken=authToken)
+    app.logger.info(f"generate config: {clientsession=} {secret=} {config=}")
+    return render_template("genqrcode.html", config=config,tracker=f"/trackme/{clientsession}")
+    #  <img src="{{ qrcode(config,error_correction='H', back_color='white', fill_color='red') }}">
 
 """
 Serve root index file
