@@ -30,7 +30,7 @@
         }
 
         function onLocationFound(msg) {
-            var radius = msg.values.horizontalAccuracy / 2;
+            var radius = (msg.values.horizontalAccuracy / 2).toFixed(1);
             var popupContent = "You are within " + radius + " meters from this point";
 
             pos = new L.LatLng(msg.values.latitude, msg.values.longitude);
