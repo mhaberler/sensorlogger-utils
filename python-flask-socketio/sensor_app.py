@@ -30,13 +30,18 @@ sock = Sock(app)
 socketio = SocketIO(app, cors_allowed_origins="*")
 # socketio = SocketIO(app, logger=True, engineio_logger=True, cors_allowed_origins='*')
 
-
+# https://blog.miguelgrinberg.com/post/add-a-websocket-route-to-your-flask-2-x-application
 @sock.route("/echo")
 def echo(sock):
     while True:
         data = sock.receive()
         app.logger.info(f"ws:  {data=}")
         sock.send(data)
+
+@app.route("/echotest")
+def echotest():
+    return render_template("echotest.html")
+
 
 
 def get_current_datetime():
