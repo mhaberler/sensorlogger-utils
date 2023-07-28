@@ -10,6 +10,7 @@ import shortuuid
 # from flask_cors import CORS
 from TheengsDecoder import decodeBLE
 from slconfig import genconfig
+from flask_sock import Sock
 
 
 """
@@ -21,15 +22,21 @@ thread_lock = Lock()
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "donsky!"
 QRcode(app)
+sock = Sock(app)
+
 
 # CORS(app)
 
 socketio = SocketIO(app, cors_allowed_origins="*")
 # socketio = SocketIO(app, logger=True, engineio_logger=True, cors_allowed_origins='*')
 
-"""
-Get current date time
-"""
+
+@sock.route("/echo")
+def echo(sock):
+    while True:
+        data = sock.receive()
+        app.logger.info(f"ws:  {data=}")
+        sock.send(data)
 
 
 def get_current_datetime():
