@@ -27,7 +27,7 @@ sock = Sock(app)
 
 # CORS(app)
 
-socketio = SocketIO(app, cors_allowed_origins="*")
+# socketio = SocketIO(app, cors_allowed_origins="*")
 # socketio = SocketIO(app, logger=True, engineio_logger=True, cors_allowed_origins='*')
 
 # https://blog.miguelgrinberg.com/post/add-a-websocket-route-to-your-flask-2-x-application
@@ -41,6 +41,11 @@ def echo(sock):
 @app.route("/echotest")
 def echotest():
     return render_template("echotest.html")
+
+@app.route("/tp")
+def teleplot():
+    return render_template("teleplot.html")
+
 
 
 
@@ -57,13 +62,13 @@ Generate random sequence of dummy sensor values and send it to our clients
 def background_thread():
     app.logger.info(f"Generating random sensor values")
     while True:
-        dummy_sensor_value = round(random() * 100, 3)
-        socketio.emit(
-            "updateSensorData",
-            {"value": dummy_sensor_value, "date": get_current_datetime()},
-        )
-        socketio.sleep(1)
-
+        # dummy_sensor_value = round(random() * 100, 3)
+        # socketio.emit(
+        #     "updateSensorData",
+        #     {"value": dummy_sensor_value, "date": get_current_datetime()},
+        # )
+        # socketio.sleep(1)
+        pass
 
 @app.route("/trackme/<clientsession>/")
 def trackme(clientsession=""):
@@ -82,8 +87,8 @@ def getpos(clientsession=""):
     deviceId = body["deviceId"]
     for p in body["payload"]:
         if p.get("name", None) == "location":
-            socketio.emit("updateLocation", p)
-
+            # socketio.emit("updateLocation", p)
+            pass
         if p.get("name", None) == "test":
             app.logger.info(
                 f"client hit test: {clientsession=} {messageId=} {sessionId=} {deviceId=}"
@@ -126,22 +131,22 @@ Decorator for connect
 """
 
 
-@socketio.on("connect")
-def connect():
-    global thread
-    app.logger.info(f"Client connected: {request.sid=}")
-    global thread
-    with thread_lock:
-        if thread is None:
-            thread = socketio.start_background_task(background_thread)
+# @socketio.on("connect")
+# def connect():
+#     global thread
+#     app.logger.info(f"Client connected: {request.sid=}")
+#     global thread
+#     with thread_lock:
+#         if thread is None:
+#             thread = socketio.start_background_task(background_thread)
 
 
-@socketio.on_error_default
-def default_error_handler(e):
-    app.logger.error(
-        f"on_error_default: {request.event['message']}"
-    )  # "my error event"
-    app.logger.error(f"on_error_default: {request.event['args']}")  # (data,)
+# @socketio.on_error_default
+# def default_error_handler(e):
+#     app.logger.error(
+#         f"on_error_default: {request.event['message']}"
+#     )  # "my error event"
+#     app.logger.error(f"on_error_default: {request.event['args']}")  # (data,)
 
 
 """
@@ -149,9 +154,9 @@ Decorator for disconnect
 """
 
 
-@socketio.on("disconnect")
-def disconnect():
-    app.logger.error(f"Client disconnected: {request.sid=}")
+# @socketio.on("disconnect")
+# def disconnect():
+#     app.logger.error(f"Client disconnected: {request.sid=}")
 
 
 if __name__ == "__main__":
