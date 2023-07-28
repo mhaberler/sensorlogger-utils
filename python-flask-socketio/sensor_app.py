@@ -93,6 +93,12 @@ def livetrack():
     )
 
 
+@app.route("/uplot")
+def uplot():
+    app.logger.info(f"uplot")
+    return render_template("stream-data.html")
+
+
 """
 Serve root index file
 """
