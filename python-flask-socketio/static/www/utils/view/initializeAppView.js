@@ -12,6 +12,7 @@ function initializeAppView()
     return new Vue({
         // these methods and attributes can be accessed from the html
         el: '#app',
+        delimiters: ['[[', ']]'],
         data: {
             connections: connections,
             widgets: widgets, // contains chartWidget or DataWidget

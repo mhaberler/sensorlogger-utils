@@ -26,7 +26,7 @@
                 <div class="connection-container">
                     <div v-for="conn in connections" class="connection">
                         <div class="connection-header">
-                            <span class="connection-name">{{conn.name}}</span>
+                            <span class="connection-name">[[conn.name]]</span>
                             <span v-if="conn.type!='teleplot-vscode'" @click="removeConnection(conn)"
                                 style="cursor: pointer;font-size: 8px;" title="Remove connection">╳</span>
                             <div class="connection-button-container">
@@ -37,12 +37,12 @@
                         <div class="connection-input-container">
                             <div v-for="input in conn.inputs" class="connection-input">
                                 <div class="connection-input-header">
-                                    <span class="connection-input-name">{{input.name}}</span>
+                                    <span class="connection-input-name">[[input.name]]</span>
                                     <span v-if="input.type=='serial'" @click="conn.removeInput(input)"
                                         style="cursor: pointer;font-size: 6px;">╳</span>
                                 </div>
                                 <div v-if="input.type=='UDP'">
-                                    <div v-if="input.connected">{{input.address}}:{{input.port}}</div>
+                                    <div v-if="input.connected">[[input.address]]:[[input.port]]</div>
                                     <div v-if="!input.connected" class="connection-input-status-not-connected">Not
                                         connected</div>
                                 </div>
@@ -52,10 +52,10 @@
                                         <select v-if="!input.connected" v-model="input.port" style="min-width: 6em;">
                                             <option v-for="port in input.portList" v-bind:key="port.path"
                                                 v-bind:value="port.path">
-                                                {{port.path}}
+                                                [[port.path]]
                                             </option>
                                         </select>
-                                        <span v-if="input.connected">{{input.port}}</span>
+                                        <span v-if="input.connected">[[input.port]]</span>
                                         <!--Baud-->
                                         <select v-if="!input.connected" v-model="input.baudrate">
                                             <option value="300">300</option>
@@ -73,7 +73,7 @@
                                             <option value="576000">576000</option>
                                             <option value="921600">921600</option>
                                         </select>
-                                        <span v-if="input.connected">@{{input.baudrate}}</span>
+                                        <span v-if="input.connected">@[[input.baudrate]]</span>
                                     </div>
                                     <div class="connection-serial-buttons">
                                         <button v-if="!input.connected" @click="input.listPorts()">↻</button>
@@ -104,7 +104,7 @@
                     <span v-if="isViewPaused" title="Display live telemetries">▶</span>
                 </button>
                 <div class="flex-col">
-                    <span title="Telemetry and logs ingest rate">{{(telemRate+logRate).toFixed(0)}}/s </span>
+                    <span title="Telemetry and logs ingest rate">[[(telemRate+logRate).toFixed(0)]]/s </span>
                     <select v-model="viewDuration" title="Select duration of window">
                         <option value="0">no window</option>
                         <option value="1">1 second</option>
@@ -178,10 +178,10 @@
                         <span v-if="telem.type =='text' " class="symbol-text-format-telem">T</span>
                         <span v-if="telem.type =='3D' " class="symbol-3d-telem">3D</span>
 
-                        <span class="serie-name">{{telem.name}}</span>
-                        <span v-if="telem.unit != undefined" class="serie-unit">({{telem.unit}})</span>
+                        <span class="serie-name">[[telem.name]]</span>
+                        <span v-if="telem.unit != undefined" class="serie-unit">([[telem.unit]])</span>
                     </div>
-                    <div class="var-vue-value">{{telem.values_formatted}}</div>
+                    <div class="var-vue-value">[[telem.values_formatted]]</div>
                 </div>
                 <div style="text-align: center;color: #bdc3c7;">Drag on chart for<br /> multi-series</div>
             </div>
@@ -215,34 +215,34 @@
                                         class="serie-name-container">
                                         <span v-if="widget.type == 'chart'" class="serie-color"
                                             v-bind:style="{'background-color':serie.options.fill, 'border-color':serie.options.stroke}">
-                                            <span class="serie-value">{{serie.values_formatted}}</span>
+                                            <span class="serie-value">[[serie.values_formatted]]</span>
                                         </span>
                                         <span class="serie-name"
-                                            v-bind:style="{'color':serie.name_color}">{{serie.name}}</span>
+                                            v-bind:style="{'color':serie.name_color}">[[serie.name]]</span>
                                         <span v-if="widget.type == 'chart' && serie.unit != undefined"
-                                            class="serie-unit">({{serie.unit}})</span>
+                                            class="serie-unit">([[serie.unit]])</span>
                                     </div>
                                     <div v-if="serie.type == '3D'" class="serie-3d-details-container">
                                         <div v-if="serie.values != undefined && serie.values.length != 0 && serie.values[0] != undefined"
                                             class="serie-3d-details">
                                             <span
-                                                class="details-3d-x">x:{{serie.details_3d_formatted.position.x}}</span>
+                                                class="details-3d-x">x:[[serie.details_3d_formatted.position.x]]</span>
                                             <span
-                                                class="details-3d-y">y:{{serie.details_3d_formatted.position.y}}</span>
+                                                class="details-3d-y">y:[[serie.details_3d_formatted.position.y]]</span>
                                             <span
-                                                class="details-3d-z">z:{{serie.details_3d_formatted.position.z}}</span>
+                                                class="details-3d-z">z:[[serie.details_3d_formatted.position.z]]</span>
                                             <span> | </span>
 
                                             <span v-if="serie.values[0].quaternion == undefined">
-                                                <span>rx:{{serie.details_3d_formatted.rotation.x}}</span>
-                                                <span>ry:{{serie.details_3d_formatted.rotation.y}}</span>
-                                                <span>rz:{{serie.details_3d_formatted.rotation.z}}</span>
+                                                <span>rx:[[serie.details_3d_formatted.rotation.x]]</span>
+                                                <span>ry:[[serie.details_3d_formatted.rotation.y]]</span>
+                                                <span>rz:[[serie.details_3d_formatted.rotation.z]]</span>
                                             </span>
                                             <span v-else>
-                                                <span>rx:{{serie.details_3d_formatted.quaternion.x}}</span>
-                                                <span>ry:{{serie.details_3d_formatted.quaternion.y}}</span>
-                                                <span>rz:{{serie.details_3d_formatted.quaternion.z}}</span>
-                                                <span>rw:{{serie.details_3d_formatted.quaternion.w}}</span>
+                                                <span>rx:[[serie.details_3d_formatted.quaternion.x]]</span>
+                                                <span>ry:[[serie.details_3d_formatted.quaternion.y]]</span>
+                                                <span>rz:[[serie.details_3d_formatted.quaternion.z]]</span>
+                                                <span>rw:[[serie.details_3d_formatted.quaternion.w]]</span>
                                             </span>
 
                                         </div>
@@ -250,23 +250,23 @@
                                     <div v-if="serie.stats" class="serie-stat-container">
                                         <div class="serie-stat">
                                             <span class="serie-stat-name">Min</span>
-                                            <span class="serie-stat-value">{{serie.stats.min}}</span>
+                                            <span class="serie-stat-value">[[serie.stats.min]]</span>
                                         </div>
                                         <div class="serie-stat">
                                             <span class="serie-stat-name">Max</span>
-                                            <span class="serie-stat-value">{{serie.stats.max}}</span>
+                                            <span class="serie-stat-value">[[serie.stats.max]]</span>
                                         </div>
                                         <div class="serie-stat">
                                             <span class="serie-stat-name">Mean</span>
-                                            <span class="serie-stat-value">{{serie.stats.mean}}</span>
+                                            <span class="serie-stat-value">[[serie.stats.mean]]</span>
                                         </div>
                                         <div class="serie-stat">
                                             <span class="serie-stat-name">Median</span>
-                                            <span class="serie-stat-value">{{serie.stats.med}}</span>
+                                            <span class="serie-stat-value">[[serie.stats.med]]</span>
                                         </div>
                                         <div class="serie-stat">
                                             <span class="serie-stat-name">Stdev</span>
-                                            <span class="serie-stat-value">{{serie.stats.stdev}}</span>
+                                            <span class="serie-stat-value">[[serie.stats.stdev]]</span>
                                         </div>
                                     </div>
 
@@ -307,7 +307,7 @@
             <div class="right-col cmd-container" v-show="(cmdAvailable || logAvailable) && rightPanelVisible">
                 <button @click="showRightPanel(false)" class="right-reduce-btn">Reduce</button>
                 <div v-for="cmd in commands" v-bind:key="cmd.name" class="cmd-vue">
-                    <button @click="sendCmd(cmd)">{{cmd.name}}</button>
+                    <button @click="sendCmd(cmd)">[[cmd.name]]</button>
                 </div>
 
                 <!-- LOG TODO update to multi input-->
