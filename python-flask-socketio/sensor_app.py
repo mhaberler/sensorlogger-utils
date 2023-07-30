@@ -1,11 +1,15 @@
 from flask import Flask, render_template, request
-from flask_socketio import SocketIO
+# from flask_socketio import SocketIO
 from random import random
-from threading import Lock
+from threading import Lock, Thread
+
 from datetime import datetime
 import json
 from flask_qrcode import QRcode
 import shortuuid
+# from celery import Celery
+import socket, select, queue
+import time
 
 # from flask_cors import CORS
 from TheengsDecoder import decodeBLE
@@ -21,19 +25,51 @@ thread_lock = Lock()
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "donsky!"
+app.config['SOCK_SERVER_OPTIONS'] = {'ping_interval': 25}
+
 QRcode(app)
 sock = Sock(app)
 
+UDP_IP = "127.0.0.1"
+UDP_PORT = 5005
+
+socket_queue = queue.Queue()
+web_socket = None
+udp_socket = None
+
+def udp_thread():
+    global udp_socket
+    if udp_socket:
+        app.logger.error(f"udp_socket already openend ")
+        return
+    
+    app.logger.info(f"udp_thread")
+
+    udp_socket = socket.socket(socket.AF_INET,  # Internet
+                         socket.SOCK_DGRAM)  # UDP
+    udp_socket.bind((UDP_IP, UDP_PORT))
+
+    while True:
+        data, addr = udp_socket.recvfrom(1024)  # buffer size is 1024 bytes
+        if web_socket:
+            web_socket.writ
+        socket_queue.put(data.decode()+"\n")
+        print( "received message:", data)
 
 # CORS(app)
 
-# socketio = SocketIO(app, cors_allowed_origins="*")
-# socketio = SocketIO(app, logger=True, engineio_logger=True, cors_allowed_origins='*')
 
+# - ws.send(data)
+# - ws.receive(timeout=None)
+# - ws.close(reason=None, message=None)
 @sock.route("/tpws")
 def tpws(sock):
+    global web_socket
+    web_socket = sock
     while True:
+        # print i, i.recvfrom(131072)
         data = sock.receive()
+
         app.logger.info(f"ws:  {data=}")
 
 
@@ -51,6 +87,9 @@ def echotest():
 
 @app.route("/tp")
 def teleplot():
+    # listen_to_udp.delay()
+    # print(socket_queue.get())
+    # udp_thread()
     return render_template("teleplot.html")
 
 
@@ -66,16 +105,16 @@ Generate random sequence of dummy sensor values and send it to our clients
 """
 
 
-def background_thread():
-    app.logger.info(f"Generating random sensor values")
-    while True:
-        # dummy_sensor_value = round(random() * 100, 3)
-        # socketio.emit(
-        #     "updateSensorData",
-        #     {"value": dummy_sensor_value, "date": get_current_datetime()},
-        # )
-        # socketio.sleep(1)
-        pass
+# def udp_thread():
+#     app.logger.info(f"Generating random sensor values")
+#     while True:
+#         # dummy_sensor_value = round(random() * 100, 3)
+#         # socketio.emit(
+#         #     "updateSensorData",
+#         #     {"value": dummy_sensor_value, "date": get_current_datetime()},
+#         # )
+#         # socketio.sleep(1)
+#         pass
 
 @app.route("/trackme/<clientsession>/")
 def trackme(clientsession=""):
@@ -145,7 +184,7 @@ Decorator for connect
 #     global thread
 #     with thread_lock:
 #         if thread is None:
-#             thread = socketio.start_background_task(background_thread)
+#             thread = socketio.start_background_task(udp_thread)
 
 
 # @socketio.on_error_default
@@ -166,5 +205,10 @@ Decorator for disconnect
 #     app.logger.error(f"Client disconnected: {request.sid=}")
 
 
-if __name__ == "__main__":
-    socketio.run(app)
+# if __name__ == "__main__":
+thread = Thread(target=udp_thread)
+thread.daemon = True
+thread.start()
+    
+# if __name__ == "__main__":
+#     socketio.run(app)
