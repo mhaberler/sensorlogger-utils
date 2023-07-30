@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request
-# from flask_socketio import SocketIO
+from flask_socketio import SocketIO, emit
 from random import random
 from threading import Lock, Thread
 
@@ -7,6 +7,7 @@ from datetime import datetime
 import json
 from flask_qrcode import QRcode
 import shortuuid
+
 # from celery import Celery
 import socket, select, queue
 import time
@@ -14,7 +15,8 @@ import time
 # from flask_cors import CORS
 from TheengsDecoder import decodeBLE
 from slconfig import genconfig
-from flask_sock import Sock
+
+# from flask_sock import Sock
 
 
 """
@@ -25,10 +27,12 @@ thread_lock = Lock()
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "donsky!"
-app.config['SOCK_SERVER_OPTIONS'] = {'ping_interval': 25}
+app.config["SOCK_SERVER_OPTIONS"] = {"ping_interval": 25}
 
 QRcode(app)
-sock = Sock(app)
+
+socketio = SocketIO()
+socketio.init_app(app)
 
 UDP_IP = "127.0.0.1"
 UDP_PORT = 5005
@@ -37,24 +41,28 @@ socket_queue = queue.Queue()
 web_socket = None
 udp_socket = None
 
+
 def udp_thread():
     global udp_socket
     if udp_socket:
         app.logger.error(f"udp_socket already openend ")
         return
-    
+
     app.logger.info(f"udp_thread")
 
-    udp_socket = socket.socket(socket.AF_INET,  # Internet
-                         socket.SOCK_DGRAM)  # UDP
+    udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # Internet  # UDP
     udp_socket.bind((UDP_IP, UDP_PORT))
 
     while True:
         data, addr = udp_socket.recvfrom(1024)  # buffer size is 1024 bytes
-        if web_socket:
-            web_socket.writ
-        socket_queue.put(data.decode()+"\n")
-        print( "received message:", data)
+        # if web_socket:
+        #     web_socket.writ
+
+        emit("chat", {"message": message, "username": username}, broadcast=True)
+
+        socket_queue.put(data.decode() + "\n")
+        print("received message:", data)
+
 
 # CORS(app)
 
@@ -62,28 +70,44 @@ def udp_thread():
 # - ws.send(data)
 # - ws.receive(timeout=None)
 # - ws.close(reason=None, message=None)
-@sock.route("/tpws")
-def tpws(sock):
-    global web_socket
-    web_socket = sock
-    while True:
-        # print i, i.recvfrom(131072)
-        data = sock.receive()
-
-        app.logger.info(f"ws:  {data=}")
-
-
-# https://blog.miguelgrinberg.com/post/add-a-websocket-route-to-your-flask-2-x-application
-# @sock.route("/echo")
-# def echo(sock):
+# @socketio.route("/tpws")
+# def tpws(sock):
+#     global web_socket
+#     web_socket = sock
 #     while True:
+#         # print i, i.recvfrom(131072)
 #         data = sock.receive()
-#         app.logger.info(f"ws:  {data=}")
-#         sock.send(data)
 
-@app.route("/echotest")
-def echotest():
-    return render_template("echotest.html")
+#         app.logger.info(f"ws:  {data=}")
+
+users = {}
+
+
+@socketio.on("connect")
+def handle_connect():
+    print("Client connected!")
+
+
+@socketio.on("user_join")
+def handle_user_join(username):
+    print(f"User {username} joined!")
+    users[username] = request.sid
+
+
+@socketio.on("new_message")
+def handle_new_message(message):
+    print(f"New message: {message}")
+    username = None
+    for user in users:
+        if users[user] == request.sid:
+            username = user
+    emit("chat", {"message": message, "username": username}, broadcast=True)
+
+
+# @app.route("/echotest")
+# def echotest():
+#     return render_template("echotest.html")
+
 
 @app.route("/tp")
 def teleplot():
@@ -91,8 +115,6 @@ def teleplot():
     # print(socket_queue.get())
     # udp_thread()
     return render_template("teleplot.html")
-
-
 
 
 def get_current_datetime():
@@ -115,6 +137,7 @@ Generate random sequence of dummy sensor values and send it to our clients
 #         # )
 #         # socketio.sleep(1)
 #         pass
+
 
 @app.route("/trackme/<clientsession>/")
 def trackme(clientsession=""):
@@ -206,9 +229,9 @@ Decorator for disconnect
 
 
 # if __name__ == "__main__":
-thread = Thread(target=udp_thread)
-thread.daemon = True
-thread.start()
-    
+# thread = Thread(target=udp_thread)
+# thread.daemon = True
+# thread.start()
+
 # if __name__ == "__main__":
 #     socketio.run(app)
