@@ -1,7 +1,9 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify, copy_current_request_context
+
 from flask_socketio import SocketIO, emit
 from random import random
 from threading import Lock, Thread
+import logging
 
 from datetime import datetime
 import json
@@ -31,37 +33,39 @@ app.config["SOCK_SERVER_OPTIONS"] = {"ping_interval": 25}
 
 QRcode(app)
 
-socketio = SocketIO()
+socketio = SocketIO(async_mode="threading")
 socketio.init_app(app)
+
 
 UDP_IP = "127.0.0.1"
 UDP_PORT = 5005
 
-socket_queue = queue.Queue()
-web_socket = None
-udp_socket = None
+
+@app.before_first_request
+def before_first_request():
+    global socket_queue, udp_socket
+    socket_queue = queue.Queue()
+    udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # Internet  # UDP
+    udp_socket.bind((UDP_IP, UDP_PORT))
+    app.logger.setLevel(logging.INFO)
+    app.logger.info("Initialized Flask logger handler")
 
 
 def udp_thread():
-    global udp_socket
-    if udp_socket:
-        app.logger.error(f"udp_socket already openend ")
-        return
-
     app.logger.info(f"udp_thread")
-
-    udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # Internet  # UDP
-    udp_socket.bind((UDP_IP, UDP_PORT))
-
     while True:
         data, addr = udp_socket.recvfrom(1024)  # buffer size is 1024 bytes
         # if web_socket:
         #     web_socket.writ
-
-        emit("chat", {"message": message, "username": username}, broadcast=True)
-
-        socket_queue.put(data.decode() + "\n")
         print("received message:", data)
+        # @copy_current_request_context
+        emit(
+            "udp",
+            {"fromSerial": "false", "data": data, "timestamp": time.time()},
+            broadcast=True,
+        )
+
+        # socket_queue.put(data.decode() + "\n")
 
 
 # CORS(app)
@@ -85,7 +89,8 @@ users = {}
 
 @socketio.on("connect")
 def handle_connect():
-    print("Client connected!")
+    print(f"Client connected {request.sid=}")
+    emit("udp", {"message": "foobar"}, broadcast=True)
 
 
 @socketio.on("user_join")
@@ -227,11 +232,12 @@ Decorator for disconnect
 # def disconnect():
 #     app.logger.error(f"Client disconnected: {request.sid=}")
 
+# app.logger.error(f"{__name__=}")
+# if __name__ == "sensor_app":
 
-# if __name__ == "__main__":
-# thread = Thread(target=udp_thread)
-# thread.daemon = True
-# thread.start()
+#     thread = Thread(target=udp_thread)
+#     thread.daemon = True
+#     thread.start()
 
 # if __name__ == "__main__":
 #     socketio.run(app)

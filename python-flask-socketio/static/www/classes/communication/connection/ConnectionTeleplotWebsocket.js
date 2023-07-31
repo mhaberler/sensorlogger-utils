@@ -1,7 +1,7 @@
-class ConnectionTeleplotWebsocket extends Connection{
-    constructor(){
+class ConnectionTeleplotWebsocket extends Connection {
+    constructor() {
         super();
-        this.name=""
+        this.name = ""
         this.type = "teleplot-websocket";
         this.inputs = [];
         this.socket = null;
@@ -14,66 +14,71 @@ class ConnectionTeleplotWebsocket extends Connection{
         this.inputs.push(this.udp);
     }
 
-    connect(_address, _port){
-        this.name = _address+":"+_port;
+    connect(_address, _port) {
+        this.name = _address + ":" + _port;
         this.address = _address;
         this.port = _port;
         this.udp.address = this.address;
-        const uri = "ws://"+this.address+":"+this.port; //  + "/tpws";
+        const uri = "ws://" + this.address + ":" + this.port; //  + "/tpws";
         // this.socket = new WebSocket(uri);
         this.socket = new io(uri);
         this.socket.connect();
         this.socket.onopen = (event) => {
             this.udp.connected = true;
             this.connected = true;
-            this.sendServerCommand({ cmd: "listSerialPorts"});
+            this.sendServerCommand({ cmd: "listSerialPorts" });
         };
         this.socket.onclose = (event) => {
             this.udp.connected = false;
             this.connected = false;
-            for(let input of this.inputs){
+            for (let input of this.inputs) {
                 input.disconnect();
             }
-            setTimeout(()=>{
+            setTimeout(() => {
                 this.connect(this.address, this.port);
             }, 2000);
         };
-        this.socket.onmessage = (msgWS) => {
-            let msg = JSON.parse(msgWS.data);
-            if("id" in msg){
-                for(let input of this.inputs){
-                    if(input.id == msg.id){
+        this.socket.on("sensorlogger", function (data) {
+            // let msg = JSON.parse(data);
+            console.log("sensorlogger", data);
+        });
+        this.socket.on("udp", function (msg) {
+            // let msg = JSON.parse(data);
+            console.log("udp", msg);
+            if ("id" in msg) {
+                for (let input of this.inputs) {
+                    if (input.id == msg.id) {
                         input.onMessage(msg);
                         break;
                     }
                 }
             }
-            else{
+            else {
                 this.udp.onMessage(msg);
             }
-        };
+        });
         return true;
     }
 
-    disconnect(){
-        if(this.socket){
+    disconnect() {
+        if (this.socket) {
             this.socket.close();
             this.socket = null;
         }
     }
 
-    sendServerCommand(command){
-        if(this.socket) this.socket.send(JSON.stringify(command));
+    sendServerCommand(command) {
+        if (this.socket) this.socket.send(JSON.stringify(command));
     }
 
-    updateCMDList(){
-        for(let input of this.inputs){
+    updateCMDList() {
+        for (let input of this.inputs) {
             input.updateCMDList();
         }
     }
 
     createInput(type) {
-        if(type=="serial") {
+        if (type == "serial") {
             let serialIn = new DataInputSerial(this, "Serial");
             this.inputs.push(serialIn);
         }
