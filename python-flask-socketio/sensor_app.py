@@ -63,21 +63,21 @@ UDP_PORT = 5005
 #     app.udp_socket.bind((UDP_IP, UDP_PORT))
 
 
-def udp_thread():
-    udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # Internet  # UDP
-    udp_socket.bind((UDP_IP, UDP_PORT))
-    app.logger.error(f"udp_thread")
-    while True:
-        data, addr = udp_socket.recvfrom(1024)  # buffer size is 1024 bytes
-        # if web_socket:
-        #     web_socket.writ
-        print("received message:", data)
-        # @copy_current_request_context
-        emit(
-            "udp",
-            {"fromSerial": "false", "data": data, "timestamp": time.time()},
-            broadcast=True,
-        )
+# def udp_thread():
+#     udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # Internet  # UDP
+#     udp_socket.bind((UDP_IP, UDP_PORT))
+#     app.logger.error(f"udp_thread")
+#     while True:
+#         data, addr = udp_socket.recvfrom(1024)  # buffer size is 1024 bytes
+#         # if web_socket:
+#         #     web_socket.writ
+#         print("received message:", data)
+#         # @copy_current_request_context
+#         emit(
+#             "udp",
+#             {"fromSerial": "false", "data": data, "timestamp": time.time()},
+#             broadcast=True,
+#         )
 
         # socket_queue.put(data.decode() + "\n")
 
@@ -98,15 +98,25 @@ def udp_thread():
 
 #         app.logger.info(f"ws:  {data=}")
 
-
+#
 def notifications_job(app):
+    wkz = os.environ.get("WERKZEUG_RUN_MAIN")
+    app.logger.info(f"notifications_job: {wkz=}")
+
+    # if wkz == "true":
+    #     return
+    udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # Internet  # UDP
+    udp_socket.bind((UDP_IP, UDP_PORT))
     last_id = 0
     with app.app_context():
         while True:
-            socketio.sleep(1)
+            data, addr = udp_socket.recvfrom(1024)  # buffer size is 1024 bytes
+
+            # socketio.sleep(1)
             last_id += 1
             msg = {
-                "data": f"\nmyValue:{last_id}\n",
+                # "data": f"\nmyValue:{last_id}\n",
+                "data" : data.decode(),
                 "fromSerial": False,
                 "timestamp": time.time(),
             }
@@ -272,10 +282,10 @@ Decorator for disconnect
 # if __name__ == "sensor_app":
 
 # if __name__ == "__main__":
-if os.environ.get("WERKZEUG_RUN_MAIN") != "true":
-    thread = Thread(target=udp_thread)
-    thread.daemon = True
-    thread.start()
+# if os.environ.get("WERKZEUG_RUN_MAIN") != "true":
+#     thread = Thread(target=udp_thread)
+#     thread.daemon = True
+#     thread.start()
 
 # if __name__ == "__main__":
 #     socketio.run(app)
