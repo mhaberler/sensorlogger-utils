@@ -39,9 +39,9 @@ class ConnectionTeleplotWebsocket extends Connection {
                 this.connect(this.address, this.port);
             }, 2000);
         };
-        this.socket.on("sensorlogger", function (data) {
+        this.socket.on("sl", function (data) {
             // let msg = JSON.parse(data);
-            console.log("sensorlogger", data);
+            console.log("sl", data);
         });
         // {
         //     "data": "\nmyValue:1234\n",

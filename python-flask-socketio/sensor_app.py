@@ -28,11 +28,10 @@ from slconfig import genconfig
 # from flask_sock import Sock
 
 
-"""
-Background Thread
-"""
-thread = None
-thread_lock = Lock()
+udp_thread = None
+udp_thread_lock = Lock()
+sl_thread = None
+sl_thread_lock = Lock()
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "donsky!"
@@ -46,7 +45,7 @@ socketio.init_app(app)
 
 UDP_IP = "127.0.0.1"
 UDP_PORT = 5005
-
+slq = queue.Queue()
 
 # @app.before_first_request
 # def before_first_request():
@@ -99,9 +98,9 @@ UDP_PORT = 5005
 #         app.logger.info(f"ws:  {data=}")
 
 #
-def notifications_job(app):
+def udp_job(app):
     wkz = os.environ.get("WERKZEUG_RUN_MAIN")
-    app.logger.info(f"notifications_job: {wkz=}")
+    app.logger.info(f"udp_job: {wkz=}")
 
     # if wkz == "true":
     #     return
@@ -124,6 +123,17 @@ def notifications_job(app):
             # socketio.emit('new_alerts', {'msg': 'New alert', 'id': last_id}, namespace='/rt/notifications/')
 
 
+def sl_job(app):
+    wkz = os.environ.get("WERKZEUG_RUN_MAIN")
+    app.logger.info(f"sl_job: {wkz=}")
+
+    # if wkz == "true":
+    #     return
+    with app.app_context():
+        while True:
+            msg = slq.get()
+            socketio.emit("sl", msg)
+
 users = {}
 
 
@@ -131,13 +141,18 @@ users = {}
 def handle_connect():
     print(f"Client connected {request.sid=}")
     # emit("udp", {"message": "foobar"}, broadcast=True)
-    global thread
-    with thread_lock:
-        if thread is None:
-            thread = socketio.start_background_task(
-                notifications_job, current_app._get_current_object()
+    global udp_thread
+    with udp_thread_lock:
+        if udp_thread is None:
+            udp_thread = socketio.start_background_task(
+                udp_job, current_app._get_current_object()
             )
-
+    global sl_thread
+    with sl_thread_lock:
+        if sl_thread is None:
+            sl_thread = socketio.start_background_task(
+                sl_job, current_app._get_current_object()
+            )
 
 @socketio.on("user_join")
 def handle_user_join(username):
@@ -206,6 +221,7 @@ def getpos(clientsession=""):
     sessionId = body["sessionId"]
     deviceId = body["deviceId"]
     for p in body["payload"]:
+        slq.put(p)
         if p.get("name", None) == "location":
             # socketio.emit("updateLocation", p)
             pass
