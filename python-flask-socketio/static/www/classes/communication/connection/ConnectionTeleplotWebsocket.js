@@ -22,6 +22,7 @@ class ConnectionTeleplotWebsocket extends Connection {
         const uri = "ws://" + this.address + ":" + this.port; //  + "/tpws";
         // this.socket = new WebSocket(uri);
         this.socket = new io(uri);
+        this.socket.udp = this.udp;
         this.socket.connect();
         this.socket.onopen = (event) => {
             this.udp.connected = true;
@@ -42,6 +43,11 @@ class ConnectionTeleplotWebsocket extends Connection {
             // let msg = JSON.parse(data);
             console.log("sensorlogger", data);
         });
+        // {
+        //     "data": "\nmyValue:1234\n",
+        //     "fromSerial": false,
+        //     "timestamp": 1690971162263
+        // }
         this.socket.on("udp", function (msg) {
             // let msg = JSON.parse(data);
             console.log("udp", msg);
