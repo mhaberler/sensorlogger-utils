@@ -3,7 +3,6 @@ from flask import (
     render_template,
     request,
     jsonify,
-    copy_current_request_context,
     current_app,
 )
 
@@ -23,6 +22,9 @@ import os, time
 
 # from flask_cors import CORS
 from TheengsDecoder import decodeBLE
+from flatten_json import flatten
+import arrow
+import custom
 from slconfig import genconfig
 
 # from flask_sock import Sock
@@ -46,58 +48,8 @@ socketio.init_app(app)
 UDP_IP = "127.0.0.1"
 UDP_PORT = 5005
 slq = queue.Queue()
+bleMeta = {}
 
-# @app.before_first_request
-# def before_first_request():
-#     global socket_queue, udp_socket
-#     socket_queue = queue.Queue()
-
-#     app.logger.setLevel(logging.INFO)
-#     app.logger.info("Initialized Flask logger handler")
-
-# if os.environ.get('WERKZEUG_RUN_MAIN') != 'true':
-#     # https://stackoverflow.com/questions/25504149/why-does-running-the-flask-dev-server-run-itself-twice
-#     # do something only once, before the reloader
-#     app.udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # Internet  # UDP
-#     app.udp_socket.bind((UDP_IP, UDP_PORT))
-
-
-# def udp_thread():
-#     udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # Internet  # UDP
-#     udp_socket.bind((UDP_IP, UDP_PORT))
-#     app.logger.error(f"udp_thread")
-#     while True:
-#         data, addr = udp_socket.recvfrom(1024)  # buffer size is 1024 bytes
-#         # if web_socket:
-#         #     web_socket.writ
-#         print("received message:", data)
-#         # @copy_current_request_context
-#         emit(
-#             "udp",
-#             {"fromSerial": "false", "data": data, "timestamp": time.time()},
-#             broadcast=True,
-#         )
-
-        # socket_queue.put(data.decode() + "\n")
-
-
-# CORS(app)
-
-
-# - ws.send(data)
-# - ws.receive(timeout=None)
-# - ws.close(reason=None, message=None)
-# @socketio.route("/tpws")
-# def tpws(sock):
-#     global web_socket
-#     web_socket = sock
-#     while True:
-#         # print i, i.recvfrom(131072)
-#         data = sock.receive()
-
-#         app.logger.info(f"ws:  {data=}")
-
-#
 def udp_job(app):
     wkz = os.environ.get("WERKZEUG_RUN_MAIN")
     app.logger.info(f"udp_job: {wkz=}")
@@ -110,13 +62,10 @@ def udp_job(app):
     with app.app_context():
         while True:
             data, addr = udp_socket.recvfrom(1024)  # buffer size is 1024 bytes
-
-            # socketio.sleep(1)
             last_id += 1
             msg = {
-                # "data": f"\nmyValue:{last_id}\n",
-                "data" : data.decode(),
-                "fromSerial": False,
+                "data": data.decode(),
+                # "fromSerial": False,
                 "timestamp": time.time(),
             }
             socketio.emit("udp", msg)
@@ -133,8 +82,6 @@ def sl_job(app):
         while True:
             msg = slq.get()
             socketio.emit("sl", msg)
-
-users = {}
 
 
 @socketio.on("connect")
@@ -154,32 +101,10 @@ def handle_connect():
                 sl_job, current_app._get_current_object()
             )
 
-@socketio.on("user_join")
-def handle_user_join(username):
-    print(f"User {username} joined!")
-    users[username] = request.sid
-
-
-@socketio.on("new_message")
-def handle_new_message(message):
-    print(f"New message: {message}")
-    username = None
-    for user in users:
-        if users[user] == request.sid:
-            username = user
-    emit("chat", {"message": message, "username": username}, broadcast=True)
-
-
-# @app.route("/echotest")
-# def echotest():
-#     return render_template("echotest.html")
 
 
 @app.route("/tp")
 def teleplot():
-    # listen_to_udp.delay()
-    # print(socket_queue.get())
-    # udp_thread()
     return render_template("teleplot.html")
 
 
@@ -187,41 +112,81 @@ def get_current_datetime():
     now = datetime.now()
     return now.strftime("%m/%d/%Y %H:%M:%S")
 
-
-"""
-Generate random sequence of dummy sensor values and send it to our clients
-"""
-
-
-# def udp_thread():
-#     app.logger.info(f"Generating random sensor values")
-#     while True:
-#         # dummy_sensor_value = round(random() * 100, 3)
-#         # socketio.emit(
-#         #     "updateSensorData",
-#         #     {"value": dummy_sensor_value, "date": get_current_datetime()},
-#         # )
-#         # socketio.sleep(1)
-#         pass
-
-
 @app.route("/trackme/<clientsession>/")
 def trackme(clientsession=""):
     app.logger.info(f"trackme {clientsession=}")
     return render_template("leaflet.html", clientsession=clientsession)
 
 
-@app.route("/sl/<clientsession>/", methods=["GET", "POST"])
+def decode_ble_beacons(j, debug=False, customDecoder=None):
+    global bleMeta
+    result = []
+    for sample in j:
+        if sample["name"].startswith("bluetoothmetadata"):
+            ssuids = sample["values"].get("serviceUUIDs",[])
+            if not isinstance(ssuids, list):
+                # mutate so we always have a list of serviceUUIDs
+                sample["values"]["serviceUUIDs"] = [ssuids]
+            id = sample["values"]["id"]
+            sid = "bluetooth-" + id.replace(":", "")
+            bleMeta[sid] = sample
+            continue
+        meta = bleMeta.get(sample["name"], None)
+        if meta and "manufacturerData" in sample["values"]:
+            # see https://github.com/theengs/decoder/blob/development/examples/python/ScanAndDecode.py
+            data = {}
+            meta_val = meta.get("values", {})
+            localName = meta_val.get("localName", None)
+            if localName:
+                data["name"] = localName
+            suuids = meta_val.get("serviceUUIDs", [])
+            if suuids:
+                sl = suuids[0]
+                if len(sl) > 4:
+                    sl = sl[4:8]
+                data["servicedatauuid"] = sl
+            data["id"] = sample["values"]["id"]
+            data["rssi"] = sample["values"]["rssi"]
+            data["manufacturerdata"] = sample["values"]["manufacturerData"]
+            input = json.dumps(data)
+            ret = decodeBLE(input)
+            if ret:
+                js = json.loads(ret)
+                js.pop("id", None)
+                js.pop("mfid", None)
+                js.pop("manufacturerdata", None)
+                js.pop("servicedatauuid", None)
+                result.append(js)
+                continue
+
+            if customDecoder:
+                ret = customDecoder(data, debug)
+                if ret:
+                    result.append(ret)
+                    continue
+        result.append(sample)
+    return result
+
+
+
+@app.route("/sl/<clientsession>/", methods=["POST"])
 def getpos(clientsession=""):
-    # if clientsession not in clientsessions:
-    #     abort(401)
-    #     pass
     body = json.loads(request.data)
+    j = body["payload"]
+
+
+    result = decode_ble_beacons(j, debug=False, customDecoder=custom.Decoder)
+    flattened = []
+    for report in result:
+        flattened.append(flatten(report))
+    # j = result
+
+    # slq.put(p)
+
     messageId = body["messageId"]
     sessionId = body["sessionId"]
     deviceId = body["deviceId"]
     for p in body["payload"]:
-        slq.put(p)
         if p.get("name", None) == "location":
             # socketio.emit("updateLocation", p)
             pass
@@ -252,19 +217,10 @@ def uplot():
     return render_template("stream-data.html")
 
 
-"""
-Serve root index file
-"""
-
-
 @app.route("/")
 def index():
     return render_template("index.html")
 
-
-"""
-Decorator for connect
-"""
 
 
 # @socketio.on("connect")
