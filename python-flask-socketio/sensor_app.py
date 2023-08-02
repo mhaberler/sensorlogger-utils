@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, copy_current_request_context
+from flask import Flask, render_template, request, jsonify, copy_current_request_context,current_app
 
 from flask_socketio import SocketIO, emit
 from random import random
@@ -12,7 +12,7 @@ import shortuuid
 
 # from celery import Celery
 import socket, select, queue
-import time
+import os,time
 
 # from flask_cors import CORS
 from TheengsDecoder import decodeBLE
@@ -41,18 +41,26 @@ UDP_IP = "127.0.0.1"
 UDP_PORT = 5005
 
 
-@app.before_first_request
-def before_first_request():
-    global socket_queue, udp_socket
-    socket_queue = queue.Queue()
-    udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # Internet  # UDP
-    udp_socket.bind((UDP_IP, UDP_PORT))
-    app.logger.setLevel(logging.INFO)
-    app.logger.info("Initialized Flask logger handler")
+# @app.before_first_request
+# def before_first_request():
+#     global socket_queue, udp_socket
+#     socket_queue = queue.Queue()
+
+#     app.logger.setLevel(logging.INFO)
+#     app.logger.info("Initialized Flask logger handler")
+
+    # if os.environ.get('WERKZEUG_RUN_MAIN') != 'true':
+    #     # https://stackoverflow.com/questions/25504149/why-does-running-the-flask-dev-server-run-itself-twice
+    #     # do something only once, before the reloader
+    #     app.udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # Internet  # UDP
+    #     app.udp_socket.bind((UDP_IP, UDP_PORT))
 
 
 def udp_thread():
-    app.logger.info(f"udp_thread")
+
+    udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # Internet  # UDP
+    udp_socket.bind((UDP_IP, UDP_PORT))
+    app.logger.error(f"udp_thread")
     while True:
         data, addr = udp_socket.recvfrom(1024)  # buffer size is 1024 bytes
         # if web_socket:
@@ -84,14 +92,28 @@ def udp_thread():
 
 #         app.logger.info(f"ws:  {data=}")
 
+
+
+def notifications_job(app):
+    last_id = 0
+    with app.app_context():
+        while True:
+            socketio.sleep(1)
+            last_id += 1
+            socketio.emit('udp', {'msg': 'New alert', 'id': last_id})
+            # socketio.emit('new_alerts', {'msg': 'New alert', 'id': last_id}, namespace='/rt/notifications/')
+
 users = {}
 
 
 @socketio.on("connect")
 def handle_connect():
     print(f"Client connected {request.sid=}")
-    emit("udp", {"message": "foobar"}, broadcast=True)
-
+    # emit("udp", {"message": "foobar"}, broadcast=True)
+    global thread
+    with thread_lock:
+        if thread is None:
+            thread = socketio.start_background_task(notifications_job, current_app._get_current_object())
 
 @socketio.on("user_join")
 def handle_user_join(username):
@@ -235,9 +257,11 @@ Decorator for disconnect
 # app.logger.error(f"{__name__=}")
 # if __name__ == "sensor_app":
 
-#     thread = Thread(target=udp_thread)
-#     thread.daemon = True
-#     thread.start()
+# if __name__ == "__main__":
+if os.environ.get('WERKZEUG_RUN_MAIN') != 'true':
+    thread = Thread(target=udp_thread)
+    thread.daemon = True
+    thread.start()
 
 # if __name__ == "__main__":
 #     socketio.run(app)
