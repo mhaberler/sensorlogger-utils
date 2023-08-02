@@ -26,6 +26,7 @@ from flatten_json import flatten
 import arrow
 import custom
 from slconfig import genconfig
+from operator import itemgetter
 
 # from flask_sock import Sock
 
@@ -49,6 +50,7 @@ UDP_IP = "127.0.0.1"
 UDP_PORT = 5005
 slq = queue.Queue()
 bleMeta = {}
+
 
 def udp_job(app):
     wkz = os.environ.get("WERKZEUG_RUN_MAIN")
@@ -81,7 +83,7 @@ def sl_job(app):
     with app.app_context():
         while True:
             msg = slq.get()
-            socketio.emit("sl", msg)
+            socketio.emit("udp", msg)
 
 
 @socketio.on("connect")
@@ -102,7 +104,6 @@ def handle_connect():
             )
 
 
-
 @app.route("/tp")
 def teleplot():
     return render_template("teleplot.html")
@@ -111,6 +112,7 @@ def teleplot():
 def get_current_datetime():
     now = datetime.now()
     return now.strftime("%m/%d/%Y %H:%M:%S")
+
 
 @app.route("/trackme/<clientsession>/")
 def trackme(clientsession=""):
@@ -123,7 +125,7 @@ def decode_ble_beacons(j, debug=False, customDecoder=None):
     result = []
     for sample in j:
         if sample["name"].startswith("bluetoothmetadata"):
-            ssuids = sample["values"].get("serviceUUIDs",[])
+            ssuids = sample["values"].get("serviceUUIDs", [])
             if not isinstance(ssuids, list):
                 # mutate so we always have a list of serviceUUIDs
                 sample["values"]["serviceUUIDs"] = [ssuids]
@@ -146,6 +148,7 @@ def decode_ble_beacons(j, debug=False, customDecoder=None):
                     sl = sl[4:8]
                 data["servicedatauuid"] = sl
             data["id"] = sample["values"]["id"]
+            data["time"] = sample["time"]
             data["rssi"] = sample["values"]["rssi"]
             data["manufacturerdata"] = sample["values"]["manufacturerData"]
             input = json.dumps(data)
@@ -168,33 +171,48 @@ def decode_ble_beacons(j, debug=False, customDecoder=None):
     return result
 
 
+# myValue:1627551892444:1;1627551892555:2;1627551892666:3
+
+
+def teleplotify(samples):
+    samples.sort(key=itemgetter("name", "time"))
+    for s in samples:
+        sensor = s["name"].replace(" ", "_")
+        ts = s["time"]
+        for key, value in s.items():
+            if key == "name":
+                continue
+            if key == "time":
+                continue
+            if isinstance(value, float) or isinstance(value, int):
+                variable = key.removeprefix("values_")
+                tp = {
+                    "data": f"{sensor}.{variable}:{value}|np\n",
+                    "timestamp": ts / 1.0e6,
+                }
+                slq.put(tp)
+
 
 @app.route("/sl/<clientsession>/", methods=["POST"])
 def getpos(clientsession=""):
     body = json.loads(request.data)
-    j = body["payload"]
-
-
-    result = decode_ble_beacons(j, debug=False, customDecoder=custom.Decoder)
-    flattened = []
-    for report in result:
-        flattened.append(flatten(report))
-    # j = result
-
-    # slq.put(p)
-
     messageId = body["messageId"]
     sessionId = body["sessionId"]
     deviceId = body["deviceId"]
-    for p in body["payload"]:
-        if p.get("name", None) == "location":
-            # socketio.emit("updateLocation", p)
-            pass
+    payload = body["payload"]
+    # check for test push
+    for p in payload:
         if p.get("name", None) == "test":
             app.logger.info(
                 f"client hit test: {clientsession=} {messageId=} {sessionId=} {deviceId=}"
             )
+            return {}
 
+    result = decode_ble_beacons(payload, debug=False, customDecoder=custom.Decoder)
+    flattened = []
+    for report in result:
+        flattened.append(flatten(report))
+    teleplotify(flattened)
     return {}
 
 
@@ -220,7 +238,6 @@ def uplot():
 @app.route("/")
 def index():
     return render_template("index.html")
-
 
 
 # @socketio.on("connect")
