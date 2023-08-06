@@ -128,6 +128,14 @@ The decoded report looks like so:
   },
 `````
 
+# Scanning BLE devices
+
+decode_ble can also scan for devices using the [Bleak](https://bleak.readthedocs.io/en/latest/index.html) client:
+````
+decode_ble --scan [--duration <seconds>]
+````
+
+
 # Installation
 
 ````
