@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Sensorlogger QRcode</title>
+</head>
+
+<body>
+    <h1>Scan this code with your mobile to start plotting sensors and
+        <a href="{{ tracker  }}">click here to track Sensor Logger on the map:</a></h1>
+    <br>
+    <img src="{{ qrcode(config, back_color='white', fill_color='red') }}">
+
+</body>
+
+</html>

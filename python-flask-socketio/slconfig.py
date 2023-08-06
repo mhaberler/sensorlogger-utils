@@ -4,9 +4,56 @@ import pyzstd
 import base64
 import json
 import qrcode
-
+from copy import deepcopy
 
 prefix = b"sensorlogger://config/"
+
+template = {
+    "workflow": "Classic",
+    "sensorState": {
+        "Accelerometer": {"enabled": None, "speed": 1000},
+        "Gravity": {"enabled": None, "speed": 1000},
+        "Gyroscope": {"enabled": None, "speed": 1000},
+        "Orientation": {"enabled": None, "speed": 1000},
+        "Magnetometer": {"enabled": None, "speed": 1000},
+        "Barometer": {"enabled": None, "speed": 1000},
+        "Location": {"enabled": True, "speed": 1000},
+        "Microphone": {"enabled": None, "speed": "disable"},
+        "Camera": {"enabled": None, "speed": 600000},
+        "Battery": {"enabled": None},
+        "Brightness": {"enabled": None},
+        # "Heart Rate": {"enabled": None},
+        # "Wrist Motion": {"enabled": None},
+    },
+    "http": {
+        "enabled": True,
+        "url": "",
+        "batchPeriod": 1000,
+        "authToken": None,
+    },
+    "additionalLocation": None,
+    "uncalibrated": None,
+    "fileFormat": ".json",
+    "fileName": "RECORDING_NAME-DATETIME_LOCAL_FORMATTED"
+}
+
+def merge(request, params):
+    t = deepcopy(template)
+    for s in request.form.getlist('sensors'):
+        t["sensorState"][s]["enabled"] = True
+    accelRate = request.form.getlist('accelRate')[0]
+    for s in ['Accelerometer', 'Gravity', 'Gyroscope', 'Orientation', 'Magnetometer']:
+        t["sensorState"][s]["speed"] = accelRate
+    baroRate = request.form.getlist('baroRate')[0]
+    t["sensorState"]["Barometer"]["speed"] = baroRate
+
+    t.update(params)
+    return t
+
+def gen_export_code(cfg):
+    s = json.dumps(cfg).encode()
+    z = pyzstd.compress(s)
+    return prefix + base64.b64encode(z)
 
 def genconfig(uri, authToken=None, rate=1000, **kwargs):
     cfg = {
@@ -45,31 +92,4 @@ if __name__ == "__main__":
     img = qr.make_image(fill_color="black", back_color="white")
     img.save("genconfig.png")
 
-# suggested = {
-#     "workflow": "Integrated",
-#     "sensorState": {
-#         "Accelerometer": {"enabled": None, "speed": 1000},
-#         "Gravity": {"enabled": None, "speed": 1000},
-#         "Gyroscope": {"enabled": None, "speed": 1000},
-#         "Orientation": {"enabled": None, "speed": 1000},
-#         "Magnetometer": {"enabled": None, "speed": 1000},
-#         "Barometer": {"enabled": None, "speed": 1000},
-#         "Location": {"enabled": True, "speed": 1000},
-#         "Microphone": {"enabled": None, "speed": "disable"},
-#         "Camera": {"enabled": None, "speed": 600000},
-#         "Battery": {"enabled": None},
-#         "Brightness": {"enabled": None},
-#         "Heart Rate": {"enabled": None},
-#         "Wrist Motion": {"enabled": None},
-#     },
-#     "http": {
-#         "enabled": True,
-#         "url": "https://foobar.com/push",
-#         "batchPeriod": 1000,
-#         "authToken": "foo=bar",
-#     },
-#     "additionalLocation": True,
-#     "uncalibrated": None,
-#     "fileFormat": ".json",
-#     "fileName": "DATETIME_LOCAL_FORMATTED-RECORDING_NAME",
-# }
+

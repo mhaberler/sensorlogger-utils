@@ -43,14 +43,8 @@ class ConnectionTeleplotWebsocket extends Connection {
             // let msg = JSON.parse(data);
             console.log("sl", data);
         });
-        // {
-        //     "data": "\nmyValue:1234\n",
-        //     "fromSerial": false,
-        //     "timestamp": 1690971162263
-        // }
         this.socket.on("udp", function (msg) {
-            // let msg = JSON.parse(data);
-            console.log("udp", msg);
+            // console.log("udp", msg);
             if ("id" in msg) {
                 for (let input of this.inputs) {
                     if (input.id == msg.id) {
