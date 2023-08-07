@@ -6,11 +6,26 @@
 </head>
 
 <body>
-    <h1>Scan this code with your mobile to start live tracking and
-        <a href="{{ tracker  }}">click here to track Sensor Logger on the map:</a></h1>
+    <h2>Scan this code with your mobile, import into Sensor Logger and start recording <br>
+    </h2>
     <br>
-    <img src="{{ qrcode(config,error_correction='H', back_color='white', fill_color='red') }}">
+    <img src="{{ qrcode(config, back_color='white', fill_color='red') }}">
 
+    <br>
+    <div id="status">
+    </div>
+    <script>
+
+        var time = 3000;
+        setTimeout(function () {
+            document.getElementById("status").innerHTML = "<h2>waiting for Sensorlogger ..</h2>";
+
+            // open in same window
+            // window.location = "http://172.16.0.212:5010/tp";
+            // opens new window
+            // window.open("http://172.16.0.212:5010/tp")
+        }, time);
+    </script>
 </body>
 
 </html>

@@ -15,6 +15,9 @@
     <link rel="stylesheet" href="{{ url_for('static', filename = 'www/style.css') }}">
     <script src="{{ url_for('static', filename = 'www/lib/vue.js' ) }}"></script>
 
+    <script>
+        const session = "{{ clientsession }}";
+    </script>
 </head>
 
 <body>
@@ -349,8 +352,10 @@
 <script src="{{ url_for('static', filename = 'www/components/3dComponent/3dComponent.js' ) }}"></script>
 <script src="{{ url_for('static', filename = 'www/constants.js' ) }}"></script>
 <script src="{{ url_for('static', filename = 'www/classes/communication/connection/Connection.js' ) }}"></script>
-<script src="{{ url_for('static', filename = 'www/classes/communication/connection/ConnectionTeleplotVSCode.js' ) }}"></script>
-<script src="{{ url_for('static', filename = 'www/classes/communication/connection/ConnectionTeleplotWebsocket.js' ) }}"></script>
+<script
+    src="{{ url_for('static', filename = 'www/classes/communication/connection/ConnectionTeleplotVSCode.js' ) }}"></script>
+<script
+    src="{{ url_for('static', filename = 'www/classes/communication/connection/ConnectionTeleplotWebsocket.js' ) }}"></script>
 <script src="{{ url_for('static', filename = 'www/utils/view/cursor.js' ) }}"></script>
 <script src="{{ url_for('static', filename = 'www/classes/communication/serverMessageReading.js' ) }}"></script>
 <script src="{{ url_for('static', filename = 'www/classes/view/widgets/DataWidget.js' ) }}"></script>
@@ -372,6 +377,24 @@
 <script src="{{ url_for('static', filename = 'www/utils/view/initializeAppView.js' ) }}"></script>
 <script src="{{ url_for('static', filename = 'www/utils/view/updateView.js' ) }}"></script>
 <script src="{{ url_for('static', filename = 'www/utils/stats/computeStats.js' ) }}"></script>
-<script src="{{ url_for('static', filename = 'www/main.js' ) }}"></script>
+<script>
 
+    // Init Vue
+    var app = initializeAppView();
+
+    //Init refresh rate
+    setInterval(updateView, 1000 / widgetFPS);
+
+    let conn = new ConnectionTeleplotWebsocket();
+    let addr = window.location.hostname;
+    let port = window.location.port;
+    conn.connect(addr, port);
+    app.connections.push(conn);
+
+    setInterval(() => {
+        for (let conn of app.connections) {
+            conn.updateCMDList();
+        }
+    }, 3000);
+</script>
 </html>

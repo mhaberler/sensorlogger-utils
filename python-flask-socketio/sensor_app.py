@@ -1,6 +1,15 @@
-from flask import Flask, render_template, request, current_app, url_for, flash, redirect
+from flask import (
+    Flask,
+    abort,
+    render_template,
+    request,
+    current_app,
+    url_for,
+    flash,
+    redirect,
+)
 
-from flask_socketio import SocketIO, emit
+from flask_socketio import SocketIO, emit, Namespace
 from threading import Lock, Thread
 
 from datetime import datetime
@@ -24,6 +33,13 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, TextAreaField, IntegerField, BooleanField, RadioField
 from wtforms.validators import InputRequired, Length
 
+sessions = {}
+UDP_IP = "127.0.0.1"
+UDP_PORT = 5005
+slq = queue.Queue()
+bleMeta = {}
+SESSION_TIMEOUT = 60
+
 udp_thread = None
 udp_thread_lock = Lock()
 sl_thread = None
@@ -38,12 +54,6 @@ QRcode(app)
 
 socketio = SocketIO(async_mode="threading")
 socketio.init_app(app)
-
-
-UDP_IP = "127.0.0.1"
-UDP_PORT = 5005
-slq = queue.Queue()
-bleMeta = {}
 
 
 def udp_job(app):
@@ -70,9 +80,41 @@ def sl_job(app):
             socketio.emit("udp", msg)
 
 
+@socketio.on("message")
+def handle_message(data):
+    app.logger.info(f"received message: {data=} {request.sid=}")
+    msg = json.loads(data)
+
+    s = msg.get("session", None)
+    session = sessions.get(s, None)
+    if session:
+        pass
+        # create queue
+        # start sl_job relay thread
+        # confirm
+
+class MyCustomNamespace(Namespace):
+    def on_connect(self):
+        app.logger.info(f"{self.namespace=} on_connect")
+
+    def on_disconnect(self):
+        app.logger.info(f"{self.namespace=} on_disconnect")
+
+    def on_message(self, m):
+        app.logger.info(f"{self.namespace=} on_message {m}")
+
+    def on_error(self):
+        app.logger.info(f"{self.namespace=} on_error")
+
+    def on_my_event(self, data):
+        emit('my_response', data)
+
+socketio.on_namespace(MyCustomNamespace('/test'))
+
 @socketio.on("connect")
-def handle_connect():
-    print(f"Client connected {request.sid=}")
+def handle_connect(auth):
+    app.logger.info(f"Client connected {request.sid=}")
+    return
     # emit("udp", {"message": "foobar"}, broadcast=True)
     global udp_thread
     with udp_thread_lock:
@@ -88,15 +130,10 @@ def handle_connect():
             )
 
 
-@app.route("/tp")
-def teleplot():
-    return render_template("teleplot.html")
-
-
 @app.route("/trackme/<clientsession>/")
 def trackme(clientsession=""):
     app.logger.info(f"trackme {clientsession=}")
-    return render_template("leaflet.html", clientsession=clientsession)
+    return render_template("leaflet.html", sessionId=clientsession)
 
 
 def decode_ble_beacons(j, debug=False, customDecoder=None):
@@ -165,7 +202,7 @@ def decode_ble_beacons(j, debug=False, customDecoder=None):
 # https://stackoverflow.com/questions/50505381/python-split-a-list-of-objects-into-sublists-based-on-objects-attributes
 
 
-def teleplotify(samples):
+def teleplotify(samples, q):
     # samples.sort(key=itemgetter("name", "time"))
     # d = defaultdict(list)
     # for item in samples:
@@ -194,29 +231,63 @@ def teleplotify(samples):
                     "data": f"{sensor}.{variable}:{ts}:{value}|np\n",
                     # "timestamp": ts ,
                 }
-                slq.put(tp)
+                q.put(tp)
 
 
-@app.route("/sl/<clientsession>/", methods=["POST"])
+# curl -X POST http://172.16.0.212:5010/token -H "Accept: application/json" -H "Authorization: Bearer blahfasel"
+
+# @app.route("/token", methods=["POST"])
+# def gettoken():
+#     app.logger.info(f"{request.headers=}")
+#     return {"foo": 123}
+
+
+@app.route("/sl/<clientsession>", methods=["POST"])
 def getpos(clientsession=""):
-    body = json.loads(request.data)
-    messageId = body["messageId"]
-    sessionId = body["sessionId"]
-    deviceId = body["deviceId"]
-    payload = body["payload"]
+    try:
+        body = json.loads(request.data)
+        messageId = body["messageId"]
+        sessionId = body["sessionId"]
+        deviceId = body["deviceId"]
+        payload = body["payload"]
+        bearer = request.headers.get("Authorization")
+        token = bearer.split()[1]
+    except Exception:
+        return f"invalid request", 404
+
+    if not clientsession in sessions:
+        return "no such session: {clientsession}", 404
+
+    if sessions[clientsession]["authToken"] != token:
+        return f"invalid token: {token}", 404
+
+    age = int(time.time() - sessions[clientsession]["created"])
+    if age > SESSION_TIMEOUT:
+        return f"Session timed out - link age is {age} seconds", 404
+
     # check for test push
     for p in payload:
         if p.get("name", None) == "test":
             app.logger.info(
-                f"client hit test: {clientsession=} {messageId=} {sessionId=} {deviceId=}"
+                f"client test push: {clientsession=} {messageId=} {sessionId=} {deviceId=}"
             )
             return {}
+
+    if not "deviceId" in sessions[clientsession]:
+        sessions[clientsession]["deviceId"] = deviceId
+
+    if not "queue" in sessions[clientsession]:
+        app.logger.info(f"no queue for {clientsession}")
+        return {}
+
+    # record last messageId
+    sessions[clientsession]["messageId"] = messageId
 
     result = decode_ble_beacons(payload, debug=False, customDecoder=custom.Decoder)
     flattened = []
     for report in result:
         flattened.append(flatten(report))
-    teleplotify(flattened)
+    teleplotify(flattened, slq)
     return {}
 
 
@@ -233,6 +304,7 @@ def livetrack():
     )
 
 
+
 @app.route("/plot", methods=["GET", "POST"])
 def plot():
     app.logger.info(f"plot {request.method=}")
@@ -244,96 +316,39 @@ def plot():
         app.logger.info(f"baroRate: {request.form.getlist('baroRate')}")
         app.logger.info(f"sensors: {request.form.getlist('sensors')}")
         app.logger.info(f"to_dict: {request.form.to_dict(flat=False)}")
+
+        sessionKey = shortuuid.uuid()
+        authToken = shortuuid.uuid()
+        url = request.host_url + "sl/" + sessionKey
+        sessions[sessionKey] = {
+            "authToken": authToken,
+            "created": time.time(),
+            "url": url,
+        }
         params = {
             "http": {
                 "enabled": True,
-                "url": "http://172.16.0.212:5010/sl/6Qss2oWAHxwtoc4fuH7e4d",
+                "url": url,
                 "batchPeriod": 1000,
-                "authToken": "realm=WW4yxcg9NJykavqPYmwXEf",
+                "authToken": "Bearer " + authToken,
             },
         }
         cfg = merge(request, params)
         return render_template(
-            "genqrcode.html", config=gen_export_code(cfg), tracker=f"/tp"
+            "genqrcode.html", config=gen_export_code(cfg), tracker=f"/tp?session={sessionKey}"
         )
     return {}
 
 
-# https://www.digitalocean.com/community/tutorials/how-to-use-web-forms-in-a-flask-application
-messages = [
-    {"title": "Message One", "content": "Message One Content"},
-    {"title": "Message Two", "content": "Message Two Content"},
-]
-
-
-@app.route("/formtest")
-def formtest():
-    return render_template("formtest.html", messages=messages)
-
-
-@app.route("/create/", methods=("GET", "POST"))
-def create():
-    if request.method == "POST":
-        title = request.form["title"]
-        content = request.form["content"]
-
-        if not title:
-            flash("Title is required!")
-        elif not content:
-            flash("Content is required!")
-        else:
-            messages.append({"title": title, "content": content})
-            return redirect(url_for("index"))
-
-    return render_template("create.html")
-
-
-courses_list = [
-    {
-        "title": "Python 101",
-        "description": "Learn Python basics",
-        "price": 34,
-        "available": True,
-        "level": "Beginner",
-    }
-]
-
-from forms import CourseForm
-
-
-@app.route("/wtform", methods=("GET", "POST"))
-def wtform():
-    form = CourseForm()
-    if form.validate_on_submit():
-        courses_list.append(
-            {
-                "title": form.title.data,
-                "description": form.description.data,
-                "price": form.price.data,
-                "available": form.available.data,
-                "level": form.level.data,
-            }
-        )
-        return redirect(url_for("wtcourses"))
-    return render_template("wtform.html", form=form)
-
-
-@app.route("/wtcourses/")
-def courses():
-    return render_template("wtcourses.html", courses_list=courses_list)
-
+@app.route("/tp")
+def teleplot():
+    s = request.args.get('session')
+    app.logger.info(f"/tp: session={s}")
+    return render_template("teleplot.html", clientsession=s)
 
 @app.route("/")
 def index():
     return render_template("index.html")
-
-
-# receive a JSON file by upload
-# convert as per options
-@app.route("/upload", methods=["GET", "POST"])
-def upload():
-    if request.method == "GET":
-        return render_template("upload.html")
 
 
 @socketio.on_error_default
@@ -347,3 +362,11 @@ def default_error_handler(e):
 @socketio.on("disconnect")
 def disconnect():
     app.logger.error(f"Client disconnected: {request.sid=}")
+
+
+# receive a JSON file by upload
+# convert as per options
+@app.route("/upload", methods=["GET", "POST"])
+def upload():
+    if request.method == "GET":
+        return render_template("upload.html")

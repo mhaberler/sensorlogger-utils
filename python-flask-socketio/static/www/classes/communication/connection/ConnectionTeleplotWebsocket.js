@@ -19,17 +19,17 @@ class ConnectionTeleplotWebsocket extends Connection {
         this.address = _address;
         this.port = _port;
         this.udp.address = this.address;
-        const uri = "ws://" + this.address + ":" + this.port; //  + "/tpws";
-        // this.socket = new WebSocket(uri);
+        const uri = "ws://" + this.address + ":" + this.port + "/test"; //  + "/" + session;
         this.socket = new io(uri);
         this.socket.udp = this.udp;
         this.socket.connect();
-        this.socket.onopen = (event) => {
+        this.socket.on("connect", (event)  => {
             this.udp.connected = true;
             this.connected = true;
+            this.sendServerCommand({ session: session });
             this.sendServerCommand({ cmd: "listSerialPorts" });
-        };
-        this.socket.onclose = (event) => {
+        });
+        this.socket.on("disconnect", (event) => {
             this.udp.connected = false;
             this.connected = false;
             for (let input of this.inputs) {
@@ -38,7 +38,7 @@ class ConnectionTeleplotWebsocket extends Connection {
             setTimeout(() => {
                 this.connect(this.address, this.port);
             }, 2000);
-        };
+        });
         this.socket.on("sl", function (data) {
             // let msg = JSON.parse(data);
             console.log("sl", data);
