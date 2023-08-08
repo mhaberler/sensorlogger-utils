@@ -34,11 +34,14 @@ from wtforms import StringField, TextAreaField, IntegerField, BooleanField, Radi
 from wtforms.validators import InputRequired, Length
 
 sessions = {}
+namespaces = {}
+queues = {}
+threads = {}
+locks = {}
 UDP_IP = "127.0.0.1"
 UDP_PORT = 5005
-slq = queue.Queue()
 bleMeta = {}
-SESSION_TIMEOUT = 60
+SESSION_TIMEOUT = 3600
 
 udp_thread = None
 udp_thread_lock = Lock()
@@ -73,27 +76,29 @@ def udp_job(app):
             # socketio.emit('new_alerts', {'msg': 'New alert', 'id': last_id}, namespace='/rt/notifications/')
 
 
-def sl_job(app):
+def sl_job(app, q, ns):
     with app.app_context():
+        app.logger.info(f"thread for {ns.namespace} started")
         while True:
-            msg = slq.get()
-            socketio.emit("udp", msg)
+            msg = q.get()
+            ns.emit("udp", msg)
 
 
-@socketio.on("message")
-def handle_message(data):
-    app.logger.info(f"received message: {data=} {request.sid=}")
-    msg = json.loads(data)
+# @socketio.on("message")
+# def handle_message(data):
+#     app.logger.info(f"received message: {data=} {request.sid=}")
+#     msg = json.loads(data)
 
-    s = msg.get("session", None)
-    session = sessions.get(s, None)
-    if session:
-        pass
-        # create queue
-        # start sl_job relay thread
-        # confirm
+#     s = msg.get("session", None)
+#     session = sessions.get(s, None)
+#     if session:
+#         pass
+#         # create queue
+#         # start sl_job relay thread
+#         # confirm
 
-class MyCustomNamespace(Namespace):
+
+class TeleplotNamespace(Namespace):
     def on_connect(self):
         app.logger.info(f"{self.namespace=} on_connect")
 
@@ -107,27 +112,26 @@ class MyCustomNamespace(Namespace):
         app.logger.info(f"{self.namespace=} on_error")
 
     def on_my_event(self, data):
-        emit('my_response', data)
+        emit("my_response", data)
 
-socketio.on_namespace(MyCustomNamespace('/test'))
 
-@socketio.on("connect")
-def handle_connect(auth):
-    app.logger.info(f"Client connected {request.sid=}")
-    return
-    # emit("udp", {"message": "foobar"}, broadcast=True)
-    global udp_thread
-    with udp_thread_lock:
-        if udp_thread is None:
-            udp_thread = socketio.start_background_task(
-                udp_job, current_app._get_current_object()
-            )
-    global sl_thread
-    with sl_thread_lock:
-        if sl_thread is None:
-            sl_thread = socketio.start_background_task(
-                sl_job, current_app._get_current_object()
-            )
+# @socketio.on("connect")
+# def handle_connect(auth):
+#     app.logger.info(f"Client connected {request.sid=}")
+#     return
+#     # emit("udp", {"message": "foobar"}, broadcast=True)
+#     global udp_thread
+#     with udp_thread_lock:
+#         if udp_thread is None:
+#             udp_thread = socketio.start_background_task(
+#                 udp_job, current_app._get_current_object()
+#             )
+#     global sl_thread
+#     with sl_thread_lock:
+#         if sl_thread is None:
+#             sl_thread = socketio.start_background_task(
+#                 sl_job, current_app._get_current_object()
+#             )
 
 
 @app.route("/trackme/<clientsession>/")
@@ -276,7 +280,7 @@ def getpos(clientsession=""):
     if not "deviceId" in sessions[clientsession]:
         sessions[clientsession]["deviceId"] = deviceId
 
-    if not "queue" in sessions[clientsession]:
+    if not clientsession in queues:
         app.logger.info(f"no queue for {clientsession}")
         return {}
 
@@ -287,7 +291,7 @@ def getpos(clientsession=""):
     flattened = []
     for report in result:
         flattened.append(flatten(report))
-    teleplotify(flattened, slq)
+    teleplotify(flattened, queues[clientsession])
     return {}
 
 
@@ -302,7 +306,6 @@ def livetrack():
     return render_template(
         "genqrcode.html", config=config, tracker=f"/trackme/{clientsession}/"
     )
-
 
 
 @app.route("/plot", methods=["GET", "POST"])
@@ -325,6 +328,20 @@ def plot():
             "created": time.time(),
             "url": url,
         }
+        tpns = TeleplotNamespace("/" + sessionKey)
+        socketio.on_namespace(tpns)
+        namespaces[sessionKey] = tpns
+        queues[sessionKey] = queue.Queue()
+        locks[sessionKey] = Lock()
+
+        with locks[sessionKey]:
+            threads[sessionKey] = socketio.start_background_task(
+                sl_job,
+                current_app._get_current_object(),
+                queues[sessionKey],
+                namespaces[sessionKey],
+            )
+
         params = {
             "http": {
                 "enabled": True,
@@ -335,16 +352,19 @@ def plot():
         }
         cfg = merge(request, params)
         return render_template(
-            "genqrcode.html", config=gen_export_code(cfg), tracker=f"/tp?session={sessionKey}"
+            "genqrcode.html",
+            config=gen_export_code(cfg),
+            tracker=f"/tp?session={sessionKey}",
         )
     return {}
 
 
 @app.route("/tp")
 def teleplot():
-    s = request.args.get('session')
+    s = request.args.get("session")
     app.logger.info(f"/tp: session={s}")
     return render_template("teleplot.html", clientsession=s)
+
 
 @app.route("/")
 def index():
