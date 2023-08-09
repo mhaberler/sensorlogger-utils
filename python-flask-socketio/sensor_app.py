@@ -24,24 +24,16 @@ import os, time
 from TheengsDecoder import decodeBLE
 from flatten_json import flatten
 import custom
-from slconfig import genconfig, merge, gen_export_code
-from operator import itemgetter
-from collections import defaultdict
+from slconfig import merge, gen_export_code
 
-sessions = {}
-namespaces = {}
-queues = {}
-threads = {}
-locks = {}
-UDP_IP = "127.0.0.1"
-UDP_PORT = 5005
-bleMeta = {}
+# from operator import itemgetter
+# from collections import defaultdict
+
+
+UDP_IP = "0.0.0.0"
+UDP_PORT = 0  #  choose ephemeral port
 SESSION_TIMEOUT = 3600
 
-udp_thread = None
-udp_thread_lock = Lock()
-sl_thread = None
-sl_thread_lock = Lock()
 
 app = Flask(__name__)
 app.config["SOCK_SERVER_OPTIONS"] = {"ping_interval": 25}
@@ -50,47 +42,45 @@ app.config["SECRET_KEY"] = "yo2Ecuugh8oowiep1rui0niev8Fahnoh"
 
 QRcode(app)
 
+sessions = {}
+namespaces = {}
+queues = {}
+sl_threads = {}
+udp_threads = {}
+bleMeta = {}
+udp_thread_lock = Lock()
+sl_thread_lock = Lock()
+
 socketio = SocketIO(async_mode="threading")
 socketio.init_app(app)
 
 
-def udp_job(app):
-    udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # Internet  # UDP
-    udp_socket.bind((UDP_IP, UDP_PORT))
-    last_id = 0
+def open_udp_port(ip="0.0.0.0", portno=0):
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    s.bind((ip, portno))
+    addr, port = s.getsockname()
+    app.logger.info(f"udp getsockname({addr}, {port})")
+    return s, addr, port
+
+
+def udp_job(app, s, namespace):
     with app.app_context():
         while True:
-            data, addr = udp_socket.recvfrom(1024)  # buffer size is 1024 bytes
-            last_id += 1
+            data, addr = s.recvfrom(4096)
             msg = {
                 "data": data.decode(),
-                # "fromSerial": False,
                 "timestamp": time.time(),
             }
-            socketio.emit("udp", msg)
-            # socketio.emit('new_alerts', {'msg': 'New alert', 'id': last_id}, namespace='/rt/notifications/')
+            namespace.emit("udp", msg)
 
 
-def sl_job(app, q, ns):
+def sl_job(app, q, namespace):
     with app.app_context():
-        app.logger.info(f"thread for {ns.namespace} started")
+        app.logger.info(f"thread for {namespace.namespace} started")
         while True:
             msg = q.get()
-            ns.emit("udp", msg)
-
-
-# @socketio.on("message")
-# def handle_message(data):
-#     app.logger.info(f"received message: {data=} {request.sid=}")
-#     msg = json.loads(data)
-
-#     s = msg.get("session", None)
-#     session = sessions.get(s, None)
-#     if session:
-#         pass
-#         # create queue
-#         # start sl_job relay thread
-#         # confirm
+            namespace.emit("udp", msg)
 
 
 class TeleplotNamespace(Namespace):
@@ -113,31 +103,6 @@ class TeleplotNamespace(Namespace):
 
     def on_json(self, data):
         app.logger.info(f"{self.namespace=} on_json received {data=}")
-
-
-# @socketio.on("connect")
-# def handle_connect(auth):
-#     app.logger.info(f"Client connected {request.sid=}")
-#     return
-#     # emit("udp", {"message": "foobar"}, broadcast=True)
-#     global udp_thread
-#     with udp_thread_lock:
-#         if udp_thread is None:
-#             udp_thread = socketio.start_background_task(
-#                 udp_job, current_app._get_current_object()
-#             )
-#     global sl_thread
-#     with sl_thread_lock:
-#         if sl_thread is None:
-#             sl_thread = socketio.start_background_task(
-#                 sl_job, current_app._get_current_object()
-#             )
-
-
-@app.route("/trackme/<clientsession>/")
-def trackme(clientsession=""):
-    app.logger.info(f"trackme {clientsession=}")
-    return render_template("leaflet.html", sessionId=clientsession)
 
 
 def decode_ble_beacons(j, debug=False, customDecoder=None):
@@ -237,19 +202,9 @@ def teleplotify(samples, q):
                     value = int(value)
                 tp = {
                     "data": f"{sensor}.{variable}:{ts}:{value}|np\n",
-                    # "timestamp": ts ,
                 }
-                # app.logger.info(f"{tp['data']}")
-                if ts > 1: # suppress spurious zero timestamps
+                if ts > 1:  # suppress spurious zero timestamps
                     q.put(tp)
-
-
-# curl -X POST http://172.16.0.212:5010/token -H "Accept: application/json" -H "Authorization: Bearer blahfasel"
-
-# @app.route("/token", methods=["POST"])
-# def gettoken():
-#     app.logger.info(f"{request.headers=}")
-#     return {"foo": 123}
 
 
 @app.route("/sl/<clientsession>", methods=["POST"])
@@ -281,6 +236,12 @@ def getpos(clientsession=""):
             app.logger.info(
                 f"client test push: {clientsession=} {messageId=} {sessionId=} {deviceId=}"
             )
+            namespaces[clientsession].emit(
+                "udp",
+                {
+                    "data": f">:test push : {clientsession=} {messageId=} {sessionId=} {deviceId=}\n",
+                },
+            )
             return {}
 
     if not "deviceId" in sessions[clientsession]:
@@ -303,32 +264,12 @@ def getpos(clientsession=""):
     return {}
 
 
-@app.route("/livetrack", methods=["GET", "POST"])
-def livetrack():
-    clientsession = shortuuid.uuid()
-    secret = shortuuid.uuid()
-    authToken = f"realm={secret}"
-    uri = f"{request.host_url}sl/{clientsession}"
-    config = genconfig(uri, authToken=authToken)
-    app.logger.info(f"generate config: {clientsession=} {secret=} {config=}")
-    return render_template(
-        "genqrcode.html", config=config, tracker=f"/trackme/{clientsession}/"
-    )
-
-
 @app.route("/plot", methods=["GET", "POST"])
 def plot():
     app.logger.info(f"plot {request.method=}")
     if request.method == "GET":
         return render_template("plot.html")
     if request.method == "POST":
-        app.logger.info(f"locationRate: {request.form.getlist('locationRate')}")
-        app.logger.info(f"accelRate: {request.form.getlist('accelRate')}")
-        app.logger.info(f"baroRate: {request.form.getlist('baroRate')}")
-        app.logger.info(f"sensors: {request.form.getlist('sensors')}")
-        app.logger.info(f"batchPeriod: {request.form.getlist('batchPeriod')}")
-        app.logger.info(f"to_dict: {request.form.to_dict(flat=False)}")
-
         sessionKey = shortuuid.uuid()
         authToken = shortuuid.uuid()
         url = request.host_url + "sl/" + sessionKey
@@ -341,15 +282,28 @@ def plot():
         socketio.on_namespace(tpns)
         namespaces[sessionKey] = tpns
         queues[sessionKey] = queue.Queue()
-        locks[sessionKey] = Lock()
 
-        with locks[sessionKey]:
-            threads[sessionKey] = socketio.start_background_task(
-                sl_job,
-                current_app._get_current_object(),
-                queues[sessionKey],
-                namespaces[sessionKey],
-            )
+        # sensorlogger-to-teleplot bridging thread
+        with sl_thread_lock:
+            if not sessionKey in sl_threads:  # once only
+                sl_threads[sessionKey] = socketio.start_background_task(
+                    sl_job,
+                    current_app._get_current_object(),
+                    queues[sessionKey],
+                    namespaces[sessionKey],
+                )
+
+        # udp-to-teleplot bridging thread
+        with udp_thread_lock:
+            if not sessionKey in udp_threads:  # once only
+                s, _, port = open_udp_port(ip=UDP_IP, portno=UDP_PORT)
+                sessions[sessionKey]["udp_port"] = port
+                udp_threads[sessionKey] = socketio.start_background_task(
+                    udp_job,
+                    current_app._get_current_object(),
+                    s,
+                    namespaces[sessionKey],
+                )
 
         params = {
             "http": {
@@ -376,27 +330,27 @@ def teleplot():
     return render_template("teleplot.html", clientsession=s)
 
 
-@app.route("/")
-def index():
-    return render_template("index.html")
+# @app.route("/")
+# def index():
+#     return render_template("index.html")
 
 
-@socketio.on_error_default
-def default_error_handler(e):
-    app.logger.error(
-        f"on_error_default: {request.event['message']}"
-    )  # "my error event"
-    app.logger.error(f"on_error_default: {request.event['args']}")  # (data,)
+# @socketio.on_error_default
+# def default_error_handler(e):
+#     app.logger.error(
+#         f"on_error_default: {request.event['message']}"
+#     )  # "my error event"
+#     app.logger.error(f"on_error_default: {request.event['args']}")  # (data,)
 
 
-@socketio.on("disconnect")
-def disconnect():
-    app.logger.error(f"Client disconnected: {request.sid=}")
+# @socketio.on("disconnect")
+# def disconnect():
+#     app.logger.error(f"Client disconnected: {request.sid=}")
 
 
-# receive a JSON file by upload
-# convert as per options
-@app.route("/upload", methods=["GET", "POST"])
-def upload():
-    if request.method == "GET":
-        return render_template("upload.html")
+# # receive a JSON file by upload
+# # convert as per options
+# @app.route("/upload", methods=["GET", "POST"])
+# def upload():
+#     if request.method == "GET":
+#         return render_template("upload.html")
