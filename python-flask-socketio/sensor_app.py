@@ -1,6 +1,5 @@
 from flask import (
     Flask,
-    abort,
     render_template,
     request,
     current_app,
@@ -18,7 +17,7 @@ from flask_qrcode import QRcode
 import shortuuid
 
 # from celery import Celery
-import socket, select, queue
+import socket, queue
 import os, time
 
 # from flask_cors import CORS
@@ -28,10 +27,6 @@ import custom
 from slconfig import genconfig, merge, gen_export_code
 from operator import itemgetter
 from collections import defaultdict
-
-from flask_wtf import FlaskForm
-from wtforms import StringField, TextAreaField, IntegerField, BooleanField, RadioField
-from wtforms.validators import InputRequired, Length
 
 sessions = {}
 namespaces = {}
@@ -101,6 +96,7 @@ def sl_job(app, q, ns):
 class TeleplotNamespace(Namespace):
     def on_connect(self):
         app.logger.info(f"{self.namespace=} on_connect")
+        # emit("slconnect")
 
     def on_disconnect(self):
         app.logger.info(f"{self.namespace=} on_disconnect")
@@ -113,6 +109,13 @@ class TeleplotNamespace(Namespace):
 
     def on_my_event(self, data):
         emit("my_response", data)
+
+    def on_tpconnect(self, data):
+        app.logger.info(f"{self.namespace=} tpconnect received {data=}")
+        # emit("slconnect", data)
+
+    def on_json(self, data):
+        app.logger.info(f"{self.namespace=} on_json received {data=}")
 
 
 # @socketio.on("connect")
@@ -286,6 +289,8 @@ def getpos(clientsession=""):
 
     # record last messageId
     sessions[clientsession]["messageId"] = messageId
+    # if messageId < 3:
+    # namespaces[clientsession].emit("slconnect", { "device": deviceId})
 
     result = decode_ble_beacons(payload, debug=False, customDecoder=custom.Decoder)
     flattened = []
@@ -318,6 +323,7 @@ def plot():
         app.logger.info(f"accelRate: {request.form.getlist('accelRate')}")
         app.logger.info(f"baroRate: {request.form.getlist('baroRate')}")
         app.logger.info(f"sensors: {request.form.getlist('sensors')}")
+        app.logger.info(f"batchPeriod: {request.form.getlist('batchPeriod')}")
         app.logger.info(f"to_dict: {request.form.to_dict(flat=False)}")
 
         sessionKey = shortuuid.uuid()
@@ -346,15 +352,16 @@ def plot():
             "http": {
                 "enabled": True,
                 "url": url,
-                "batchPeriod": 1000,
                 "authToken": "Bearer " + authToken,
             },
         }
         cfg = merge(request, params)
         return render_template(
             "genqrcode.html",
-            config=gen_export_code(cfg),
-            tracker=f"/tp?session={sessionKey}",
+            config=json.dumps(cfg, indent=2),
+            config_img=gen_export_code(cfg),
+            clientsession=sessionKey,
+            tppath="/tp",
         )
     return {}
 

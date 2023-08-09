@@ -30,6 +30,11 @@
                     <input type="checkbox" name="sensors" value="Gyroscope" checked> Gyroscope <br>
                     <input type="checkbox" name="sensors" value="Orientation" checked> Orientation <br>
                     <input type="checkbox" name="sensors" value="Magnetometer" checked> Magnetometer <br>
+                    <input type="checkbox" name="sensors" value="Microphone" checked> Microphone <br>
+                    <input type="checkbox" name="sensors" value="Battery" checked> Battery <br>
+                    <input type="checkbox" name="sensors" value="Brightness" checked> Brightness <br>
+                    <input type="checkbox" name="sensors" value="Pedometer" checked> Pedometer <br>
+                    
                 </td>
                 <td> <select name="accelRate" id="accelRate">
                         <option value="1000">1000mS</option>
@@ -42,6 +47,16 @@
                 <td> <select name="baroRate" id="baroRate">
                         <option value="1000">1000mS</option>
                         <option value="100">100mS</option>
+                    </select></td>
+            </tr>
+            <tr>
+                <td> HTTP batch period
+                </td>
+                <td> <select name="batchPeriod" id="batchPeriod">
+                    <option value="1000">1s</option>
+                    <option value="5000">5s</option>
+                    <option value="200">200ms</option>
+                    <option value="100">100ms</option>
                     </select></td>
             </tr>
         </table>

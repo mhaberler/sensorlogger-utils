@@ -2,31 +2,38 @@
 <html>
 
 <head>
-    <title>Sensorlogger QRcode</title>
+    <title>Sensor Logger Live Plot</title>
+    <script src="{{ url_for('static', filename = 'socket.io.min.js' ) }}"></script>
 </head>
 
 <body>
-    <h2>Scan this code with your mobile, import into Sensor Logger and start recording <br>
-    </h2>
-    <h2>then click {{ tracker }}<br>
+    <h2>Scan this code with your mobile, import into Sensor Logger and start recording: <br>
     </h2>
     <br>
-    <img src="{{ qrcode(config, back_color='white', fill_color='red') }}"  width="500" height="500">
-
+    <img src="{{ qrcode(config_img, back_color='white', fill_color='red',
+        box_size=10,border=4) }}" width="500" height="500">
     <br>
     <div id="status">
     </div>
+    <br>
+    <h3>QRcode contents:</h3>
+    <pre>{{ config }}
+    </pre>
+    <br>
+
     <script>
-
-        var time = 3000;
-        setTimeout(function () {
-            document.getElementById("status").innerHTML = "<h2>waiting for Sensorlogger ..</h2>";
-
-            // open in same window
-            // window.location = "http://172.16.0.212:5010/tp";
-            // opens new window
-            // window.open("http://172.16.0.212:5010/tp")
-        }, time);
+        const session = "{{ clientsession }}";
+        document.getElementById("status").innerHTML = "<h2>waiting for Sensorlogger ..</h2>";
+        const uri = "ws://" + window.location.host + "/" + session;
+        const socket = new io(uri);
+        // notify we're alive and listening
+        socket.emit("tpconnect", { session: session });
+        // on first data sample, switch to teleplot view
+        // we lose the first sample, but such is life
+        socket.on("udp", (data) => {
+            document.getElementById("status").innerHTML = "<h2>starting Teleplot</h2>";
+            window.location = "http://" + window.location.host + "{{tppath}}?session=" + session;
+        });
     </script>
 </body>
 
