@@ -9,11 +9,11 @@
     <link rel="stylesheet" href="{{ url_for('static', filename = 'uPlot.min.css') }}">
     <script src="{{ url_for('static', filename = 'socket.io.min.js' ) }}"></script>
     <link rel="stylesheet"
-        href="{{ url_for('static', filename = 'www/components/vueResponsiveText/vue-responsive-text.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename = 'www/components/singleValue/single-value.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename = 'www/components/3dComponent/3dComponent.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename = 'www/style.css') }}">
-    <script src="{{ url_for('static', filename = 'www/lib/vue.js' ) }}"></script>
+        href="{{ url_for('static', filename = 'components/vueResponsiveText/vue-responsive-text.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'components/singleValue/single-value.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'components/3dComponent/3dComponent.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'style.css') }}">
+    <script src="{{ url_for('static', filename = 'lib/vue.js' ) }}"></script>
 
     <script>
         const session = "{{ clientsession }}";
@@ -25,7 +25,7 @@
         <header class="top-banner">
             <div class="top-banner-left">
 
-                <img src="{{ url_for('static', filename = 'www/images/logo-color.svg' ) }}" />
+                <img src="{{ url_for('static', filename = 'images/logo-color.svg' ) }}" />
                 <div class="connection-container">
                     <div v-for="conn in connections" class="connection">
                         <div class="connection-header">
@@ -195,7 +195,7 @@
             <div class="center-col" @drop="onDropInNewChart($event, false)" @dragenter.prevent
                 @dragover="onNewChartDragOver($event)" @dragenter.prevent @dragleave="onNewChartDragLeave($event)">
                 <div v-if="!dataAvailable" class="help-container">
-                    <img src="{{ url_for('static', filename = 'www/images/logo-color.svg' ) }}" />
+                    <img src="{{ url_for('static', filename = 'images/logo-color.svg' ) }}" />
                     <span>Ready to plot incoming telemetry.</span>
                 </div>
                 <!-- WIDGETS -->
@@ -339,44 +339,44 @@
 
 </body>
 
-<script src="{{ url_for('static', filename = 'www/utils/javascriptUtils.js' ) }}"></script>
-<script src="{{ url_for('static', filename = 'www/lib/uPlot/uplot.iife.js' ) }}"></script>
-<script src="{{ url_for('static', filename = 'www/lib/three/three.js' ) }}"></script>
-<script src="{{ url_for('static', filename = 'www/lib/three/three.module.js' ) }}"></script>
-<script src="{{ url_for('static', filename = 'www/lib/three/OrbitControls.js' ) }}"></script>
-<script src="{{ url_for('static', filename = 'www/lib/hyperlist/hyperlist.js' ) }}"></script>
-<script src="{{ url_for('static', filename = 'www/classes/view/logs/Log.js' ) }}"></script>
-<script src="{{ url_for('static', filename = 'www/components/uPlot/uplot-component.js' ) }}"></script>
-<script src="{{ url_for('static', filename = 'www/components/vueResponsiveText/vue-responsive-text.js' ) }}"></script>
-<script src="{{ url_for('static', filename = 'www/components/singleValue/singleValue.js' ) }}"></script>
-<script src="{{ url_for('static', filename = 'www/components/3dComponent/3dComponent.js' ) }}"></script>
-<script src="{{ url_for('static', filename = 'www/constants.js' ) }}"></script>
-<script src="{{ url_for('static', filename = 'www/classes/communication/connection/Connection.js' ) }}"></script>
+<script src="{{ url_for('static', filename = 'utils/javascriptUtils.js' ) }}"></script>
+<script src="{{ url_for('static', filename = 'lib/uPlot/uplot.iife.js' ) }}"></script>
+<script src="{{ url_for('static', filename = 'lib/three/three.js' ) }}"></script>
+<script src="{{ url_for('static', filename = 'lib/three/three.module.js' ) }}"></script>
+<script src="{{ url_for('static', filename = 'lib/three/OrbitControls.js' ) }}"></script>
+<script src="{{ url_for('static', filename = 'lib/hyperlist/hyperlist.js' ) }}"></script>
+<script src="{{ url_for('static', filename = 'classes/view/logs/Log.js' ) }}"></script>
+<script src="{{ url_for('static', filename = 'components/uPlot/uplot-component.js' ) }}"></script>
+<script src="{{ url_for('static', filename = 'components/vueResponsiveText/vue-responsive-text.js' ) }}"></script>
+<script src="{{ url_for('static', filename = 'components/singleValue/singleValue.js' ) }}"></script>
+<script src="{{ url_for('static', filename = 'components/3dComponent/3dComponent.js' ) }}"></script>
+<script src="{{ url_for('static', filename = 'constants.js' ) }}"></script>
+<script src="{{ url_for('static', filename = 'classes/communication/connection/Connection.js' ) }}"></script>
 <script
-    src="{{ url_for('static', filename = 'www/classes/communication/connection/ConnectionTeleplotVSCode.js' ) }}"></script>
+    src="{{ url_for('static', filename = 'classes/communication/connection/ConnectionTeleplotVSCode.js' ) }}"></script>
 <script
-    src="{{ url_for('static', filename = 'www/classes/communication/connection/ConnectionTeleplotWebsocket.js' ) }}"></script>
-<script src="{{ url_for('static', filename = 'www/utils/view/cursor.js' ) }}"></script>
-<script src="{{ url_for('static', filename = 'www/classes/communication/serverMessageReading.js' ) }}"></script>
-<script src="{{ url_for('static', filename = 'www/classes/view/widgets/DataWidget.js' ) }}"></script>
-<script src="{{ url_for('static', filename = 'www/classes/view/widgets/ChartWidget.js' ) }}"></script>
-<script src="{{ url_for('static', filename = 'www/classes/view/widgets/SingleValueWidget.js' ) }}"></script>
-<script src="{{ url_for('static', filename = 'www/classes/view/widgets/Widget3D.js' ) }}"></script>
-<script src="{{ url_for('static', filename = 'www/classes/view/logs/LogConsole.js' ) }}"></script>
-<script src="{{ url_for('static', filename = 'www/classes/communication/data/DataInput.js' ) }}"></script>
-<script src="{{ url_for('static', filename = 'www/classes/communication/data/DataInputSerial.js' ) }}"></script>
-<script src="{{ url_for('static', filename = 'www/classes/communication/data/DataInputUDP.js' ) }}"></script>
-<script src="{{ url_for('static', filename = 'www/classes/Telemetry.js' ) }}"></script>
-<script src="{{ url_for('static', filename = 'www/classes/DataSerie.js' ) }}"></script>
-<script src="{{ url_for('static', filename = 'www/classes/3d/Shape3D.js' ) }}"></script>
-<script src="{{ url_for('static', filename = 'www/classes/3d/World.js' ) }}"></script>
-<script src="{{ url_for('static', filename = 'www/utils/view/paint.js' ) }}"></script>
-<script src="{{ url_for('static', filename = 'www/utils/import_export/fileManagement.js' ) }}"></script>
-<script src="{{ url_for('static', filename = 'www/utils/import_export/layout.js' ) }}"></script>
-<script src="{{ url_for('static', filename = 'www/utils/import_export/session.js' ) }}"></script>
-<script src="{{ url_for('static', filename = 'www/utils/view/initializeAppView.js' ) }}"></script>
-<script src="{{ url_for('static', filename = 'www/utils/view/updateView.js' ) }}"></script>
-<script src="{{ url_for('static', filename = 'www/utils/stats/computeStats.js' ) }}"></script>
+    src="{{ url_for('static', filename = 'classes/communication/connection/ConnectionTeleplotWebsocket.js' ) }}"></script>
+<script src="{{ url_for('static', filename = 'utils/view/cursor.js' ) }}"></script>
+<script src="{{ url_for('static', filename = 'classes/communication/serverMessageReading.js' ) }}"></script>
+<script src="{{ url_for('static', filename = 'classes/view/widgets/DataWidget.js' ) }}"></script>
+<script src="{{ url_for('static', filename = 'classes/view/widgets/ChartWidget.js' ) }}"></script>
+<script src="{{ url_for('static', filename = 'classes/view/widgets/SingleValueWidget.js' ) }}"></script>
+<script src="{{ url_for('static', filename = 'classes/view/widgets/Widget3D.js' ) }}"></script>
+<script src="{{ url_for('static', filename = 'classes/view/logs/LogConsole.js' ) }}"></script>
+<script src="{{ url_for('static', filename = 'classes/communication/data/DataInput.js' ) }}"></script>
+<script src="{{ url_for('static', filename = 'classes/communication/data/DataInputSerial.js' ) }}"></script>
+<script src="{{ url_for('static', filename = 'classes/communication/data/DataInputUDP.js' ) }}"></script>
+<script src="{{ url_for('static', filename = 'classes/Telemetry.js' ) }}"></script>
+<script src="{{ url_for('static', filename = 'classes/DataSerie.js' ) }}"></script>
+<script src="{{ url_for('static', filename = 'classes/3d/Shape3D.js' ) }}"></script>
+<script src="{{ url_for('static', filename = 'classes/3d/World.js' ) }}"></script>
+<script src="{{ url_for('static', filename = 'utils/view/paint.js' ) }}"></script>
+<script src="{{ url_for('static', filename = 'utils/import_export/fileManagement.js' ) }}"></script>
+<script src="{{ url_for('static', filename = 'utils/import_export/layout.js' ) }}"></script>
+<script src="{{ url_for('static', filename = 'utils/import_export/session.js' ) }}"></script>
+<script src="{{ url_for('static', filename = 'utils/view/initializeAppView.js' ) }}"></script>
+<script src="{{ url_for('static', filename = 'utils/view/updateView.js' ) }}"></script>
+<script src="{{ url_for('static', filename = 'utils/stats/computeStats.js' ) }}"></script>
 <script>
 
     // Init Vue

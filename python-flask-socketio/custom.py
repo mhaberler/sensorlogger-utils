@@ -21,6 +21,7 @@ def Decoder(args, debug):
                     "<H6sIIBB", data
                 )
             return {
+                "name" : "foobar",
                 "type": "tpms0100",
                 "mac": b2mac(adr),
                 "pressure": pressure / 100000.0,

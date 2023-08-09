@@ -107,9 +107,6 @@ class TeleplotNamespace(Namespace):
     def on_error(self):
         app.logger.info(f"{self.namespace=} on_error")
 
-    def on_my_event(self, data):
-        emit("my_response", data)
-
     def on_tpconnect(self, data):
         app.logger.info(f"{self.namespace=} tpconnect received {data=}")
         # emit("slconnect", data)
@@ -179,7 +176,7 @@ def decode_ble_beacons(j, debug=False, customDecoder=None):
             data["rssi"] = sample["values"]["rssi"]
             data["manufacturerdata"] = sample["values"]["manufacturerData"]
             input = json.dumps(data)
-            app.logger.info(f"data sent to decoder: '{input}'")
+            # app.logger.info(f"data sent to decoder: '{input}'")
             # input = '{"servicedatauuid": "181b", "servicedata": "0224b2070113100c08fdff4a0b", "manufacturerdata": "5701381ec781c63c", "name": "MIBFS", "id": "5732A8DA-27AF-1C19-DA77-C8EF5AD5CB28", "rssi": -67}'
             # input = '{"servicedatauuid": "181b", "manufacturerdata": "5701381ec781c63c", "name": "MIBFS", "id": "5732A8DA-27AF-1C19-DA77-C8EF5AD5CB28", "rssi": -67}'
             # {"name": "MIBFS", "servicedatauuid": "181b", "id": "2b79964c-23a6-aba8-ed42-b4351592548d", "time": 1691300324099000000, "rssi": -73, "manufacturerdata": "5701381ec781c63c"}'
@@ -192,12 +189,14 @@ def decode_ble_beacons(j, debug=False, customDecoder=None):
                 js.pop("mfid", None)
                 js.pop("manufacturerdata", None)
                 js.pop("servicedatauuid", None)
+                app.logger.info(f"decodeBLE: '{js}'")
                 result.append(js)
                 continue
 
             if customDecoder:
                 ret = customDecoder(data, debug)
                 if ret:
+                    app.logger.info(f"customDecoder: '{js}'")
                     result.append(ret)
                     continue
         result.append(sample)
@@ -230,15 +229,19 @@ def teleplotify(samples, q):
             if key == "name":
                 continue
             if key == "time":
-                ts = s["time"] / 1.0e6
+                ts = s["time"] * 1.0e-6
                 continue
             if isinstance(value, float) or isinstance(value, int):
                 variable = key.removeprefix("values_")
+                if isinstance(value, bool):
+                    value = int(value)
                 tp = {
                     "data": f"{sensor}.{variable}:{ts}:{value}|np\n",
                     # "timestamp": ts ,
                 }
-                q.put(tp)
+                # app.logger.info(f"{tp['data']}")
+                if ts > 1: # suppress spurious zero timestamps
+                    q.put(tp)
 
 
 # curl -X POST http://172.16.0.212:5010/token -H "Accept: application/json" -H "Authorization: Bearer blahfasel"

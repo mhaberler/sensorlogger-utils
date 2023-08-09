@@ -16,20 +16,20 @@ prefix = b"sensorlogger://config/"
 template = {
     "workflow": "Classic",
     "sensorState": {
-        "Accelerometer": {"enabled": None, "speed": 1000},
-        "Gravity": {"enabled": None, "speed": 1000},
-        "Gyroscope": {"enabled": None, "speed": 1000},
-        "Orientation": {"enabled": None, "speed": 1000},
-        "Magnetometer": {"enabled": None, "speed": 1000},
-        "Barometer": {"enabled": None, "speed": 1000},
+        "Accelerometer": {"enabled": False, "speed": 1000},
+        "Gravity": {"enabled": False, "speed": 1000},
+        "Gyroscope": {"enabled": False, "speed": 1000},
+        "Orientation": {"enabled": False, "speed": 1000},
+        "Magnetometer": {"enabled": False, "speed": 1000},
+        "Barometer": {"enabled": False, "speed": 1000},
         "Location": {"enabled": True, "speed": 1000},
-        "Microphone": {"enabled": None, "speed": "disable"},
-        "Camera": {"enabled": None, "speed": 600000},
-        "Battery": {"enabled": None},
-        "Brightness": {"enabled": None},
-        "Pedometer": {"enabled": None},
-        # "Heart Rate": {"enabled": None},
-        # "Wrist Motion": {"enabled": None},
+        "Microphone": {"enabled": False, "speed": "disable"},
+        "Camera": {"enabled": False, "speed": 600000},
+        "Battery": {"enabled": False},
+        "Brightness": {"enabled": False},
+        "Pedometer": {"enabled": False},
+        "Heart Rate": {"enabled": False},
+        "Wrist Motion": {"enabled": False},
     },
     "http": {
         "enabled": True,
@@ -37,8 +37,8 @@ template = {
         "batchPeriod": 1000,
         "authToken": None,
     },
-    "additionalLocation": None,
-    "uncalibrated": None,
+    "additionalLocation": False,
+    "uncalibrated": False,
     "fileFormat": ".json",
     "fileName": "RECORDING_NAME-DATETIME_LOCAL_FORMATTED",
 }
@@ -54,17 +54,24 @@ def make_numeric(value):
 
 def merge(request, params):
     t = deepcopy(template)
-    for s in request.form.getlist("sensors"):
+    enabled = request.form.getlist("sensors")
+    for s in enabled:
         t["sensorState"][s]["enabled"] = True
+
     accelRate = request.form.getlist("accelRate")[0]
     for s in ["Accelerometer", "Gravity", "Gyroscope", "Orientation", "Magnetometer"]:
         t["sensorState"][s]["speed"] = make_numeric(accelRate)
     baroRate = request.form.getlist("baroRate")[0]
     t["sensorState"]["Barometer"]["speed"] = make_numeric(baroRate)
+    # remove config for disabled sensors
+    for k in template["sensorState"].keys():
+        if not k in enabled:
+            t["sensorState"].pop(k, None) 
+
     t.update(params)
     batchPeriod = request.form.getlist("batchPeriod")[0]
     t["http"]["batchPeriod"] = make_numeric(batchPeriod)
-
+    t["uncalibrated"] = len(request.form.getlist("Uncalibrated")) > 0
     return t
 
 
