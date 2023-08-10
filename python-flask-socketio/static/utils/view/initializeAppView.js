@@ -5,6 +5,7 @@ var commands = {};
 var logs = []; // contains a list of Log objects (all the logs received)
 
 var logBuffer = []; // temporary buffer for logs
+var annotationBuffer = []; // temporary buffer for annotations
 var telemBuffer = []; // temporary buffer for telemetries
 
 function initializeAppView()

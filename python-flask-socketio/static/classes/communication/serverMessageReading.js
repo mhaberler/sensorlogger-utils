@@ -25,6 +25,8 @@ function parseData(msgIn){
             // Log
             else if(msg.startsWith(">"))
                 parseLog(msg, now);
+            else if(msg.startsWith("<"))
+                parseAnnotation(msg, now);
             // 3D
             else if (msg.substring(0,3) == "3D|")
                 parse3D(msg, now);
@@ -67,6 +69,20 @@ function parseLog(msg, now)
     logBuffer.push(new Log(logTimestamp, logText));
 }
 
+
+// msg : a String containing an annotation message, ex : "<:takeoff"
+// now : a Number representing a timestamp
+function parseAnnotation(msg, now) 
+{
+       
+    let annStart = msg.indexOf(":")+1;
+    
+    let annText = msg.substr(annStart);
+    let annTimestamp = (parseFloat(msg.substr(1, annStart-2)))/1000; // /1000 to convert to seconds
+    if(isNaN(annTimestamp) || !isFinite(annTimestamp)) annTimestamp = now;
+
+    annotationBuffer.push(new Annotation(annTimestamp, annText));
+}
 
 function isTextFormatTelemetry(msg)
 {

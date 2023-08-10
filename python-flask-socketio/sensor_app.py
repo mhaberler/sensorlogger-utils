@@ -205,6 +205,12 @@ def teleplotify(samples, q):
                 }
                 if ts > 1:  # suppress spurious zero timestamps
                     q.put(tp)
+                continue
+            if sensor == "annotation":
+                q.put({
+                    "data": f"<{ts}:{value}\n"
+                })
+            
 
 
 @app.route("/sl/<clientsession>", methods=["POST"])
