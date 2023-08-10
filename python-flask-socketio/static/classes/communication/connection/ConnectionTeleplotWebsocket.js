@@ -7,11 +7,15 @@ class ConnectionTeleplotWebsocket extends Connection {
         this.socket = null;
         this.address = "";
         this.port = "";
+        this.supportSerial = true;
+
         this.udp = new DataInputUDP(this, "UDP");
         this.udp.address = "";
         this.udp.port = UDPport;
-        this.supportSerial = true;
         this.inputs.push(this.udp);
+
+        // this.sio = new DataInputSocketio(this, "SocketIO");
+        // this.inputs.push(this.sio);
     }
 
     connect(_address, _port) {
@@ -19,11 +23,11 @@ class ConnectionTeleplotWebsocket extends Connection {
         this.address = _address;
         this.port = _port;
         this.udp.address = this.address;
-        const uri = "ws://" + this.address + ":" + this.port  + "/" + session;
+        const uri = "ws://" + this.address + ":" + this.port + "/" + session;
         this.socket = new io(uri);
         this.socket.udp = this.udp;
         this.socket.connect();
-        this.socket.on("connect", (event)  => {
+        this.socket.on("connect", (event) => {
             this.udp.connected = true;
             this.connected = true;
             this.sendServerCommand({ session: session });
@@ -35,13 +39,18 @@ class ConnectionTeleplotWebsocket extends Connection {
             for (let input of this.inputs) {
                 input.disconnect();
             }
-            setTimeout(() => {
-                this.connect(this.address, this.port);
-            }, 2000);
+            // setTimeout(() => {
+            //     this.connect(this.address, this.port);
+            // }, 2000);
         });
-        this.socket.on("sl", function (data) {
-            // let msg = JSON.parse(data);
-            console.log("sl", data);
+        this.socket.on("json", function (msg) {
+            if ("data" in msg) {
+                msg.input = this;
+                parseJson(msg);
+            }
+            else if ("cmd" in msg) {
+                //nope
+            }
         });
         this.socket.on("udp", function (msg) {
             // console.log("udp", msg);

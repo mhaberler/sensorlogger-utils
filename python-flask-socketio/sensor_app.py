@@ -80,7 +80,8 @@ def sl_job(app, q, namespace):
         app.logger.info(f"thread for {namespace.namespace} started")
         while True:
             msg = q.get()
-            namespace.emit("udp", msg)
+            channel = msg.get("channel", "udp")
+            namespace.emit(channel, msg)
 
 
 class TeleplotNamespace(Namespace):
@@ -173,7 +174,7 @@ def decode_ble_beacons(j, debug=False, customDecoder=None):
 # https://stackoverflow.com/questions/50505381/python-split-a-list-of-objects-into-sublists-based-on-objects-attributes
 
 
-def teleplotify(samples, q):
+def teleplotify(samples, clientsession):
     # samples.sort(key=itemgetter("name", "time"))
     # d = defaultdict(list)
     # for item in samples:
@@ -204,13 +205,15 @@ def teleplotify(samples, q):
                     "data": f"{sensor}.{variable}:{ts}:{value}|np\n",
                 }
                 if ts > 1:  # suppress spurious zero timestamps
-                    q.put(tp)
+                    queues[clientsession].put(tp)
                 continue
             if sensor == "annotation":
-                q.put({
-                    "data": f"<{ts}:{value}\n"
-                })
-            
+                queues[clientsession].put(
+                    {   "channel" : "json",
+                        "data": {"annotation": {"label": value, "from": ts*1e-3}},
+                        "timestamp": time.time(),
+                    }
+                )
 
 
 @app.route("/sl/<clientsession>", methods=["POST"])
@@ -266,7 +269,7 @@ def getpos(clientsession=""):
     flattened = []
     for report in result:
         flattened.append(flatten(report))
-    teleplotify(flattened, queues[clientsession])
+    teleplotify(flattened, clientsession)
     return {}
 
 

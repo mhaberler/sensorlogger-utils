@@ -64,6 +64,7 @@ function initializeAppView()
                 Vue.set(app, 'logs', logs);
                 LogConsole.reboot();
                 logBuffer.length = 0;
+                annotationBuffer.length = 0;
                 telemetries = {};
                 Vue.set(app, 'telemetries', telemetries);
                 commands = {};
@@ -100,7 +101,7 @@ function initializeAppView()
                 let incomingType = app.telemetries[telemetryName].type;
                 let currType = widget.series[0].type;
                 
-                if(incomingType != currType) return;
+                if ((incomingType != "text") && (incomingType != currType)) return;
                 
                 let serie = getSerieInstanceFromTelemetry(telemetryName);
                 widget.addSerie(serie);

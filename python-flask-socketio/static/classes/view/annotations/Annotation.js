@@ -1,8 +1,8 @@
-class Annotation
-{
-    constructor(timestamp, text)
-    {
-        this.timestamp = timestamp;
-        this.text = text;
+class Annotation {
+    constructor(label, from, to, color) {
+        this.label = label;
+        this.from = from;
+        this.to = to;
+        this.color = color;
     }
 }
