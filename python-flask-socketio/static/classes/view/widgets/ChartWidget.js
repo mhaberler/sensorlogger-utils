@@ -4,7 +4,7 @@ This class represents a chart
 
 
 function annotationsPlugin(opts) {
-    const { types } = opts;
+    const { widget, types } = opts;
 
     // TODO: use <template> + .cloneNode() ?
     function placeMark(u, mark, opts) {
@@ -45,20 +45,22 @@ function annotationsPlugin(opts) {
                     for (let el of u.over.querySelectorAll('.u-mark-x'))
                         el.remove();
                     app.annotations.forEach(mark => {
-                        const range = (mark.to - mark.from) > 0.1;
-                        let o = opts.types[range ? "annotationspan" : "annotation"];
-
-                        if (
-                            mark.from >= u.scales.x.min &&
-                            mark.from <= u.scales.x.max
-                            ||
-                            mark.to >= u.scales.x.min &&
-                            mark.to <= u.scales.x.max
-                            ||
-                            mark.from <= u.scales.x.min &&
-                            mark.to >= u.scales.x.max
-                        ) {
-                            placeMark(u, mark, o);
+                        if (widget.annotationsVisible) {
+                            const range = (mark.to - mark.from) > 0.1;
+                            let o = opts.types[range ? "annotationspan" : "annotation"];
+    
+                            if (
+                                mark.from >= u.scales.x.min &&
+                                mark.from <= u.scales.x.max
+                                ||
+                                mark.to >= u.scales.x.min &&
+                                mark.to <= u.scales.x.max
+                                ||
+                                mark.from <= u.scales.x.min &&
+                                mark.to >= u.scales.x.max
+                            ) {
+                                placeMark(u, mark, o);
+                            }
                         }
                     });
                 }
@@ -89,6 +91,7 @@ class ChartWidget extends DataWidget {
             legend: { show: false },
             plugins: [
                 annotationsPlugin({
+                    widget: this,
                     types: {
                         annotation: {
                             width: 2,

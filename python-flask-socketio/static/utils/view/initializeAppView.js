@@ -128,6 +128,10 @@ function initializeAppView()
                 if(idx>=0) app.widgets.splice(idx, 1);
                 triggerChartResize();
             },
+            toggleAnnotations: function(widget){
+                widget.annotationsVisible = !widget.annotationsVisible;
+                // console.log("toggleAnnotations");
+            },
             onDropInNewChart: function(e, prepend=true){    
                 e.preventDefault();
                 e.stopPropagation();
