@@ -3,7 +3,8 @@ function exportSessionJSON() {
         telemetries: app.telemetries,
         logs: app.logs,
         dataAvailable: app.dataAvailable,
-        logAvailable: app.logAvailable
+        logAvailable: app.logAvailable,
+        annotations: app.annotations
     }, null, 3);
 
     saveFile(savedObj, buildFileName("session", "json"));
@@ -63,6 +64,7 @@ function importSessionJSON(event) {
 
             app.logAvailable = savedObj.logAvailable;
             app.dataAvailable = savedObj.dataAvailable;
+            app.annotations = savedObj.annotations;
             
             app.logs = savedObj.logs;
             if (app.logs.length>0)

@@ -316,10 +316,12 @@ def plot():
         with open(state, "w") as f:
             f.write(json.dumps(sessions, indent=4))
         app.logger.info(f"{len(sessions.keys())} sessions saved")
+        configCode =  len(request.form.getlist("configCode")) > 0
 
         return render_template(
             "genqrcode.html",
-            config=json.dumps(cfg, indent=2),
+            config= json.dumps(cfg, indent=2) if configCode else "",
+            cchdr= "QRcode contents:" if configCode else "",
             config_img=gen_export_code(cfg),
             clientsession=sessionKey,
             udp_port=sessions[sessionKey]["udp_port"],

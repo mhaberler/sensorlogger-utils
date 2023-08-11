@@ -5,7 +5,7 @@ var commands = {};
 var logs = []; // contains a list of Log objects (all the logs received)
 
 var logBuffer = []; // temporary buffer for logs
-var annotationBuffer = []; // temporary buffer for annotations
+var annotations = []; // temporary buffer for annotations
 var telemBuffer = []; // temporary buffer for telemetries
 
 function initializeAppView()
@@ -19,6 +19,7 @@ function initializeAppView()
             widgets: widgets, // contains chartWidget or DataWidget
             telemetries: telemetries, // contains telemetries (DataSerie)
             commands: commands,
+            annotations: annotations,
             logs: logs,
             dataAvailable: false,
             cmdAvailable: false,
@@ -64,7 +65,7 @@ function initializeAppView()
                 Vue.set(app, 'logs', logs);
                 LogConsole.reboot();
                 logBuffer.length = 0;
-                annotationBuffer.length = 0;
+                annotations.length = 0;
                 telemetries = {};
                 Vue.set(app, 'telemetries', telemetries);
                 commands = {};

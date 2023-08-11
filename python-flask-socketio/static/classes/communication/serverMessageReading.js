@@ -78,7 +78,7 @@ function parseJson(m) {
         const start = (msg.annotation.from === undefined) ? now : msg.annotation.from;
         const end = (msg.annotation.to === undefined) ? start : msg.annotation.to;
         const label = (msg.annotation.label === undefined) ? "" : msg.annotation.label;
-        annotationBuffer.push(new Annotation(label, start, end, msg.annotation.color));
+        app.annotations.push(new Annotation(label, start, end, msg.annotation.color));
     }
 }
 

@@ -3,25 +3,6 @@ This class represents a chart
 */
 
 
-let xMarks = [
-    {
-        type: 'annotation',
-        from: 4,
-        to: 4,
-        label: 'eqk_01',
-        link: 'https://google.com/',
-        descr: 'Earthquake 01!',
-    },
-    {
-        type: 'tor',
-        from: 9.3,
-        to: 18.5,
-        label: 'tor_20',
-        link: 'https://google.com/',
-        descr: 'Tornado 20!',
-    },
-];
-
 function annotationsPlugin(opts) {
     const { types } = opts;
 
@@ -63,7 +44,7 @@ function annotationsPlugin(opts) {
                 (u) => {
                     for (let el of u.over.querySelectorAll('.u-mark-x'))
                         el.remove();
-                    annotationBuffer.forEach(mark => {
+                    app.annotations.forEach(mark => {
                         const range = (mark.to - mark.from) > 0.1;
                         let o = opts.types[range ? "annotationspan" : "annotation"];
 
