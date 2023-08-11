@@ -3,21 +3,22 @@ function exportLayout() {
         widgets: [],
         viewDuration: app.viewDuration
     };
-    for(let w of widgets) {
+    for (let w of widgets) {
         let widget = {
             type: w.type,
             gridPos: w.gridPos,
             series: [],
-            precision_mode: w.precision_mode
+            precision_mode: w.precision_mode,
+            annotationsVisible: w.annotationsVisible
         };
-        for(let s of w.series) {
+        for (let s of w.series) {
             let serie = {
                 name: s.name,
                 sourceNames: s.sourceNames,
                 formula: s.formula,
                 options: s.options,
                 unit: s.unit,
-                type : s.type,
+                type: s.type,
             }
             widget.series.push(serie);
         }
@@ -28,10 +29,9 @@ function exportLayout() {
     saveFile(content, filename);
 }
 
-function deleteCurrentWidgets() 
-{
-    for(let w of widgets) w.destroy();
-    
+function deleteCurrentWidgets() {
+    for (let w of widgets) w.destroy();
+
     widgets.length = 0;
     Vue.set(app, 'widgets', widgets);
 }
@@ -42,20 +42,19 @@ function importLayoutJSON(event) {
         return;
     }
     var reader = new FileReader();
-    reader.onload = function(e) {
-        try{
+    reader.onload = function (e) {
+        try {
             let content = JSON.parse(e.target.result);
-            if("viewDuration" in content) app.viewDuration = content.viewDuration;
+            if ("viewDuration" in content) app.viewDuration = content.viewDuration;
 
             deleteCurrentWidgets();
-            for(let w of content.widgets){
+            for (let w of content.widgets) {
 
                 let newSeries = []
                 let isWidgetXY = false;
-                for(let s of w.series)
-                {
+                for (let s of w.series) {
                     let serie = new DataSerie(s.name, s.unit, s.type);
-                    for(let sn of s.sourceNames){
+                    for (let sn of s.sourceNames) {
                         serie.addSource(sn);
                     }
                     if (serie.type == "xy") isWidgetXY = true;
@@ -65,43 +64,40 @@ function importLayoutJSON(event) {
 
                 let widget = undefined;
 
-                if(w.type == "chart") 
-                {
+                if (w.type == "chart") {
                     widget = new ChartWidget(isWidgetXY);
 
-                    for(let s of newSeries)
+                    for (let s of newSeries)
                         widget.addSerie(s);
+                    widget.annotationsVisible = w.annotationsVisible;
                 }
 
-                else if (w.type == "single_value_text") 
-                {
-                    widget = new SingleValueWidget(true); 
+                else if (w.type == "single_value_text") {
+                    widget = new SingleValueWidget(true);
                     widget.addSerie(newSeries[0]);
                 }
-                else if (w.type == "single_value_number") 
-                {
-                    widget = new SingleValueWidget(false); 
+                else if (w.type == "single_value_number") {
+                    widget = new SingleValueWidget(false);
                     widget.precision_mode = w.precision_mode
                     widget.addSerie(newSeries[0]);
                 }
-                else if (w.type == "widget3D")
-                {
+                else if (w.type == "widget3D") {
                     widget = new Widget3D();
                     for (let s of newSeries)
                         widget.addSerie(s);
                 }
-                else throw new Error("widget type "+w.type+" is not supported");
+                else throw new Error("widget type " + w.type + " is not supported");
 
-                
-                
+
+
                 widget.gridPos = w.gridPos;
-                setTimeout(()=>{updateWidgetSize_(widget)}, 100);
+                setTimeout(() => { updateWidgetSize_(widget) }, 100);
                 widgets.push(widget);
             }
             app.leftPanelVisible = false; // hide telemetry list
         }
-        catch(e) {
-            alert("Importation failed: "+e.toString());
+        catch (e) {
+            alert("Importation failed: " + e.toString());
         }
     };
     reader.readAsText(file);
