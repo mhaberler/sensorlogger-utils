@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, current_app
+from flask import Flask, render_template, request, current_app, redirect
 
 from flask_socketio import SocketIO, Namespace
 from threading import Lock
@@ -225,7 +225,7 @@ def getpos(clientsession=""):
     if sessions[clientsession]["authToken"] != token:
         return f"invalid token: {token}", 404
 
-    age = int(time.time() - sessions[clientsession]["created"])
+    age = int(time.time() - sessions[clientsession]["lastUse"])
     if age > SESSION_MAX_AGE:
         return f"Session timed out - link age is {age} seconds", 404
 
@@ -252,8 +252,8 @@ def getpos(clientsession=""):
 
     # record last messageId
     sessions[clientsession]["messageId"] = messageId
-    # if messageId < 3:
-    # namespaces[clientsession].emit("slconnect", { "device": deviceId})
+    # refresh expiration timer
+    sessions[clientsession]["lastUse"] = time.time()
 
     result = decode_ble_beacons(payload, debug=False, customDecoder=custom.Decoder)
     flattened = []
@@ -274,7 +274,7 @@ def plot():
         url = request.host_url + "sl/" + sessionKey
         sessions[sessionKey] = {
             "authToken": authToken,
-            "created": time.time(),
+            "lastUse": time.time(),
             "url": url,
         }
         tpns = TeleplotNamespace("/" + sessionKey)
@@ -335,8 +335,10 @@ def teleplot():
     return render_template("teleplot.html", clientsession=s)
 
 
-# @app.route("/")
-# def index():
+@app.route("/")
+def index():
+    return redirect("/plot", code=302)
+
 #     return render_template("index.html")
 
 
@@ -367,7 +369,7 @@ if os.path.exists(state):
     app.logger.info(f"{len(sessions.keys())} sessions loaded")
     expired = []
     for sessionKey in sessions.keys():
-        age = time.time() - sessions[sessionKey]["created"]
+        age = time.time() - sessions[sessionKey]["lastUse"]
         if age > SESSION_MAX_AGE:
             app.logger.info(f"expiring session {sessionKey} - age {age/3600} hours")
             expired.append(sessionKey)
