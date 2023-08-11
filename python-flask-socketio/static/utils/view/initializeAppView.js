@@ -80,7 +80,7 @@ function initializeAppView()
             sendText: function(text) {
                 let escape = app.sendTextLineEnding.replace("\\n","\n");
                 escape = escape.replace("\\r","\r");
-                vscode.postMessage({ cmd: "sendToSerial", text: text+escape});
+                // vscode.postMessage({ cmd: "sendToSerial", text: text+escape});
             },
             onDragTelemetry: function(e, telemetryName){
                 e.dataTransfer.dropEffect = 'copy'

@@ -1,26 +1,13 @@
-from flask import (
-    Flask,
-    render_template,
-    request,
-    current_app,
-    url_for,
-    flash,
-    redirect,
-)
+from flask import Flask, render_template, request, current_app
 
-from flask_socketio import SocketIO, emit, Namespace
-from threading import Lock, Thread
-
-from datetime import datetime
+from flask_socketio import SocketIO, Namespace
+from threading import Lock
 import json
 from flask_qrcode import QRcode
 import shortuuid
-
-# from celery import Celery
 import socket, queue
-import os, time
-
-# from flask_cors import CORS
+import time
+import os
 from TheengsDecoder import decodeBLE
 from flatten_json import flatten
 import custom
@@ -32,8 +19,9 @@ from slconfig import merge, gen_export_code
 
 UDP_IP = "0.0.0.0"
 UDP_PORT = 0  #  choose ephemeral port
-SESSION_TIMEOUT = 3600
+SESSION_MAX_AGE = 3600*24
 
+state = "sessions.json"
 
 app = Flask(__name__)
 app.config["SOCK_SERVER_OPTIONS"] = {"ping_interval": 25}
@@ -67,7 +55,7 @@ def open_udp_port(ip="0.0.0.0", portno=0):
 def udp_job(app, s, namespace):
     with app.app_context():
         while True:
-            data, addr = s.recvfrom(4096)
+            data, _ = s.recvfrom(4096)
             msg = {
                 "data": data.decode(),
                 "timestamp": time.time(),
@@ -93,7 +81,8 @@ class TeleplotNamespace(Namespace):
         app.logger.info(f"{self.namespace=} on_disconnect")
 
     def on_message(self, m):
-        app.logger.info(f"{self.namespace=} on_message {m}")
+        pass
+        # app.logger.info(f"{self.namespace=} on_message {m}")
 
     def on_error(self):
         app.logger.info(f"{self.namespace=} on_error")
@@ -209,8 +198,9 @@ def teleplotify(samples, clientsession):
                 continue
             if sensor == "annotation":
                 queues[clientsession].put(
-                    {   "channel" : "json",
-                        "data": {"annotation": {"label": value, "from": ts*1e-3}},
+                    {
+                        "channel": "json",
+                        "data": {"annotation": {"label": value, "from": ts * 1e-3}},
                         "timestamp": time.time(),
                     }
                 )
@@ -236,7 +226,7 @@ def getpos(clientsession=""):
         return f"invalid token: {token}", 404
 
     age = int(time.time() - sessions[clientsession]["created"])
-    if age > SESSION_TIMEOUT:
+    if age > SESSION_MAX_AGE:
         return f"Session timed out - link age is {age} seconds", 404
 
     # check for test push
@@ -322,11 +312,17 @@ def plot():
             },
         }
         cfg = merge(request, params)
+        sessions[sessionKey]["config_code"] = cfg
+        with open(state, "w") as f:
+            f.write(json.dumps(sessions, indent=4))
+        app.logger.info(f"{len(sessions.keys())} sessions saved")
+
         return render_template(
             "genqrcode.html",
             config=json.dumps(cfg, indent=2),
             config_img=gen_export_code(cfg),
             clientsession=sessionKey,
+            udp_port=sessions[sessionKey]["udp_port"],
             tppath="/tp",
         )
     return {}
@@ -363,3 +359,44 @@ def teleplot():
 # def upload():
 #     if request.method == "GET":
 #         return render_template("upload.html")
+
+if os.path.exists(state):
+    #
+    with open(state) as f:
+        sessions = json.loads(f.read())
+    app.logger.info(f"{len(sessions.keys())} sessions loaded")
+    expired = []
+    for sessionKey in sessions.keys():
+        age = time.time() - sessions[sessionKey]["created"]
+        if age > SESSION_MAX_AGE:
+            app.logger.info(f"expiring session {sessionKey} - age {age/3600} hours")
+            expired.append(sessionKey)
+            continue
+        tpns = TeleplotNamespace("/" + sessionKey)
+        socketio.on_namespace(tpns)
+        namespaces[sessionKey] = tpns
+        queues[sessionKey] = queue.Queue()
+        # sensorlogger-to-teleplot bridging thread
+        with app.app_context():
+            with sl_thread_lock:
+                if not sessionKey in sl_threads:  # once only
+                    sl_threads[sessionKey] = socketio.start_background_task(
+                        sl_job,
+                        current_app._get_current_object(),
+                        queues[sessionKey],
+                        namespaces[sessionKey],
+                    )
+
+            # udp-to-teleplot bridging thread
+            with udp_thread_lock:
+                if not sessionKey in udp_threads:  # once only
+                    s, _, port = open_udp_port(ip=UDP_IP, portno=UDP_PORT)
+                    sessions[sessionKey]["udp_port"] = port
+                    udp_threads[sessionKey] = socketio.start_background_task(
+                        udp_job,
+                        current_app._get_current_object(),
+                        s,
+                        namespaces[sessionKey],
+                    )
+    for k in expired:
+        sessions.pop(k)

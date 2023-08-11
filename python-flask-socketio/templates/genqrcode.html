@@ -32,7 +32,7 @@
         // we lose the first sample, but such is life
         socket.on("udp", (data) => {
             document.getElementById("status").innerHTML = "<h2>starting Teleplot</h2>";
-            window.location = "http://" + window.location.host + "{{tppath}}?session=" + session;
+            window.location = "http://" + window.location.host + "{{tppath}}?session=" + session + "&udp_port={{udp_port}}";
         });
     </script>
 </body>

@@ -355,8 +355,6 @@
 <script src="{{ url_for('static', filename = 'constants.js' ) }}"></script>
 <script src="{{ url_for('static', filename = 'classes/communication/connection/Connection.js' ) }}"></script>
 <script
-    src="{{ url_for('static', filename = 'classes/communication/connection/ConnectionTeleplotVSCode.js' ) }}"></script>
-<script
     src="{{ url_for('static', filename = 'classes/communication/connection/ConnectionTeleplotWebsocket.js' ) }}"></script>
 <script src="{{ url_for('static', filename = 'utils/view/cursor.js' ) }}"></script>
 <script src="{{ url_for('static', filename = 'classes/communication/serverMessageReading.js' ) }}"></script>
@@ -383,6 +381,10 @@
 <script>
 
     // Init Vue
+    var url = new URL(window.location.href);
+    var  udp_port = url.searchParams.get("udp_port");
+    UDPport = parseInt(udp_port);
+
     var app = initializeAppView();
 
     //Init refresh rate
