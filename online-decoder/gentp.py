@@ -31,7 +31,12 @@ class Telemetry:
                 "values_formatted": f"{self.values[-1]:.{self.precision}f}",
             }
         
-
+def annotate(label, start=time.time(), end=None):
+    annotations.append({
+        "label":label,
+        "from": start,
+        "to" : end if end else start
+    })
 
 def save(name):
     with open(name, "w") as f:
@@ -40,10 +45,7 @@ def save(name):
             "logs": [],
             "dataAvailable": True,
             "logAvailable": False,
-            "annotations": [
-                # {"label": "hhh", "from": 1691748817.478, "to": 1691748817.478},
-                # {"label": "kkmnb", "from": 1691748825.408, "to": 1691748825.408},
-            ],
+            "annotations": annotations
         }
         for name in telemetries.keys():
             data["telemetries"][name] = telemetries[name].generate()
@@ -55,10 +57,14 @@ if __name__ == "__main__":
     s = Telemetry("sin")
     c = Telemetry("cos")
     numpts = 100
+    annotate("begin",t+1)
+    annotate("range",t+20,t+30)
+
     for i in range(numpts):
         t += 1
         alpha = 2*pi*i/numpts
         s.addSample(sin(alpha),t)
         c.addSample(cos(alpha),t)
+    annotate("end",t-1)
 
     save("test.json")
