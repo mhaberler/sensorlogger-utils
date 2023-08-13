@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-import os
+import os, time
 from datetime import datetime
 from flask import (
     Flask,
@@ -30,9 +30,9 @@ from flask_qrcode import QRcode
 
 # pip install git+https://github.com/mhaberler/uttlv.git@ltv-option
 
-from uttlv import TLV
-import bleads
+#import bleads
 import overpy
+from gentp import Teleplot
 
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -68,13 +68,13 @@ def traverse_and_modify(obj, **kwargs):
                 return
             if key in useless:
                 if debug:
-                    print(f"drop {key=}")
+                    app.logger.debug(f"drop {key=}")
                 obj.pop(key)
                 continue
             if key == "seconds_elapsed" and "drop_bad_timestamps" in options:
                 if float(value) < 0.0:
                     if debug:
-                        print(f"drop bad seconds_elapsed: {value=}")
+                        app.logger.debug(f"drop bad seconds_elapsed: {value=}")
                     obj.clear()
                     return
             if key == "time" and "linux_timestamp_float" in timestamp:
@@ -139,7 +139,7 @@ def decode_ble_beacons(j, debug=False, customDecoder=None):
                 js.pop("servicedatauuid", None)
                 sample[decoded] = js
                 if debug and sample[decoded]:
-                    print(json.dumps(sample, indent=2))
+                    app.logger.debug(json.dumps(sample, indent=2))
                 continue
 
             if customDecoder:
@@ -147,38 +147,42 @@ def decode_ble_beacons(j, debug=False, customDecoder=None):
                 if result:
                     sample[decoded] = result
                     continue
-            # try splitting up the advertisement
-            tlv = TLV(len_size=1, ltv=True, lenTV=True)
-            tlv.set_tag_map(bleads.bleAdvConfig)
-            tlv.parse_array(bytes(bytearray.fromhex(data["manufacturerdata"])))
-            if bleads.BLE_HS_ADV_TYPE_MFG_DATA in tlv:  # ha!
-                data = {}
-                if meta["localName"]:
-                    data["name"] = meta["localName"]
-                sl = meta["serviceUUIDs"][0]
-                if len(sl) > 4:
-                    sl = sl[4:8]
-                data["servicedatauuid"] = sl
-                data["id"] = sample["id"]
-                data["rssi"] = sample["rssi"]
-                data["manufacturerdata"] = tlv[bleads.BLE_HS_ADV_TYPE_MFG_DATA].hex()
-                input = json.dumps(data)
-                result = decodeBLE(input)
-                if result:
-                    js = json.loads(result)
-                    js.pop("id", None)
-                    js.pop("mfid", None)
-                    js.pop("manufacturerdata", None)
-                    js.pop("servicedatauuid", None)
-                    sample[decoded] = js
-                    if debug and sample[decoded]:
-                        print(json.dumps(sample, indent=2))
-                continue
     return
+
+
+
+def teleplotify(samples):
+    tp = Teleplot()
+    ts = time.time()  # default to receive time
+    for s in samples:
+        if "name" in s:
+            sensor = s["name"].replace(" ", "_")
+        else:
+            sensor = s["sensor"]
+        for key, value in s.items():
+            if key == "name":
+                continue
+            if key == "sensor":
+                continue
+            if key == "time":
+                ts = float(s["time"]) * 1.0e-6
+                continue
+            if isinstance(value, float) or isinstance(value, int):
+                variable = key.removeprefix("values_")
+                if isinstance(value, bool):
+                    value = int(value)
+                if ts > 1:  # suppress spurious zero timestamps
+                    tp.addSample(f"{sensor}.{variable}", value, timestamp=ts)
+                continue
+            if sensor == "annotation":
+                tp.annotate(value, start=ts)
+    return tp
 
 
 def decode(input, options, destfmt, timestamp, debug=False, customDecoder=None):
     j = json.loads(input.decode("utf-8"))
+    if "teleplot" in destfmt:
+        options = ["decode_ble","flatten_json"]
 
     if "gpx" in destfmt:
         xml = gengpx.gengpx(j)
@@ -194,6 +198,13 @@ def decode(input, options, destfmt, timestamp, debug=False, customDecoder=None):
         for report in j:
             result.append(flatten(report))
         j = result
+
+    if "teleplot" in destfmt:
+        tp = teleplotify(j)
+        buffer = io.BytesIO()
+        buffer.write(tp.toJson().encode("utf-8"))
+        buffer.seek(0)
+        return ("teleplot.json", buffer)
 
     massaged = traverse_and_modify(
         j, options=options, useless=useless, timestamp=timestamp, debug=debug
