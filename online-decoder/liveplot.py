@@ -24,7 +24,7 @@ UDP_IP = "0.0.0.0"
 UDP_PORT = 0  #  choose ephemeral port
 SESSION_MAX_AGE = 3600 * 24
 state = "sessions.json"
-
+HOST_URL = "https://sensorlogger.mah.priv.at/"
 sessions = {}
 namespaces = {}
 queues = {}
@@ -340,7 +340,8 @@ def plot():
     if request.method == "POST":
         sessionKey = shortuuid.uuid()
         authToken = shortuuid.uuid()
-        url = request.host_url + "sl/" + sessionKey
+        url = HOST_URL + "sl/" + sessionKey
+        # url = request.host_url + "sl/" + sessionKey
         sessions[sessionKey] = {
             "authToken": authToken,
             "lastUse": time.time(),
