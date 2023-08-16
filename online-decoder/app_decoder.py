@@ -197,8 +197,11 @@ def teleplotify(samples):
                 s.pop("values_name")
 
             elif "id" in s:
-                s["name"] = bleMeta[s["id"]]["name"]
-            sensor = s["name"]
+                if s["id"] in bleMeta:
+                    s["name"] = bleMeta[s["id"]]["name"]
+                elif "bluetooth-" + s["id"] in bleMeta:
+                    s["name"] = bleMeta["bluetooth-" + s["id"]]["name"]
+            sensor = s.get("name", s["sensor"])
         else:
             sensor = s["sensor"]
         for key, value in s.items():
