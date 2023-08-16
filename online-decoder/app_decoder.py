@@ -9,7 +9,10 @@ from flask import (
     request,
     make_response,
     send_file,
+    current_app,
+    redirect,
 )
+from threading import Lock
 from werkzeug.utils import secure_filename
 import io
 import json
@@ -28,10 +31,16 @@ import re
 
 app = Flask(__name__)
 app.config.from_object(__name__)
+app.config["SOCK_SERVER_OPTIONS"] = {"ping_interval": 25}
 app.config["UPLOAD_FOLDER"] = "/tmp/sensorlogger-upload"
+app.config["SECRET_KEY"] = "yo2Ecuugh8oowiep1rui0niev8Fahnoh"
 QRcode(app)
+from  liveplot import liveplot,init_liveplot,restore_sessions
+init_liveplot(app)
+restore_sessions(app)
+app.register_blueprint(liveplot)
 
-ALLOWED_EXTENSIONS = ["zip", "json"]
+ALLOWED_EXTENSIONS = ["json"]
 
 reader = codecs.getreader("utf-8")
 decoded = "values"
@@ -39,6 +48,7 @@ suffix = "-processed"
 metadataNames = ["BluetoothMetadata", "Metadata"]
 useless = ["manufacturerData"]
 skipKeys = ["seconds_elapsed"]
+
 
 RE_INT = re.compile(r"^[-+]?([1-9]\d*|0)$")
 RE_FLOAT = re.compile(r"^[-+]?(\d+([.,]\d*)?|[.,]\d+)([eE][-+]?\d+)?$")
@@ -125,7 +135,7 @@ def decode_ble_beacons(j, debug=False, customDecoder=None):
             if "advertisement" in sample:
                 da = decode_advertisement(sample["advertisement"])
                 # could do this, but ATM not really useful and not JSON serializable
-                #sample.update(da)
+                # sample.update(da)
         if sample["sensor"].startswith("BluetoothMetadata"):
             if not isinstance(sample["serviceUUIDs"], list):
                 # mutate so we always have a list of serviceUUIDs
@@ -169,8 +179,9 @@ def decode_ble_beacons(j, debug=False, customDecoder=None):
     return
 
 
-def teleplotify(samples):
+def teleplotify(samples, options):
     bleMeta = {}
+    gen3d = "gen3d" in options
     tp = Teleplot()
     ts = time.time()  # default to receive time
     for s in samples:
@@ -218,7 +229,7 @@ def teleplotify(samples):
 def decode(input, options, destfmt, timestamp, debug=False, customDecoder=None):
     j = json.loads(input.decode("utf-8"))
     if "teleplot" in destfmt:
-        options = ["decode_ble", "flatten_json"]
+        options = ["decode_ble", "flatten_json"] + "gen3d" if "gen3d" in options else []
 
     if "gpx" in destfmt:
         xml = gengpx.gengpx(j)
@@ -236,7 +247,7 @@ def decode(input, options, destfmt, timestamp, debug=False, customDecoder=None):
         j = result
 
     if "teleplot" in destfmt:
-        tp = teleplotify(j)
+        tp = teleplotify(j, options)
         buffer = io.BytesIO()
         buffer.write(tp.toJson().encode("utf-8"))
         buffer.seek(0)
@@ -315,7 +326,6 @@ def sensorlogger():
                     )
                 )
                 return response
-
 
 
 @app.route("/livetrack", methods=["GET", "POST"])

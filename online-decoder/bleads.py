@@ -29,31 +29,35 @@ BLE_HS_ADV_TYPE_MFG_DATA = 0xFF
 def toString(s):
     return s.decode("utf-8")
 
+def serviceData(s):
+    return s.hex()
+
+
 # types and tags for BLE advertisement data which is LTV
 bleAdvConfig = {
     BLE_HS_ADV_TYPE_FLAGS: {"type": bytes, "name": "FLAGS"},
     BLE_HS_ADV_TYPE_INCOMP_UUIDS16: {
-        "type": bytes,
+        "type": serviceData,
         "name": "INCOMP_UUIDS16",
     },
     BLE_HS_ADV_TYPE_COMP_UUIDS16: {
-        "type": bytes,
+        "type": serviceData,
         "name": "COMP_UUIDS16",
     },
     BLE_HS_ADV_TYPE_INCOMP_UUIDS32: {
-        "type": bytes,
+        "type": serviceData,
         "name": "INCOMP_UUIDS32",
     },
     BLE_HS_ADV_TYPE_COMP_UUIDS32: {
-        "type": bytes,
+        "type": serviceData,
         "name": "COMP_UUIDS32",
     },
     BLE_HS_ADV_TYPE_INCOMP_UUIDS128: {
-        "type": bytes,
+        "type": serviceData,
         "name": "INCOMP_UUIDS128",
     },
     BLE_HS_ADV_TYPE_COMP_UUIDS128: {
-        "type": bytes,
+        "type": serviceData,
         "name": "COMP_UUIDS128",
     },
     BLE_HS_ADV_TYPE_INCOMP_NAME: {"type": toString, "name": "INCOMP_NAME"},
@@ -64,11 +68,11 @@ bleAdvConfig = {
         "name": "SLAVE_ITVL_RANGE",
     },
     BLE_HS_ADV_TYPE_SOL_UUIDS16: {
-        "type": bytes,
+        "type": serviceData,
         "name": "SOL_UUIDS16",
     },
     BLE_HS_ADV_TYPE_SOL_UUIDS128: {
-        "type": bytes,
+        "type": serviceData,
         "name": "SOL_UUIDS128",
     },
     BLE_HS_ADV_TYPE_SVC_DATA_UUID16: {
@@ -86,21 +90,21 @@ bleAdvConfig = {
     BLE_HS_ADV_TYPE_APPEARANCE: {"type": bytes, "name": "APPEARANCE"},
     BLE_HS_ADV_TYPE_ADV_ITVL: {"type": bytes, "name": "ADV_ITVL"},
     BLE_HS_ADV_TYPE_SVC_DATA_UUID32: {
-        "type": bytes,
+        "type": serviceData,
         "name": "SVC_DATA_UUID32",
     },
     BLE_HS_ADV_TYPE_SVC_DATA_UUID128: {
-        "type": bytes,
+        "type": serviceData,
         "name": "SVC_DATA_UUID128",
     },
     BLE_HS_ADV_TYPE_URI: {"type": str, "name": "URI"},
     BLE_HS_ADV_TYPE_MESH_PROV: {"type": bytes, "name": "MESH_PROV"},
     BLE_HS_ADV_TYPE_MESH_MESSAGE: {
-        "type": bytes,
+        "type": serviceData,
         "name": "MESH_MESSAGE",
     },
     BLE_HS_ADV_TYPE_MESH_BEACON: {
-        "type": bytes,
+        "type": serviceData,
         "name": "MESH_BEACON",
     },
     BLE_HS_ADV_TYPE_MFG_DATA: {"type": bytes, "name": "MFG_DATA"},

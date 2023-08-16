@@ -1,0 +1,32 @@
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+.u-over {
+    overflow: hidden;
+}
+
+.u-mark-x {
+    position: absolute;
+    display: inline-block;
+    height: 100%;
+    cursor: pointer;
+}
+
+.u-mark-x-label {
+    position: absolute;
+    transform: translateX(-50%);
+    padding: 0 4px;
+    background: #fff !important;
+}
+
+.u-mark-x:hover {
+    border-left-style: solid !important;
+/*	border-right-style: solid !important;*/
+}
+
+.u-mark-x:hover .u-mark-x-label {
+    border-style: solid !important;
+}
