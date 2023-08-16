@@ -1,5 +1,3 @@
-from uttlv import TLV
-
 # https://github.com/h2zero/NimBLE-Arduino/blob/bc333ccb6e8d9ff2059af9cbd5006a290a4de3a5/src/nimble/nimble/host/include/host/ble_hs_adv.h#L108
 
 BLE_HS_ADV_TYPE_FLAGS = 0x01
@@ -28,79 +26,106 @@ BLE_HS_ADV_TYPE_MESH_MESSAGE = 0x2A
 BLE_HS_ADV_TYPE_MESH_BEACON = 0x2B
 BLE_HS_ADV_TYPE_MFG_DATA = 0xFF
 
+def toString(s):
+    return s.decode("utf-8")
+
 # types and tags for BLE advertisement data which is LTV
 bleAdvConfig = {
-    BLE_HS_ADV_TYPE_FLAGS: {TLV.Config.Type: bytes, TLV.Config.Name: "FLAGS"},
+    BLE_HS_ADV_TYPE_FLAGS: {"type": bytes, "name": "FLAGS"},
     BLE_HS_ADV_TYPE_INCOMP_UUIDS16: {
-        TLV.Config.Type: bytes,
-        TLV.Config.Name: "INCOMP_UUIDS16",
+        "type": bytes,
+        "name": "INCOMP_UUIDS16",
     },
     BLE_HS_ADV_TYPE_COMP_UUIDS16: {
-        TLV.Config.Type: bytes,
-        TLV.Config.Name: "COMP_UUIDS16",
+        "type": bytes,
+        "name": "COMP_UUIDS16",
     },
     BLE_HS_ADV_TYPE_INCOMP_UUIDS32: {
-        TLV.Config.Type: bytes,
-        TLV.Config.Name: "INCOMP_UUIDS32",
+        "type": bytes,
+        "name": "INCOMP_UUIDS32",
     },
     BLE_HS_ADV_TYPE_COMP_UUIDS32: {
-        TLV.Config.Type: bytes,
-        TLV.Config.Name: "COMP_UUIDS32",
+        "type": bytes,
+        "name": "COMP_UUIDS32",
     },
     BLE_HS_ADV_TYPE_INCOMP_UUIDS128: {
-        TLV.Config.Type: bytes,
-        TLV.Config.Name: "INCOMP_UUIDS128",
+        "type": bytes,
+        "name": "INCOMP_UUIDS128",
     },
     BLE_HS_ADV_TYPE_COMP_UUIDS128: {
-        TLV.Config.Type: bytes,
-        TLV.Config.Name: "COMP_UUIDS128",
+        "type": bytes,
+        "name": "COMP_UUIDS128",
     },
-    BLE_HS_ADV_TYPE_INCOMP_NAME: {TLV.Config.Type: str, TLV.Config.Name: "INCOMP_NAME"},
-    BLE_HS_ADV_TYPE_COMP_NAME: {TLV.Config.Type: str, TLV.Config.Name: "COMP_NAME"},
-    BLE_HS_ADV_TYPE_TX_PWR_LVL: {TLV.Config.Type: bytes, TLV.Config.Name: "TX_PWR_LVL"},
+    BLE_HS_ADV_TYPE_INCOMP_NAME: {"type": toString, "name": "INCOMP_NAME"},
+    BLE_HS_ADV_TYPE_COMP_NAME: {"type": toString, "name": "COMP_NAME"},
+    BLE_HS_ADV_TYPE_TX_PWR_LVL: {"type": bytes, "name": "TX_PWR_LVL"},
     BLE_HS_ADV_TYPE_SLAVE_ITVL_RANGE: {
-        TLV.Config.Type: bytes,
-        TLV.Config.Name: "SLAVE_ITVL_RANGE",
+        "type": bytes,
+        "name": "SLAVE_ITVL_RANGE",
     },
     BLE_HS_ADV_TYPE_SOL_UUIDS16: {
-        TLV.Config.Type: bytes,
-        TLV.Config.Name: "SOL_UUIDS16",
+        "type": bytes,
+        "name": "SOL_UUIDS16",
     },
     BLE_HS_ADV_TYPE_SOL_UUIDS128: {
-        TLV.Config.Type: bytes,
-        TLV.Config.Name: "SOL_UUIDS128",
+        "type": bytes,
+        "name": "SOL_UUIDS128",
     },
     BLE_HS_ADV_TYPE_SVC_DATA_UUID16: {
-        TLV.Config.Type: bytes,
-        TLV.Config.Name: "SVC_DATA_UUID16",
+        "type": bytes,
+        "name": "SVC_DATA_UUID16",
     },
     BLE_HS_ADV_TYPE_PUBLIC_TGT_ADDR: {
-        TLV.Config.Type: bytes,
-        TLV.Config.Name: "PUBLIC_TGT_ADDR",
+        "type": bytes,
+        "name": "PUBLIC_TGT_ADDR",
     },
     BLE_HS_ADV_TYPE_RANDOM_TGT_ADDR: {
-        TLV.Config.Type: bytes,
-        TLV.Config.Name: "RANDOM_TGT_ADDR",
+        "type": bytes,
+        "name": "RANDOM_TGT_ADDR",
     },
-    BLE_HS_ADV_TYPE_APPEARANCE: {TLV.Config.Type: bytes, TLV.Config.Name: "APPEARANCE"},
-    BLE_HS_ADV_TYPE_ADV_ITVL: {TLV.Config.Type: bytes, TLV.Config.Name: "ADV_ITVL"},
+    BLE_HS_ADV_TYPE_APPEARANCE: {"type": bytes, "name": "APPEARANCE"},
+    BLE_HS_ADV_TYPE_ADV_ITVL: {"type": bytes, "name": "ADV_ITVL"},
     BLE_HS_ADV_TYPE_SVC_DATA_UUID32: {
-        TLV.Config.Type: bytes,
-        TLV.Config.Name: "SVC_DATA_UUID32",
+        "type": bytes,
+        "name": "SVC_DATA_UUID32",
     },
     BLE_HS_ADV_TYPE_SVC_DATA_UUID128: {
-        TLV.Config.Type: bytes,
-        TLV.Config.Name: "SVC_DATA_UUID128",
+        "type": bytes,
+        "name": "SVC_DATA_UUID128",
     },
-    BLE_HS_ADV_TYPE_URI: {TLV.Config.Type: str, TLV.Config.Name: "URI"},
-    BLE_HS_ADV_TYPE_MESH_PROV: {TLV.Config.Type: bytes, TLV.Config.Name: "MESH_PROV"},
+    BLE_HS_ADV_TYPE_URI: {"type": str, "name": "URI"},
+    BLE_HS_ADV_TYPE_MESH_PROV: {"type": bytes, "name": "MESH_PROV"},
     BLE_HS_ADV_TYPE_MESH_MESSAGE: {
-        TLV.Config.Type: bytes,
-        TLV.Config.Name: "MESH_MESSAGE",
+        "type": bytes,
+        "name": "MESH_MESSAGE",
     },
     BLE_HS_ADV_TYPE_MESH_BEACON: {
-        TLV.Config.Type: bytes,
-        TLV.Config.Name: "MESH_BEACON",
+        "type": bytes,
+        "name": "MESH_BEACON",
     },
-    BLE_HS_ADV_TYPE_MFG_DATA: {TLV.Config.Type: bytes, TLV.Config.Name: "MFG_DATA"},
+    BLE_HS_ADV_TYPE_MFG_DATA: {"type": bytes, "name": "MFG_DATA"},
 }
+
+def decode_advertisement(hexbuffer):
+    b = bytearray.fromhex(hexbuffer)
+    size = len(b)
+    i = 0
+    result = {}
+    while i < size:
+        l = int.from_bytes(b[i : i + 1])-1
+        type = int.from_bytes(b[i + 1 : i + 2])
+        value = b[i + 2 : i + 2 + l]
+        d = bleAdvConfig.get(type, None)
+        if d:
+            result[d["name"]] = d["type"](value)
+        else:
+            raise Exception(f"invalid {type=} {i=} {hexbuffer=}")
+        i += l + 2
+    return result
+
+
+if __name__ == "__main__":
+    r = decode_advertisement(
+        "0201061bff99040511b0854affff01b403980024739632ac57dd79c68fbda211079ecadc240ee5a9e093f3a3b50100406e0b0952757576692042444132"
+    )
+    print(r)

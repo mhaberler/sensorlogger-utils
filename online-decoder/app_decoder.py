@@ -27,12 +27,14 @@ from flatten_json import flatten
 import arrow
 import gengpx
 from flask_qrcode import QRcode
+from bleads import decode_advertisement
 
 # pip install git+https://github.com/mhaberler/uttlv.git@ltv-option
 
-#import bleads
+# import bleads
 import overpy
 from gentp import Teleplot
+import re
 
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -46,6 +48,26 @@ decoded = "values"
 suffix = "-processed"
 metadataNames = ["BluetoothMetadata", "Metadata"]
 useless = ["manufacturerData"]
+skipKeys = ["seconds_elapsed"]
+
+RE_INT = re.compile(r"^[-+]?([1-9]\d*|0)$")
+RE_FLOAT = re.compile(r"^[-+]?(\d+([.,]\d*)?|[.,]\d+)([eE][-+]?\d+)?$")
+
+
+def make_numeric(value):
+    if isinstance(value, bytes):
+        return None
+    if isinstance(value, bool):
+        return int(value)
+    if isinstance(value, int):
+        return value
+    if isinstance(value, float):
+        return value
+    if RE_INT.match(value):
+        return int(value)
+    if RE_FLOAT.match(value):
+        return float(value)
+    return None
 
 
 def allowed_file(filename):
@@ -109,6 +131,11 @@ def traverse_and_modify(obj, **kwargs):
 def decode_ble_beacons(j, debug=False, customDecoder=None):
     bleMeta = {}
     for sample in j:
+        if sample["sensor"].startswith("bluetooth-"):
+            if "advertisement" in sample:
+                da = decode_advertisement(sample["advertisement"])
+                # could do this, but ATM not really useful and not JSON serializable
+                #sample.update(da)
         if sample["sensor"].startswith("BluetoothMetadata"):
             if not isinstance(sample["serviceUUIDs"], list):
                 # mutate so we always have a list of serviceUUIDs
@@ -120,7 +147,9 @@ def decode_ble_beacons(j, debug=False, customDecoder=None):
         if meta and "manufacturerData" in sample:
             # see https://github.com/theengs/decoder/blob/development/examples/python/ScanAndDecode.py
             data = {}
-            if meta["localName"]:
+            if meta["name"]:
+                data["name"] = meta["name"]
+            elif meta["localName"]:
                 data["name"] = meta["localName"]
             sl = meta["serviceUUIDs"][0]
             if len(sl) > 4:
@@ -150,13 +179,26 @@ def decode_ble_beacons(j, debug=False, customDecoder=None):
     return
 
 
-
 def teleplotify(samples):
+    bleMeta = {}
     tp = Teleplot()
     ts = time.time()  # default to receive time
     for s in samples:
-        if "name" in s:
-            sensor = s["name"].replace(" ", "_")
+        if s["sensor"] == "Metadata":
+            continue
+        if s["sensor"] == "BluetoothMetadata":
+            bleMeta[s["id"]] = s
+            continue
+
+        if s["sensor"].startswith("bluetooth-"):
+            if "values_name" in s:
+                # variable = key.removeprefix("values_")
+                s["name"] = s["values_name"].replace(" ", "_")
+                s.pop("values_name")
+
+            elif "id" in s:
+                s["name"] = bleMeta[s["id"]]["name"]
+            sensor = s["name"]
         else:
             sensor = s["sensor"]
         for key, value in s.items():
@@ -165,24 +207,25 @@ def teleplotify(samples):
             if key == "sensor":
                 continue
             if key == "time":
-                ts = float(s["time"]) * 1.0e-6
+                ts = float(s["time"]) * 1.0e-9
                 continue
-            if isinstance(value, float) or isinstance(value, int):
+            if key in skipKeys:
+                continue
+            v = make_numeric(value)
+            if v:
                 variable = key.removeprefix("values_")
-                if isinstance(value, bool):
-                    value = int(value)
                 if ts > 1:  # suppress spurious zero timestamps
-                    tp.addSample(f"{sensor}.{variable}", value, timestamp=ts)
+                    tp.addSample(f"{sensor}.{variable}", v, timestamp=ts)
                 continue
             if sensor == "annotation":
-                tp.annotate(value, start=ts)
+                tp.annotate(v, start=ts)
     return tp
 
 
 def decode(input, options, destfmt, timestamp, debug=False, customDecoder=None):
     j = json.loads(input.decode("utf-8"))
     if "teleplot" in destfmt:
-        options = ["decode_ble","flatten_json"]
+        options = ["decode_ble", "flatten_json"]
 
     if "gpx" in destfmt:
         xml = gengpx.gengpx(j)
@@ -365,7 +408,7 @@ def shops():
         # The code here determines what happens after sumbitting the form
         # Get shops data from OpenStreetMap
         shops = get_shops(request.form["lat"], request.form["lon"], distance=50)
-        #app.logger.info(f"found {len(shops.nodes)} shops")
+        # app.logger.info(f"found {len(shops.nodes)} shops")
 
         # Initialize variables
         id_counter = 0
