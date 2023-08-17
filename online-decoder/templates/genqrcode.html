@@ -23,7 +23,7 @@
     <script>
         const session = "{{ clientsession }}";
         document.getElementById("status").innerHTML = "<h2>waiting for Sensorlogger ..</h2>";
-        const uri = "ws://" + window.location.host + "/waitfor/" + session;
+        const uri = "wss://" + window.location.host + "/waitfor/" + session;
         const socket = new WebSocket(uri);
 
         // notify we're alive and listening

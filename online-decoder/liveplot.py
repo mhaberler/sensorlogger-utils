@@ -335,6 +335,8 @@ def from_sensorlogger(clientsession=""):
 
 @liveplot.route("/plot", methods=["GET", "POST"])
 def plot():
+
+    app.logger.info(f"plot {request.method=}")
     if request.method == "GET":
         return render_template("plot.html")
     if request.method == "POST":
@@ -354,26 +356,25 @@ def plot():
 
         # sensorlogger-to-teleplot bridging thread
         # with sl_thread_lock:
-        #     if not sessionKey in sl_threads:  # once only
-        #         sl_threads[sessionKey] = socketio.start_background_task(
-        #             sl_job,
-        #             current_app._get_current_object(),
-        #             queues[sessionKey],
-        #             namespaces[sessionKey],
-        #         )
-        s, _, port = open_udp_port(ip=UDP_IP, portno=UDP_PORT)
-        sessions[sessionKey]["udp_port"] = port
-        # # udp-to-teleplot bridging thread
+        if not sessionKey in sl_threads:  # once only
+            sl_threads[sessionKey] = socketio.start_background_task(
+                sl_job,
+                current_app._get_current_object(),
+                queues[sessionKey],
+                namespaces[sessionKey],
+            )
+
+        #udp-to-teleplot bridging thread
         # with udp_thread_lock:
-        #     if not sessionKey in udp_threads:  # once only
-        #
-        #         sessions[sessionKey]["udp_port"] = port
-        #         udp_threads[sessionKey] = socketio.start_background_task(
-        #             udp_job,
-        #             current_app._get_current_object(),
-        #             s,
-        #             namespaces[sessionKey],
-        #         )
+        if not sessionKey in udp_threads:  # once only
+            s, _, port = open_udp_port(ip=UDP_IP, portno=UDP_PORT)
+            sessions[sessionKey]["udp_port"] = port
+            udp_threads[sessionKey] = socketio.start_background_task(
+                udp_job,
+                current_app._get_current_object(),
+                s,
+                namespaces[sessionKey],
+            )
 
         params = {
             "http": {
@@ -409,13 +410,15 @@ def teleplot():
 
 
 def init_liveplot(a, s):
-    global sock
+    global socketio
     global app
     app = a
-    sock = s
+    socketio = s
+#     socketio = SocketIO(async_mode="threading")
+#     socketio.init_app(a)
 
 
-def restore_sessions():
+def restore_sessions(app, socketio):
     if os.path.exists(state):
         with open(state) as f:
             sessions = json.loads(f.read())
