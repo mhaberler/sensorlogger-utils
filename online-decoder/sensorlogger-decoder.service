@@ -3,8 +3,12 @@ Description=sensorlogger online BLE decoder backend
 
 [Service]
 
+#	--log-level debug
 ExecStart=/home/sensorlogger/sensorlogger-utils/.venv/bin/gunicorn \
-             --bind 127.0.0.1:5000 wsgi:app
+	--log-syslog \
+ 	--worker-class gevent \
+	--workers 1 --threads 100 \
+	--bind 127.0.0.1:5000 wsgi:app
 
 
 # gunicorn --bind 127.0.0.1:5000 wsgi:app
