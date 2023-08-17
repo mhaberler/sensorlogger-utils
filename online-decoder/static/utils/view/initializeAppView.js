@@ -26,9 +26,9 @@ function initializeAppView()
             logAvailable: false,
             telemRate: 0,
             logRate: 0,
-            viewDuration: 0, // the window duration, if == 0, the window will not slide left
+            viewDuration: 15, // the window duration, if == 0, the window will not slide left
             leftPanelVisible: true,
-            rightPanelVisible: true,
+            rightPanelVisible: false,
             textToSend: "",
             sendTextLineEnding: "\\r\\n",
             newChartDropZoneOver: false,
@@ -36,7 +36,8 @@ function initializeAppView()
             newConnectionAddress: "",
             creatingConnection: false,
             telemetryFilterString: "",
-            isViewPaused: false
+            isViewPaused: false,
+            colorStyle: _teleplot_default_color_style || "light"
         },
         methods: {
             updateStats: function(widget){
@@ -77,6 +78,9 @@ function initializeAppView()
                 app.isViewPaused = false;
                 app.telemetryFilterString = "";
 
+            },
+            setColorStyle: function(style) {
+                app.colorStyle = style;
             },
             sendText: function(text) {
                 let escape = app.sendTextLineEnding.replace("\\n","\n");
@@ -239,6 +243,21 @@ function initializeAppView()
             isWidgetSmallOnGrid: function(widget){
                 if(widget.gridPos.w < 3) return true;
                 if(widget.gridPos.w < 5 && widget.series.length > 1) return true;
+                return false;
+            },
+            shouldShowRightPanelButton: function(){
+                if(app.rightPanelVisible) return false;
+                if(app.cmdAvailable || app.logAvailable) return true;
+                // Show with connected serial inputs
+                for(let conn of app.connections){
+                    if(conn.connected){
+                        for(let input of conn.inputs){
+                            if(input.type == "serial" && input.connected){
+                                return true;
+                            }
+                        }
+                    }
+                }
                 return false;
             }
         }

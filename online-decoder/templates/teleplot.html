@@ -12,11 +12,13 @@
     <link rel="stylesheet" href="{{ url_for('static', filename = 'components/singleValue/single-value.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename = 'components/3dComponent/3dComponent.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename = 'css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'css/style-dark.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename = 'css/annotation.css') }}">
     <script src="{{ url_for('static', filename = 'lib/vue.js' ) }}"></script>
 
     <script>
         const session = "{{ clientsession }}";
+        var _teleplot_default_color_style = "light";
     </script>
 </head>
 
@@ -102,7 +104,8 @@
             </div>
             <div v-if="dataAvailable" class="flex-row" style="align-items: center;">
                 <button @click="isViewPaused = !isViewPaused" class="header-button play-pause-button"
-                    style="width:34px;height:34px">
+                    style="width:34px;height:34px" v-bind:class="{ 'play-pause-button-paused': isViewPaused }">
+
                     <span v-if="!isViewPaused" title="Pause">⏸</span>
                     <span v-if="isViewPaused" title="Display live telemetries">▶</span>
                 </button>
@@ -141,7 +144,13 @@
                     <button onclick="exportSessionCSV()" class="header-button"
                         title="Export current session in a .csv file">➦ Export to CSV</button>
                 </div>
-                <button @click="clearAll()" class="header-button" title="Clear everything">Clear</button>
+                <div class="flex-col">
+                    <button @click="clearAll()" class="header-button" title="Clear everything">Clear</button>
+                    <a v-if="colorStyle=='light'" @click="setColorStyle('dark')" class="style-button"
+                        title="Switch to dark colors">dark mode</a>
+                    <a v-if="colorStyle=='dark'" @click="setColorStyle('light')" class="style-button"
+                        title="Switch to light colors">light mode</a>
+                </div>
             </div>
             <div v-else>
                 <label for="session-json-input" class="header-button" title="Open a past session from a .json file">🗁
@@ -150,7 +159,7 @@
             </div>
         </header>
 
-        <div class="main-body">
+        <div class="main-body" v-bind:class="{ 'dark-style': colorStyle=='dark' }">
 
             <!--Variables-->
             <div class="var-container" v-if="!leftPanelVisible">
@@ -220,8 +229,8 @@
                                             v-bind:style="{'background-color':serie.options.fill, 'border-color':serie.options.stroke}">
                                             <span class="serie-value">[[serie.values_formatted]]</span>
                                         </span>
-                                        <span class="serie-name"
-                                            v-bind:style="{'color':serie.name_color}">[[serie.name]]</span>
+
+                                        <span class="serie-name">[[serie.name]]</span>
                                         <span v-if="widget.type == 'chart' && serie.unit != undefined"
                                             class="serie-unit">([[serie.unit]])</span>
                                     </div>
@@ -277,8 +286,8 @@
                                 </div>
                             </div>
                             <div class="widget-option-container">
-                                <span v-if="widget.type == 'chart'" class="widget-option" @click="toggleAnnotations(widget)"
-                                title="Toggle Annotations">@</span>
+                                <span v-if="widget.type == 'chart'" class="widget-option"
+                                    @click="toggleAnnotations(widget)" title="Toggle Annotations">@</span>
                                 <span v-if="widget.type == 'chart'" class="widget-option" @click="updateStats(widget)"
                                     title="Recalculate stats">‱</span>
                                 <span id="closeWidgetButton" class="widget-option" @click="removeWidget(widget)"
@@ -305,18 +314,18 @@
 
             <!-- CMD update to multi input-->
 
-            <div class="var-container" v-if="!rightPanelVisible">
+            <div class="var-container" v-if="shouldShowRightPanelButton()">
                 <button @click="showRightPanel(true)" class="right-rounded-btn">
                     << /button>
             </div>
-            <div class="right-col cmd-container" v-show="(cmdAvailable || logAvailable) && rightPanelVisible">
+            <div class="right-col cmd-container" v-show="rightPanelVisible">
                 <button @click="showRightPanel(false)" class="right-reduce-btn">Reduce</button>
                 <div v-for="cmd in commands" v-bind:key="cmd.name" class="cmd-vue">
                     <button @click="sendCmd(cmd)">[[cmd.name]]</button>
                 </div>
 
                 <!-- LOG TODO update to multi input-->
-                <div id="log-container-div" class="log-container" v-show="logAvailable"></div>
+                <div id="log-container-div" class="log-container"></div>
                 <div v-for="conn in connections" class="flex-col">
                     <div v-for="input in conn.inputs" class="flex-col">
                         <div v-if="input.type=='serial' && input.port" class="send-text-container">
@@ -367,7 +376,6 @@
 <script src="{{ url_for('static', filename = 'classes/communication/data/DataInput.js' ) }}"></script>
 <script src="{{ url_for('static', filename = 'classes/communication/data/DataInputSerial.js' ) }}"></script>
 <script src="{{ url_for('static', filename = 'classes/communication/data/DataInputUDP.js' ) }}"></script>
-<!-- <script src="{{ url_for('static', filename = 'classes/communication/data/DataInputSocketio.js' ) }}"></script> -->
 <script src="{{ url_for('static', filename = 'classes/Telemetry.js' ) }}"></script>
 <script src="{{ url_for('static', filename = 'classes/DataSerie.js' ) }}"></script>
 <script src="{{ url_for('static', filename = 'classes/3d/Shape3D.js' ) }}"></script>
@@ -383,7 +391,7 @@
 
     // Init Vue
     var url = new URL(window.location.href);
-    var  udp_port = url.searchParams.get("udp_port");
+    var udp_port = url.searchParams.get("udp_port");
     UDPport = parseInt(udp_port);
 
     var app = initializeAppView();
@@ -403,4 +411,5 @@
         }
     }, 3000);
 </script>
+
 </html>
