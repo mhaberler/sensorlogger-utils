@@ -13,6 +13,7 @@ from flask import (
     redirect,
 )
 from threading import Lock
+from flask_sock import Sock,ConnectionClosed
 from werkzeug.utils import secure_filename
 import io
 import json
@@ -35,10 +36,40 @@ app.config["SOCK_SERVER_OPTIONS"] = {"ping_interval": 25}
 app.config["UPLOAD_FOLDER"] = "/tmp/sensorlogger-upload"
 app.config["SECRET_KEY"] = "yo2Ecuugh8oowiep1rui0niev8Fahnoh"
 QRcode(app)
-from  liveplot import liveplot,init_liveplot,restore_sessions
-init_liveplot(app)
-restore_sessions(app)
-app.register_blueprint(liveplot)
+sock = Sock(app)
+
+@sock.route("/tp/<clientsession>")
+def tp(ws, clientsession=""):
+    try:
+        while True:
+            s = ws.receive()
+            msg = json.loads(s)
+            app.logger.info(f"/tp/{clientsession=} {msg=}")
+            liveplot.add_websocket(clientsession, ws)
+    except ConnectionClosed:
+        app.logger.info(f"/tp/{clientsession=} closed")
+        liveplot.del_websocket(ws)
+
+
+@sock.route("/waitfor/<clientsession>")
+def waitfor(ws, clientsession=""):
+    try:
+        while True:
+            s = ws.receive()
+            msg = json.loads(s)
+            if "hello" in msg:
+                app.logger.info(f"/waitfor/{clientsession} {msg=} ")
+            liveplot.add_waitingfor(clientsession, ws)
+    except ConnectionClosed as e:
+        app.logger.info(f"ws closed: {e}")
+        liveplot.del_waitingfor(clientsession, ws)
+
+import liveplot
+
+liveplot.app = app
+# liveplot.sock = sock
+# liveplot.restore_sessions()
+app.register_blueprint(liveplot.liveplot) #, url_prefix='/liveplot')
 
 ALLOWED_EXTENSIONS = ["json"]
 
@@ -229,7 +260,7 @@ def teleplotify(samples, options):
 def decode(input, options, destfmt, timestamp, debug=False, customDecoder=None):
     j = json.loads(input.decode("utf-8"))
     if "teleplot" in destfmt:
-        options = ["decode_ble", "flatten_json"] + "gen3d" if "gen3d" in options else []
+        options = ["decode_ble", "flatten_json"] #+ "gen3d" if "gen3d" in options else []
 
     if "gpx" in destfmt:
         xml = gengpx.gengpx(j)

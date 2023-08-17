@@ -3,7 +3,6 @@
 
 <head>
     <title>Sensor Logger Live Plot</title>
-    <script src="{{ url_for('static', filename = 'js/socket.io.min.js' ) }}"></script>
 </head>
 
 <body>
@@ -24,16 +23,23 @@
     <script>
         const session = "{{ clientsession }}";
         document.getElementById("status").innerHTML = "<h2>waiting for Sensorlogger ..</h2>";
-        const uri = "ws://" + window.location.host + "/" + session;
-        const socket = new io(uri);
+        const uri = "ws://" + window.location.host + "/waitfor/" + session;
+        const socket = new WebSocket(uri);
+
         // notify we're alive and listening
-        socket.emit("tpconnect", { session: session });
-        // on first data sample, switch to teleplot view
-        // we lose the first sample, but such is life
-        socket.on("udp", (data) => {
-            document.getElementById("status").innerHTML = "<h2>starting Teleplot</h2>";
-            window.location = "http://" + window.location.host + "{{tppath}}?session=" + session + "&udp_port={{udp_port}}";
-        });
+        socket.onopen = function (ev) {
+            this.send('{ "hello": "' + session + '"}');
+        };
+
+        socket.onmessage = function (ev) {
+            console.log(ev.data);
+            if (ev.data === "goahead") {
+                document.getElementById("status").innerHTML = "<h2>starting Teleplot</h2>";
+                this.close(1000, "got goahead");
+                window.location = "http://" + window.location.host + "{{tppath}}?session=" + session + "&udp_port={{udp_port}}";
+
+            }
+        };
     </script>
 </body>
 

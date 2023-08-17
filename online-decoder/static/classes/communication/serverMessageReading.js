@@ -72,7 +72,7 @@ function parseLog(msg, now) {
 // msg : a String containing a JSON object
 function parseJson(m) {
     let now = new Date().getTime() / 1000.0;
-    const msg = m.data;
+    const msg = m.json;
 
     if ('annotation' in msg) {
         const start = (msg.annotation.from === undefined) ? now : msg.annotation.from;
