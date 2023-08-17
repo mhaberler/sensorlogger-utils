@@ -41,6 +41,9 @@ template = {
     "uncalibrated": False,
     "fileFormat": ".json",
     "fileName": "RECORDING_NAME-DATETIME_LOCAL_FORMATTED",
+    "rssiThreshold": "No Limit",
+    "bluetoothScanningDuration": "15",
+    "keepAwake": "On",
 }
 
 
@@ -66,7 +69,7 @@ def merge(request, params):
     # remove config for disabled sensors
     for k in template["sensorState"].keys():
         if not k in enabled:
-            t["sensorState"].pop(k, None) 
+            t["sensorState"].pop(k, None)
 
     t.update(params)
     batchPeriod = request.form.getlist("batchPeriod")[0]
