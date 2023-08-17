@@ -13,7 +13,7 @@ from flask import (
     redirect,
 )
 from threading import Lock
-from flask_socketio import SocketIO
+from flask_sock import Sock,ConnectionClosed
 from werkzeug.utils import secure_filename
 import io
 import json
@@ -32,23 +32,44 @@ import re
 
 app = Flask(__name__)
 app.config.from_object(__name__)
-# app.config["SOCK_SERVER_OPTIONS"] = {"ping_interval": 25}
+app.config["SOCK_SERVER_OPTIONS"] = {"ping_interval": 25}
 app.config["UPLOAD_FOLDER"] = "/tmp/sensorlogger-upload"
 app.config["SECRET_KEY"] = "yo2Ecuugh8oowiep1rui0niev8Fahnoh"
 QRcode(app)
+sock = Sock(app)
 
-from  liveplot import liveplot,restore_sessions, init_liveplot
+@sock.route("/teleplot/<clientsession>")
+def tp(ws, clientsession=""):
+    try:
+        while True:
+            s = ws.receive()
+            msg = json.loads(s)
+            app.logger.info(f"/tp/{clientsession=} {msg=}")
+            liveplot.add_websocket(clientsession, ws)
+    except ConnectionClosed:
+        app.logger.info(f"/tp/{clientsession=} closed")
+        liveplot.del_websocket(ws)
 
-#socketio = SocketIO(app, async_mode="threading")
-socketio = SocketIO(app, async_mode="eventlet")
-# import eventlet
-# eventlet.monkey_patch()
-#socketio = SocketIO(app, logger=True, engineio_logger=True, async_mode="threading")
-init_liveplot(app, socketio)
 
+@sock.route("/waitfor/<clientsession>")
+def waitfor(ws, clientsession=""):
+    try:
+        while True:
+            s = ws.receive()
+            msg = json.loads(s)
+            if "hello" in msg:
+                app.logger.info(f"/waitfor/{clientsession} {msg=} ")
+            liveplot.add_waitingfor(clientsession, ws)
+    except ConnectionClosed as e:
+        app.logger.info(f"/waitfor/{clientsession} closed: {e}")
+        liveplot.del_waitingfor(clientsession, ws)
 
-# restore_sessions(app, socketio)
-app.register_blueprint(liveplot)
+import liveplot
+
+liveplot.app = app
+# liveplot.sock = sock
+# liveplot.restore_sessions()
+app.register_blueprint(liveplot.liveplot) #, url_prefix='/liveplot')
 
 ALLOWED_EXTENSIONS = ["json"]
 
@@ -239,7 +260,7 @@ def teleplotify(samples, options):
 def decode(input, options, destfmt, timestamp, debug=False, customDecoder=None):
     j = json.loads(input.decode("utf-8"))
     if "teleplot" in destfmt:
-        options = ["decode_ble", "flatten_json"]
+        options = ["decode_ble", "flatten_json"] #+ "gen3d" if "gen3d" in options else []
 
     if "gpx" in destfmt:
         xml = gengpx.gengpx(j)
@@ -357,6 +378,4 @@ def tracking():
 
 
 if __name__ == "__main__":
-    socketio.run(app, host="0.0.0.0", port=5000)
-
-    # app.run(debug=True, host="0.0.0.0", port=5000)
+    app.run(debug=True, host="0.0.0.0", port=5000)

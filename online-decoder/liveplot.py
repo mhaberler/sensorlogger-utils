@@ -25,6 +25,7 @@ UDP_PORT = 0  #  choose ephemeral port
 SESSION_MAX_AGE = 3600 * 24
 state = "sessions.json"
 HOST_URL = "https://sensorlogger.mah.priv.at/"
+
 sessions = {}
 namespaces = {}
 queues = {}
@@ -335,15 +336,14 @@ def from_sensorlogger(clientsession=""):
 
 @liveplot.route("/plot", methods=["GET", "POST"])
 def plot():
-
-    app.logger.info(f"plot {request.method=}")
     if request.method == "GET":
         return render_template("plot.html")
     if request.method == "POST":
         sessionKey = shortuuid.uuid()
         authToken = shortuuid.uuid()
-        url = HOST_URL + "sl/" + sessionKey
         # url = request.host_url + "sl/" + sessionKey
+        url = HOST_URL + "sl/" + sessionKey
+
         sessions[sessionKey] = {
             "authToken": authToken,
             "lastUse": time.time(),
@@ -356,25 +356,26 @@ def plot():
 
         # sensorlogger-to-teleplot bridging thread
         # with sl_thread_lock:
-        if not sessionKey in sl_threads:  # once only
-            sl_threads[sessionKey] = socketio.start_background_task(
-                sl_job,
-                current_app._get_current_object(),
-                queues[sessionKey],
-                namespaces[sessionKey],
-            )
-
-        #udp-to-teleplot bridging thread
+        #     if not sessionKey in sl_threads:  # once only
+        #         sl_threads[sessionKey] = socketio.start_background_task(
+        #             sl_job,
+        #             current_app._get_current_object(),
+        #             queues[sessionKey],
+        #             namespaces[sessionKey],
+        #         )
+        s, _, port = open_udp_port(ip=UDP_IP, portno=UDP_PORT)
+        sessions[sessionKey]["udp_port"] = port
+        # # udp-to-teleplot bridging thread
         # with udp_thread_lock:
-        if not sessionKey in udp_threads:  # once only
-            s, _, port = open_udp_port(ip=UDP_IP, portno=UDP_PORT)
-            sessions[sessionKey]["udp_port"] = port
-            udp_threads[sessionKey] = socketio.start_background_task(
-                udp_job,
-                current_app._get_current_object(),
-                s,
-                namespaces[sessionKey],
-            )
+        #     if not sessionKey in udp_threads:  # once only
+        #
+        #         sessions[sessionKey]["udp_port"] = port
+        #         udp_threads[sessionKey] = socketio.start_background_task(
+        #             udp_job,
+        #             current_app._get_current_object(),
+        #             s,
+        #             namespaces[sessionKey],
+        #         )
 
         params = {
             "http": {
@@ -410,15 +411,13 @@ def teleplot():
 
 
 def init_liveplot(a, s):
-    global socketio
+    global sock
     global app
     app = a
-    socketio = s
-#     socketio = SocketIO(async_mode="threading")
-#     socketio.init_app(a)
+    sock = s
 
 
-def restore_sessions(app, socketio):
+def restore_sessions():
     if os.path.exists(state):
         with open(state) as f:
             sessions = json.loads(f.read())

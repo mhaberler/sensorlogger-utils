@@ -36,7 +36,9 @@
             if (ev.data === "goahead") {
                 document.getElementById("status").innerHTML = "<h2>starting Teleplot</h2>";
                 this.close(1000, "got goahead");
-                window.location = "http://" + window.location.host + "{{tppath}}?session=" + session + "&udp_port={{udp_port}}";
+                const url = "https://" + window.location.host + "{{tppath}}?session=" + session + "&udp_port={{udp_port}}";
+                console.log(url);
+                window.location = url;
 
             }
         };
