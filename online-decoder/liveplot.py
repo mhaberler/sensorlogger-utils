@@ -38,6 +38,9 @@ websockets = {}
 websockets_started = set()
 waitingfor = {}
 
+# consider values only after Sat Dec 31 2022 23:00:00 GMT+0000
+timestamp_cutoff = 1672527600
+
 app = None
 sock = None
 
@@ -257,7 +260,7 @@ def teleplotify(samples, clientsession):
                     "data": f"{sensor}.{variable}:{ts}:{value}|np\n",
                     "timestamp": time.time(),
                 }
-                if ts > 1:  # suppress spurious zero timestamps
+                if ts > timestamp_cutoff:  # suppress spurious zero timestamps
                     send_all(clientsession, tp)
                 continue
             if sensor == "annotation":
