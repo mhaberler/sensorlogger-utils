@@ -9,7 +9,8 @@
 
 <body>
     <h2>Process a sensorlogger JSON export</h2>
-
+    <button onclick="window.location.href = 'plot';">Sensorlogger Live Plot</button>
+    <br> <br>
     <form action="/sensorlogger" method="post" enctype="multipart/form-data">
         Output format:<br>
         <input type="radio" name="destfmt"  value="canonical" checked>  JSON<br>
