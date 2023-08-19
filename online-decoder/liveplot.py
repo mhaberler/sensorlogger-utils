@@ -242,7 +242,7 @@ def teleplotify(samples, clientsession):
     #                 vtime = value
     #                 continue
     ts = time.time()  # default to receive time
-
+    data = []
     for s in samples:
         sensor = s["name"].replace(" ", "_")
         for key, value in s.items():
@@ -251,16 +251,20 @@ def teleplotify(samples, clientsession):
             if key == "time":
                 ts = s["time"] * 1.0e-6
                 continue
+            if ts < timestamp_cutoff:  # suppress spurious zero timestamps
+                continue
             if isinstance(value, float) or isinstance(value, int):
                 variable = key.removeprefix("values_")
                 if isinstance(value, bool):
                     value = int(value)
-                tp = {
-                    "data": f"{sensor}.{variable}:{ts}:{value}|np\n",
-                    "timestamp": time.time(),
-                }
-                if ts > timestamp_cutoff:  # suppress spurious zero timestamps
-                    send_all(clientsession, tp)
+
+                data.append(f"{sensor}.{variable}:{ts}:{value}|np")
+                # tp = {
+                #     "data": f"{sensor}.{variable}:{ts}:{value}|np\n",
+                #     "timestamp": time.time(),
+                # }
+                # if ts > timestamp_cutoff:
+                #     send_all(clientsession, tp)
                 continue
             if sensor == "annotation":
                 send_all(
@@ -270,6 +274,8 @@ def teleplotify(samples, clientsession):
                         "timestamp": time.time(),
                     },
                 )
+    if data:
+        send_all(clientsession, {"data": "\n".join(data)})
 
 
 @liveplot.route("/sl/<clientsession>", methods=["POST"])

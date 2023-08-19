@@ -12,6 +12,8 @@
     <img src="{{ qrcode(config_img, back_color='white', fill_color='black',
         box_size=10,border=4) }}" width="500" height="500">
     <br>
+    <div id="plotsession">
+    </div>
     <div id="status">
     </div>
     <br>
@@ -30,14 +32,15 @@
         socket.onopen = function (ev) {
             this.send('{ "hello": "' + session + '"}');
         };
+        const destUri = "http://" + window.location.host + "{{tppath}}?session=" + session + "&udp_port={{udp_port}}";
+        document.getElementById("plotsession").innerHTML =  "<a href=" + destUri + "  > shareable link to Teleplot session </a>";
 
         socket.onmessage = function (ev) {
             console.log(ev.data);
             if (ev.data === "goahead") {
                 document.getElementById("status").innerHTML = "<h2>starting Teleplot</h2>";
                 this.close(1000, "got goahead");
-                window.location = "http://" + window.location.host + "{{tppath}}?session=" + session + "&udp_port={{udp_port}}";
-
+                window.location = destUri; 
             }
         };
     </script>
