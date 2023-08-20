@@ -28,7 +28,8 @@ import gengpx
 from flask_qrcode import QRcode
 from bleads import decode_advertisement
 from gentp import Teleplot
-import re
+from util import allowed_file, make_numeric
+
 
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -71,6 +72,9 @@ liveplot.app = app
 # liveplot.restore_sessions()
 app.register_blueprint(liveplot.liveplot) #, url_prefix='/liveplot')
 
+import vario
+app.register_blueprint(vario.vario) #, url_prefix='/liveplot')
+
 ALLOWED_EXTENSIONS = ["json"]
 
 reader = codecs.getreader("utf-8")
@@ -80,29 +84,6 @@ metadataNames = ["BluetoothMetadata", "Metadata"]
 useless = ["manufacturerData"]
 skipKeys = ["seconds_elapsed"]
 
-
-RE_INT = re.compile(r"^[-+]?([1-9]\d*|0)$")
-RE_FLOAT = re.compile(r"^[-+]?(\d+([.,]\d*)?|[.,]\d+)([eE][-+]?\d+)?$")
-
-
-def make_numeric(value):
-    if isinstance(value, bytes):
-        return None
-    if isinstance(value, bool):
-        return int(value)
-    if isinstance(value, int):
-        return value
-    if isinstance(value, float):
-        return value
-    if RE_INT.match(value):
-        return int(value)
-    if RE_FLOAT.match(value):
-        return float(value)
-    return None
-
-
-def allowed_file(filename):
-    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 def traverse_and_modify(obj, **kwargs):
@@ -342,9 +323,8 @@ def sensorlogger():
         files = request.files.getlist("files")
         for file in files:
             fn = secure_filename(file.filename)
-            if fn and allowed_file(fn):
+            if fn and allowed_file(fn, ALLOWED_EXTENSIONS):
                 input = file.stream.read()
-                # input = file.stream._file.getvalue()
                 (ext, output) = decode(
                     input, options, destfmt, timestamp, customDecoder=custom.Decoder
                 )

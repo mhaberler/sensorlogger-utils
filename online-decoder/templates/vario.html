@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Ballon-Vario utilities</title>
+
+</head>
+
+<body>
+    <h2>process a Ballon-Vario CSV logfile</h2>
+ <br>
+    <form action="/vario" method="post" enctype="multipart/form-data">
+        Output format:<br>
+        <!-- <input type="radio" name="destfmt"  value="canonical" checked>  JSON<br> -->
+        <!-- <input type="radio" name="destfmt"  value="plotjuggler"> JSON for plotJuggler <br> -->
+        <input type="radio" name="destfmt"  value="teleplot" checked>Teleplot recording<br>
+        <input type="radio" name="destfmt"  value="csv">sanitized CSV for PlotJuggler<br>
+        <!-- <input type="radio" name="destfmt"  value="geojson"> GeoJSON<br> -->
+        <!-- <input type="radio" name="destfmt"  value="gpx"> <a href="https://en.wikipedia.org/wiki/GPS_Exchange_Format">GPX track</a> <br>   -->
+        <!-- <input type="radio" name="destfmt"  value="influxdbv2"> InfluxDBv2 import file<br> -->
+        <!-- <input type="radio" name="destfmt"  value="cesium"> generate 3D animation with Cesiume<br> -->
+        <br>
+        <!-- Timestamps (absolute time only):
+        <br>
+        <input type="radio" name="timestamp" value="linux_timestamp_float" checked> convert time to <a href="https://en.wikipedia.org/wiki/Unix_time">Unix timestamp</a> (float)<br>
+        <input type="radio" name="timestamp" value="linux_timestamp" > convert time to <a href="https://en.wikipedia.org/wiki/Unix_time">Unix timestamp</a> (int, 1s resolution)<br>
+        <input type="radio" name="timestamp" value="iso8061"> convert time to <a href="https://en.wikipedia.org/wiki/ISO_8601"  > ISO 8601 </a> time format<br>
+        <input type="radio" name="timestamp" value="untouched"> leave untouched (nanoseconds since Jan 1, 1970)<br>
+        <br> -->
+        <!-- Conversion options:<br>
+        <input type="checkbox" name="options" value="drop_bad_timestamps" checked> drop records with invalid timestamps<br>
+        <input type="checkbox" name="options" value="drop_bad_temperatur" checked> drop invalid temperature samples<br>
+        <input type="checkbox" name="options" value="drop_bad_gpsloc" checked> drop location with no GPS fix<br>
+        <input type="checkbox" name="options" value="drop_bad_batpct" checked> drop battery reports with unreasonable batPercent<br>
+        <input type="checkbox" name="options" value="startflag_annotation" checked> emit annotation for Startflag change<br>
+        <input type="checkbox" name="options" value="drop_NaN" checked> drop records with NaN value<br> -->
+        <!-- <input type="checkbox" name="options" value="flatten_json" checked> flatten JSON <br>
+        <input type="checkbox" name="options" value="ndjson" > export in newline-delimited JSON <a href="https://en.wikipedia.org/wiki/JSON_streaming#Newline-Delimited_JSON">(NDJSON) </a> <br> 
+        <input type="checkbox" name="options" value="strings_to_numeric" checked> convert strings to numeric<br> -->
+        <!-- <input type="checkbox" name="options" value="fix_keys" checked> fix key syntax<br> -->
+        <!-- <input type="checkbox" name="options" value="drop_useless" checked> drop useless data<br> -->
+        <!-- <input type="checkbox" name="options" value="prettyprint" checked> Prettyprint JSON<br> -->
+        <!-- <input type="checkbox" name="options" value="gzip"> gzip the result<br> -->
+
+        <br>
+        <input type="file" name="files">
+        <input type="submit" value="convert">
+    </form>
+</body>
+</html>
