@@ -2,8 +2,9 @@ from flask import render_template, request, make_response, send_file, Blueprint
 import io
 import os
 from werkzeug.utils import secure_filename
-from util import allowed_file
+from util import allowed_file, make_numeric
 import pandas
+import csv
 from gentp import Teleplot
 import numpy
 
@@ -43,12 +44,15 @@ def generate(df, destfmt, options):
                 if name == "timestamp":
                     continue
                 value = row[name]
-                if numpy.isnan(value):
+                v = make_numeric(value)
+                if not v:
                     continue
-                tp.addSample(name, value, ts)
+                if numpy.isnan(v):
+                    continue
+                tp.addSample(name, v, ts)
         return ("_vario2tp.json", tp.toJson().encode("utf8"))
     if "csv" in destfmt:
-        s = df.to_csv(sep=";")
+        s = df.to_csv(sep=";", quoting=csv.QUOTE_NONNUMERIC) #,  quotechar="'")
         return ("_sanitized.csv", s.encode("utf8"))
 
 
