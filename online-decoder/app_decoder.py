@@ -143,11 +143,18 @@ def traverse_and_modify(obj, **kwargs):
 def decode_ble_beacons(j, debug=False, customDecoder=None):
     bleMeta = {}
     for sample in j:
+        decoded_ad = {}
+        data = {}
         if sample["sensor"].startswith("bluetooth-"):
             if "advertisement" in sample:
                 decoded_ad = decode_advertisement(sample["advertisement"])
-                app.logger.info(f"{decoded_ad=}")
-
+                app.logger.debug(f"{decoded_ad=}")
+                sd = decoded_ad.get("SVC_DATA_UUID16", None)
+                if sd and len(sd) > 2:
+                    app.logger.debug(f"ADD SERVICEDATA len={len(sd)-2} {sd[2:].hex()=}")
+                    data["servicedata"] = sd[2:].hex()
+                    data["servicedatauuid"] = sd[1:2].hex() + sd[0:1].hex()
+                    
                 # could do this, but ATM not really useful and not JSON serializable
                 # sample.update(da)
         if sample["sensor"].startswith("BluetoothMetadata"):
@@ -160,7 +167,7 @@ def decode_ble_beacons(j, debug=False, customDecoder=None):
         meta = bleMeta.get(sample["sensor"], None)
         if meta and "manufacturerData" in sample:
             # see https://github.com/theengs/decoder/blob/development/examples/python/ScanAndDecode.py
-            data = {}
+
             if meta["name"]:
                 data["name"] = meta["name"]
             elif meta["localName"]:
@@ -168,7 +175,8 @@ def decode_ble_beacons(j, debug=False, customDecoder=None):
             sl = meta["serviceUUIDs"][0]
             if len(sl) > 4:
                 sl = sl[4:8]
-            data["servicedatauuid"] = sl
+            if not "servicedatauuid" in data: # prefer our own uuid decoded from advertisementdata
+                data["servicedatauuid"] = sl
             data["id"] = sample["id"]
             data["rssi"] = sample["rssi"]
             data["manufacturerdata"] = sample["manufacturerData"]
