@@ -145,7 +145,9 @@ def decode_ble_beacons(j, debug=False, customDecoder=None):
     for sample in j:
         if sample["sensor"].startswith("bluetooth-"):
             if "advertisement" in sample:
-                da = decode_advertisement(sample["advertisement"])
+                decoded_ad = decode_advertisement(sample["advertisement"])
+                app.logger.info(f"{decoded_ad=}")
+
                 # could do this, but ATM not really useful and not JSON serializable
                 # sample.update(da)
         if sample["sensor"].startswith("BluetoothMetadata"):
