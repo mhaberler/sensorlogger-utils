@@ -38,10 +38,22 @@ def Decoder(args, debug):
         ):
             if debug:
                 eprint(f"found FlowSensor {args}")
+            #  typedef struct __attribute__((packed)) {
+            #   uint8_t mfidLow;
+            #   uint8_t mfidHigh;
+            #   uint8_t address[6];   // replicate to tunnel past iOS
+            #   int32_t count;        // counts
+            #   uint32_t last_change; // uS since startup
+            #   uint16_t pressure_mBar;
+            #   int16_t rate;         // counts/second
+            #   uint8_t batteryLevel; // %
+            #   uint8_t flags;
+            # } mfdReport_t;
             data = bytearray.fromhex(args["manufacturerdata"])
+            # eprint(f"manufacturerdata= {len(data)}")
             # see https://github.com/mhaberler/flowsensor/blob/main/src/defs.h#L33-L42
-            mfid, adr, count, last_change, rate, batteryLevel, flags = struct.unpack(
-                "<H6siIhbb", data
+            mfid, adr, count, last_change, pressure_mBar, rate, batteryLevel, flags = struct.unpack(
+                "<H6siIHhbb", data
             )
             return {
                 "type": "customFLowSensor",
@@ -50,6 +62,7 @@ def Decoder(args, debug):
                 "mfid": mfid,
                 "count": count,
                 "last_change": last_change,
+                "pressure": pressure_mBar/1000.0,
                 "rate": rate,
                 "batteryLevel": batteryLevel,
                 "flags": flags,
