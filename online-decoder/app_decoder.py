@@ -252,21 +252,31 @@ def teleplotify(samples, options):
 
 def emit(s : dict, tp: Teleplot, ts: float ):
     sensor = s.get("name", s["sensor"])
-
+    
+    if sensor == "Annotation":
+        ts = float(s["time"]) * 1.0e-9
+        label = s["text"]
+        duration = int(s["millisecond_press_duration"])
+        tp.annotate(label, start=ts, end=ts + duration/1000.0)    
+        return
+        
     for key, value in s.items():
         if key in ["name", "sensor","seconds_elapsed" ]:
             continue
         if key == "time":
             ts = float(s["time"]) * 1.0e-9
             continue
+        
         v = make_numeric(value)
+
+
+        
         if v:
             variable = key.removeprefix("values_")
             if ts > 1:  # suppress spurious zero timestamps
                 tp.addSample(f"{sensor}.{variable}", v, timestamp=ts)
             continue
-        if sensor == "annotation":
-            tp.annotate(v, start=ts)    
+
 
 def decode(input, options, destfmt, timestamp, debug=False, customDecoder=None):
     j = json.loads(input.decode("utf-8"))
