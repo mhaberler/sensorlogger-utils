@@ -29,6 +29,7 @@ from flask_qrcode import QRcode
 from bleads import decode_advertisement
 from gentp import Teleplot
 from util import allowed_file, make_numeric
+from copy import deepcopy
 
 
 app = Flask(__name__)
@@ -82,7 +83,6 @@ decoded = "values"
 suffix = "-processed"
 metadataNames = ["BluetoothMetadata", "Metadata"]
 useless = ["manufacturerData"]
-skipKeys = ["seconds_elapsed"]
 
 
 
@@ -148,15 +148,13 @@ def decode_ble_beacons(j, debug=False, customDecoder=None):
         if sample["sensor"].startswith("bluetooth-"):
             if "advertisement" in sample:
                 decoded_ad = decode_advertisement(sample["advertisement"])
-                app.logger.debug(f"{decoded_ad=}")
+                # app.logger.debug(f"{decoded_ad=}")
                 sd = decoded_ad.get("SVC_DATA_UUID16", None)
                 if sd and len(sd) > 2:
-                    app.logger.debug(f"ADD SERVICEDATA len={len(sd)-2} {sd[2:].hex()=}")
+                    # app.logger.debug(f"ADD SERVICEDATA len={len(sd)-2} {sd[2:].hex()=}")
                     data["servicedata"] = sd[2:].hex()
                     data["servicedatauuid"] = sd[1:2].hex() + sd[0:1].hex()
                     
-                # could do this, but ATM not really useful and not JSON serializable
-                # sample.update(da)
         if sample["sensor"].startswith("BluetoothMetadata"):
             if not isinstance(sample["serviceUUIDs"], list):
                 # mutate so we always have a list of serviceUUIDs
@@ -206,47 +204,69 @@ def teleplotify(samples, options):
     gen3d = "gen3d" in options
     tp = Teleplot()
     ts = time.time()  # default to receive time
+
     for s in samples:
         if s["sensor"] == "Metadata":
             continue
         if s["sensor"] == "BluetoothMetadata":
-            bleMeta[s["id"]] = s
+            # massage the metadata to be less "helpful":
+            # localName == "" means no localName
+            # name == "Unknown Name" means no name
+            tmp = deepcopy(s)
+            localName = tmp.get("localName", "")
+            if localName == "":
+                tmp.pop("localName")
+            name = tmp.get("name", "")
+            if name == "Unknown Name":
+                tmp.pop("name")
+            bleMeta[s["id"]] = tmp
             continue
 
-        if s["sensor"].startswith("bluetooth-"):
-            if "values_name" in s:
-                # variable = key.removeprefix("values_")
-                s["name"] = s["values_name"].replace(" ", "_")
-                s.pop("values_name")
+        if not s["sensor"].startswith("bluetooth-"):
+            emit(s, tp, ts)
+            continue
 
-            elif "id" in s:
-                if s["id"] in bleMeta:
-                    s["name"] = bleMeta[s["id"]]["name"]
-                elif "bluetooth-" + s["id"] in bleMeta:
-                    s["name"] = bleMeta["bluetooth-" + s["id"]]["name"]
-            sensor = s.get("name", s["sensor"])
-        else:
-            sensor = s["sensor"]
-        for key, value in s.items():
-            if key == "name":
-                continue
-            if key == "sensor":
-                continue
-            if key == "time":
-                ts = float(s["time"]) * 1.0e-9
-                continue
-            if key in skipKeys:
-                continue
-            v = make_numeric(value)
-            if v:
-                variable = key.removeprefix("values_")
-                if ts > 1:  # suppress spurious zero timestamps
-                    tp.addSample(f"{sensor}.{variable}", v, timestamp=ts)
-                continue
-            if sensor == "annotation":
-                tp.annotate(v, start=ts)
+        # drop useless names
+        if s.get("values_name", "") == "Unknown Name":
+            s.pop("values_name")
+            
+        # decide how to set s[name] for BLE devices         
+        if "values_name" in s:
+            # looks like a legit name
+            s["name"] = s["values_name"].replace(" ", "_")
+            s.pop("values_name")
+            emit(s, tp, ts)
+            continue
+        
+        # construct something from model_id and mac 
+        # prefer mfd-embedded mac over id (iOS)
+        mac = s.get("values_mac", s["id"]).replace(":", "")
+        model_id = s.get("values_model_id", "BLE")
+        s["name"] = model_id + "_" + mac
+        s.pop("values_name", None)
+        emit(s, tp, ts)
+        continue
+          
+
     return tp
 
+def emit(s : dict, tp: Teleplot, ts: float ):
+    sensor = s.get("name", s["sensor"])
+
+    for key, value in s.items():
+        if key in ["name", "sensor","seconds_elapsed" ]:
+            continue
+        if key == "time":
+            ts = float(s["time"]) * 1.0e-9
+            continue
+        v = make_numeric(value)
+        if v:
+            variable = key.removeprefix("values_")
+            if ts > 1:  # suppress spurious zero timestamps
+                tp.addSample(f"{sensor}.{variable}", v, timestamp=ts)
+            continue
+        if sensor == "annotation":
+            tp.annotate(v, start=ts)    
 
 def decode(input, options, destfmt, timestamp, debug=False, customDecoder=None):
     j = json.loads(input.decode("utf-8"))
